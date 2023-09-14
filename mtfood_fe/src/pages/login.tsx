@@ -1,3 +1,8 @@
-export default function Login() {
-    return <div>Login</div>;
+import Login from "../features/authentication/components/login";
+export default function LoginPage() {
+    return (
+        <div>
+            <Login />
+        </div>
+    );
 }

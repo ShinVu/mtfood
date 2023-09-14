@@ -1,5 +1,3 @@
-import React from "react";
-
 // Import library from react router
 import { Outlet, Navigate } from "react-router-dom";
 
@@ -13,9 +11,7 @@ import "../index.css";
 import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 export default function DefaultLayout() {
-    const { user: user, token: token } = useSelector(
-        (state) => state.authentication
-    );
+    const { user, token } = useSelector((state) => state.authentication);
 
     if (!token) {
         return <Navigate to="/login" />;
