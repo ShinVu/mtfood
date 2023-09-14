@@ -1,21 +1,17 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-    setUser,
-    setToken,
-} from "../features/authentication/authenticationSlice";
 export default function DefaultLayout() {
-    const user = useSelector((state) => state.authentication.user);
-    const dispatch = useDispatch();
+    const { user: user, token: token } = useSelector(
+        (state) => state.authentication
+    );
+
+    if (!token) {
+        return <Navigate to="/login" />;
+    }
     return (
         <div>
             {user}
-            <div>
-                <button onClick={() => dispatch(setUser({ user: "Dat" }))}>
-                    Increase
-                </button>
-            </div>
             <Outlet />
         </div>
     );
