@@ -1,7 +1,17 @@
 import React from "react";
+
+// Import library from react router
 import { Outlet, Navigate } from "react-router-dom";
+
+// Import library from react redux
 import { useSelector, useDispatch } from "react-redux";
+
+// Import tailwind css
 import "../index.css";
+
+// Import library from bootstrap
+import { Button } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 export default function DefaultLayout() {
     const { user: user, token: token } = useSelector(
         (state) => state.authentication
@@ -12,9 +22,7 @@ export default function DefaultLayout() {
     }
     return (
         <div>
-            <h1 className="text-3xl font-bold text-red-500 underline text-center">
-                {user}
-            </h1>
+            <Button>Hello</Button>
             <Outlet />
         </div>
     );

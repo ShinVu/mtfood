@@ -1,10 +1,14 @@
+// Import library from react
 import { createBrowserRouter } from "react-router-dom";
+
+//Import pages of application
 import Login from "../pages/login";
 import SignUp from "../pages/signup";
 import NotFound from "../pages/notfound";
 import DefaultLayout from "../pages/defaultlayout";
 import GuestLayout from "../pages/guestlayout";
 import Dashboard from "../pages/dashboard";
+
 const router = createBrowserRouter([
     {
         path: "/",

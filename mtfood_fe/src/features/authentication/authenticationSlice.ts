@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+//initial state for authentication slice
 const initialState = {
     user: 1234,
     // token: localStorage.getItem("ACCESS_TOKEN"),
@@ -10,10 +11,12 @@ export const authenticationSlice = createSlice({
     initialState,
     reducers: {
         setUser(state, action) {
+            //set user based on action payload
             const user = action.payload.user;
             state.user = user;
         },
         setToken(state, action) {
+            //set token based on action payload
             const token = action.payload.token;
             state.token = token;
             if (token) {
@@ -28,4 +31,5 @@ export const authenticationSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { setUser, setToken } = authenticationSlice.actions;
 
+// Export reducer to create store in app/store.tsx
 export default authenticationSlice.reducer;
