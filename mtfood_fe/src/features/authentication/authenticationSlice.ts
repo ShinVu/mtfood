@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     user: 1234,
     // token: localStorage.getItem("ACCESS_TOKEN"),
-    token: 123,
+    token: null,
 };
 export const authenticationSlice = createSlice({
     name: "authentication",
