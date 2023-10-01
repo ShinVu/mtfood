@@ -16,6 +16,13 @@ return [
         'group' => ''
     ],
     [
+        'icon'   => 'list',
+        'name'   => 'Category',
+        'route'  => 'get_admin.category.index',
+        'prefix' => ['category'],
+        'group' => 'category'
+    ],
+    [
         'icon'   => 'shopping-cart',
         'name'   => 'Order',
         'route'  => 'get_admin.order.index',
@@ -36,24 +43,32 @@ return [
         'prefix' => ['product'],
         'group' => 'product'
     ],
-//    [
-//        'icon'   => 'list',
-//        'name'   => 'Danh mục',
-//        'route'  => 'get_admin.category.index',
-//        'prefix' => ['category']
-//    ],
+    [
+        'icon'   => 'user',
+        'name'   => 'User',
+        'route'  => 'get_admin.user.index',
+        'prefix' => ['user'],
+        'group' => 'user'
+    ],
+    [
+        'icon'   => 'user',
+        'name'   => 'QL Nhân viên',
+        'route'  => 'get_admin.admin.index',
+        'prefix' => ['admin'],
+        'group' => 'admin'
+    ],
+    [
+        'icon'   => 'key',
+        'name'   => 'Role',
+        'route'  => 'get_admin.role.index',
+        'prefix' => ['role'],
+        'group' => 'role'
+    ],
 //    [
 //        'icon'   => 'database',
 //        'name'   => 'Option',
 //        'route'  => 'get_admin.product_option.index',
 //        'prefix' => ['product-option']
-//    ],
-
-//    [
-//        'icon'   => 'list',
-//        'name'   => 'Menu',
-//        'route'  => 'get_admin.menu.index',
-//        'prefix' => ['product']
 //    ],
 //    [
 //        'icon'   => 'tag',
