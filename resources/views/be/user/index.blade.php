@@ -7,12 +7,6 @@
         <div>
             <form class="form-inline">
                 <a href="" class="btn btn-primary mb-2 mr-2">Thêm mới</a>
-{{--                <div class="form-group mb-2 mr-2">--}}
-{{--                    <label for="inputPassword2" class="sr-only">Danh mục</label>--}}
-{{--                    <select name="status" id="" class="form-control">--}}
-{{--                        <option value="">Danh mục</option>--}}
-{{--                    </select>--}}
-{{--                </div>--}}
                 <div class="form-group mb-2 mr-2" style="width: 400px">
                     <input type="text" name="n" style="width: 100%" class="form-control" value="{{ Request::get('n') }}" placeholder="">
                 </div>

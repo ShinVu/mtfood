@@ -12,3 +12,4 @@ class BeRoleController extends Controller
         return view('be.role.index');
     }
 }
+
