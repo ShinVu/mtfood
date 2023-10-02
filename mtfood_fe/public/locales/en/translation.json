@@ -25,5 +25,21 @@
     "ahamove": "Ahamove",
     "connect": "Follow Us",
     "search": "Search",
-    "searchSuggestion": "Search in MTFood"
+    "searchSuggestion": "Search in MTFood",
+    "phone_number": "Phone number",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "or": "OR",
+    "logInGoogle": "Log in with Google",
+    "logInFacebook": "Log in with Facebook",
+    "NoPassword?": "Not registered yet?",
+    "signUpNow": "Sign up",
+    "continue": "Continue",
+    "signUp": "Sign up",
+    "enterVerificationCode": "Enter Verification Code",
+    "sendCode": "Resend code after",
+    "verificationTimeLimited": "Verification Code is available for 15 minutes",
+    "notReceived": "Didn't receive code",
+    "resendCode": "Resend Code",
+    "reEnterPassword": "Re-enter Password"
 }

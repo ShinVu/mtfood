@@ -37,6 +37,10 @@ export default {
                 lg: "1024px",
                 xl: "1280px",
             },
+            backgroundImage: {
+                'signUp': "url('/assets/image_15.png')",
+                'signIn': "url('/assets/image_14.png')",
+              }
         },
     },
     plugins: [

@@ -4,40 +4,31 @@ import { createBrowserRouter } from "react-router-dom";
 //Import pages of application
 import Login from "../pages/login";
 import SignUp from "../pages/signup";
-import NotFound from "../pages/notfound";
-import DefaultLayout from "../pages/defaultlayout";
-import GuestLayout from "../pages/guestlayout";
-import Dashboard from "../pages/dashboard";
-
+import SignUpVerify from "../pages/signup_verify";
+import SignUpNewPassword from "../pages/signup_password";
+import ProductDetails from "../pages/product_details";
 const router = createBrowserRouter([
     {
-        path: "/",
-        element: <DefaultLayout />,
-        children: [
-            {
-                path: "/dashboard",
-                element: <Dashboard />,
-            },
-        ],
+        path: "/login",
+        element: <Login />
     },
     {
-        path: "/",
-        element: <GuestLayout />,
-        children: [
-            {
-                path: "/login",
-                element: <Login />,
-            },
-            {
-                path: "/signup",
-                element: <SignUp />,
-            },
-        ],
+        path: "/signup",
+        element: <SignUp/>
     },
     {
-        path: "*",
-        element: <NotFound />,
+        path: "/signup/verify",
+        element: <SignUpVerify/>
     },
+    {
+        path: "/signup/password",
+        element: <SignUpNewPassword/>
+    },
+    {
+        path: "/product/:id",
+        element: <ProductDetails/>
+    }
+ 
 ]);
 
 export default router;
