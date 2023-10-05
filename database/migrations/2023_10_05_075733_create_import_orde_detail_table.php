@@ -16,7 +16,8 @@ return new class extends Migration
             $table->unsignedInteger('quantity'); //number of product imported
             $table->unsignedDecimal('unit_price', $precision = 19, $scale = 4); //price of product
             $table->string('batch_code'); //batch code of product
-            $table->
+            //FK for import order
+            //FK for product
             $table->timestamps(); //created at, update at
         });
     }

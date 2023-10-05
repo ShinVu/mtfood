@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('gender', ['0', '1', '2']); //customer gender {0: male, 1: female, 2: non-binary}
             $table->string('address'); //customer address
             $table->dateTime('date_of_birth'); //customer date of birth
-            $table->bolean('is_wholesale_customer'); //if customer is whole_sale
+            $table->boolean('is_wholesale_customer'); //if customer is whole_sale
             $table->timestamp('email_verified_at')->nullable(); //Email verified timestamp
             $table->timestamp('phone_number_verified_at')->nullable(); //Phone number verified timestamp
             $table->string('ward_code',20); //Foreign key to ward_code on table ward
