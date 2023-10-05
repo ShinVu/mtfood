@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products_discount', function (Blueprint $table) {
+        Schema::create('product_discounts', function (Blueprint $table) {
             $table->id(); //product discount primary key
-            //product_id FK
             $table->unsignedDecimal('discount_amount', $precision = 19, $scale = 4); //discount amount
             $table->string('discount_unit'); //discount unit
             $table->string('is_active'); //whether the discount is active
@@ -21,7 +20,10 @@ return new class extends Migration
             $table->unsignedDecimal('maximum_discount_amount', $precision = 19, $scale = 4); //maximum discount amount
             $table->dateTime('valid_from'); //discount is valid from
             $table->dateTime('valid_to'); //discount is valid to
+            $table->unsignedBigInteger('product_id'); //FK to id on product
             $table->timestamps(); //created at, update at
+            //CONSTRAINT
+            $table->foreign('product_id')->references('id')->on('products')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 
@@ -30,6 +32,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products_discount');
+        //DROP CONSTRAINTS
+        Schema::table('product_discounts', function (Blueprint $table) {
+            $table->dropForeign(['product_id']);
+        });
+        Schema::dropIfExists('product_discounts');
     }
 };

@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products_tag', function (Blueprint $table) {
-            $table->id(); //product tag primary key
-            $table->string('name'); //name of tag
-            $table->longText('description'); //description of tag
-            $table->timestamps(); //created at, update at
+        Schema::create('administrative_regions', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('name_en');
+            $table->string('code_name');
+            $table->string('code_name_en');
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products_tag');
+        Schema::dropIfExists('administrative_regions');
     }
 };

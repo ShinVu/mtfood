@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products_batch', function (Blueprint $table) {
+        Schema::create('product_batches', function (Blueprint $table) {
             $table->id(); //product batch primary key
-            //FK to product_id
+
             $table->string('batch_code'); //batch code
             $table->unsignedInteger('quantity'); //number of stocks of the batch
             $table->unsignedInteger('quantity_available'); //number of stocks available of the batch
             $table->dateTime('manufacturing_date'); //date of manufacturing
             $table->dateTime('expiry_date'); //date of expiration
+            $table->unsignedBigInteger('product_id'); //FK to id on product
             $table->timestamps(); //created at, update at
+            //CONSTRAINT
+            $table->foreign('product_id')->references('id')->on('products')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 
@@ -28,6 +31,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products_batch');
+          //DROP CONSTRAINTS
+          Schema::table('product_batches', function (Blueprint $table) {
+            $table->dropForeign(['product_id']);
+        });
+        Schema::dropIfExists('product_batches');
     }
 };

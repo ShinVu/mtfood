@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('provinces', function (Blueprint $table) {
-            $table->id(); //provinces primary key
-            $table->string('provinces_code',20); //province ofiicial code
-            $table->string('full_name'); //province full name in vietnamese
+        Schema::create('chat_sessions', function (Blueprint $table) {
+            $table->id(); //chat session primary key
+            $table->string('name'); //chat name
+            $table->dateTime('start_at'); //chat start at
+            $table->dateTime('end_at'); //chat end at
             $table->timestamps(); //created at, update at
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('provinces');
+        Schema::dropIfExists('chat_sessions');
     }
 };

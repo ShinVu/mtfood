@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('import_order', function (Blueprint $table) {
+        Schema::create('import_orders', function (Blueprint $table) {
             $table->id(); //import order primary key
             $table->unsignedDecimal('total_amount', $precision = 19, $scale = 4); //Total order amount
             $table->unsignedDecimal('tax', $precision = 19, $scale = 4); //tax of order
@@ -20,9 +20,12 @@ return new class extends Migration
             $table->string('notes'); //order note
             $table->string('payment_method'); //order payment method
             $table->string('status'); //order status
-            //FK to employee
-            //FK to supplier
+            $table->unsignedBigInteger('employee_id'); //FK to id on employee
+            $table->unsignedBigInteger('supplier_id'); //FK to id on supplier
             $table->timestamps(); //created at, update at
+            //CONSTRAINT
+            $table->foreign('employee_id')->references('id')->on('employees')->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreign('supplier_id')->references('id')->on('suppliers')->cascadeOnUpdate()->restrictOnDelete();
         });
     }
 
@@ -31,6 +34,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('import_order');
+         //DROP CONSTRAINTS
+         Schema::table('import_orders', function (Blueprint $table) {
+            $table->dropForeign(['employee_id']);
+            $table->dropForeign(['supplier_id']);
+        });
+        Schema::dropIfExists('import_orders');
     }
 };

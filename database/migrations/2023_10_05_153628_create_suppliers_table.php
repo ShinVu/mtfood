@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('supplier', function (Blueprint $table) {
+        Schema::create('suppliers', function (Blueprint $table) {
             $table->id(); //supplier primary key
             $table->string('name'); //name of supplier
             $table->string('contact_name'); //name of contact
             $table->string('contact_email'); //email of contact
             $table->string('address'); //address of supplier
             $table->string('phone_number'); //phone number of supplier
-            //FK to ward id
+            $table->string('ward_code', 20); //Foreign key to ward_code on table ward
             $table->timestamps(); //created at, update at
+             //CONSTRAINT
+             $table->foreign('ward_code')->references('code')->on('wards')->restrictOnDelete()->cascadeOnUpdate();
         });
     }
 
@@ -28,6 +30,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('supplier');
+          //DROP CONSTRAINTS
+          Schema::table('suppliers', function (Blueprint $table) {
+            $table->dropForeign(['ward_code']);
+        });
+        Schema::dropIfExists('suppliers');
     }
 };

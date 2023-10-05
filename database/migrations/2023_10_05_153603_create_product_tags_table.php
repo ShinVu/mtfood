@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('districts', function (Blueprint $table) {
-            $table->id(); //districts primary key
-            $table->string('district_code',20); //district ofiicial code
-            $table->string('full_name'); //district full name in vietnamese
-            $table->string('province_code'); //foreign key to province_code on table provinces
+        Schema::create('product_tags', function (Blueprint $table) {
+            $table->id(); //product tag primary key
+            $table->string('name'); //name of tag
+            $table->longText('description'); //description of tag
             $table->timestamps(); //created at, update at
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('districts');
+        Schema::dropIfExists('product_tags');
     }
 };
