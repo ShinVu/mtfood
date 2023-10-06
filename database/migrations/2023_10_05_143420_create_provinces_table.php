@@ -32,6 +32,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        //DROP CONSTRAINTS
         Schema::table('provinces', function (Blueprint $table) {
             $table->dropForeign(['administrative_unit_id']);
             $table->dropForeign(['administrative_region_id']);

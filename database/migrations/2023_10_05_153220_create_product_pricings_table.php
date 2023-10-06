@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('product_pricings', function (Blueprint $table) {
             $table->id(); //product pricing primary key
-            $table->unsignedDecimal('maximum_discount_amount', $precision = 19, $scale = 4); //price of the product
+            $table->unsignedDecimal('price', $precision = 19, $scale = 4); //price of the product
             $table->dateTime('valid_from'); //price is valid from
             $table->dateTime('valid_to'); //price is valid to
             $table->boolean('is_active'); //whether price is still being applied for the product

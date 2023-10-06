@@ -16,16 +16,14 @@ return new class extends Migration
             $table->unsignedInteger('quantity'); //number of product imported
             $table->unsignedDecimal('unit_price', $precision = 19, $scale = 4); //price of product
             $table->string('batch_code'); //batch code of product
-            //FK for import order
-            //FK for product
             $table->unsignedBigInteger('import_order_id'); //FK to id on import_order
             $table->unsignedBigInteger('product_id'); //FK to id on product
             $table->unsignedBigInteger('batch_id'); //FK to id on batch
             $table->timestamps(); //created at, update at
-             //CONSTRAINT
-             $table->foreign('import_order_id')->references('id')->on('import_orders')->cascadeOnUpdate()->restrictOnDelete();
-             $table->foreign('product_id')->references('id')->on('products')->cascadeOnUpdate()->restrictOnDelete();
-             $table->foreign('batch_id')->references('id')->on('product_batches')->cascadeOnUpdate()->restrictOnDelete();
+            //CONSTRAINT
+            $table->foreign('import_order_id')->references('id')->on('import_orders')->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreign('product_id')->references('id')->on('products')->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreign('batch_id')->references('id')->on('product_batches')->cascadeOnUpdate()->restrictOnDelete();
         });
     }
 
@@ -34,12 +32,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-         //DROP CONSTRAINTS
-         Schema::table('import_order_details', function (Blueprint $table) {
+        //DROP CONSTRAINTS
+        Schema::table('import_order_details', function (Blueprint $table) {
             $table->dropForeign(['import_order_id']);
             $table->dropForeign(['product_id']);
             $table->dropForeign(['batch_id']);
-
         });
         Schema::dropIfExists('import_order_details');
     }

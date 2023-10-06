@@ -17,11 +17,6 @@ return new class extends Migration
             $table->unsignedDecimal('unit_price', $precision = 19, $scale = 4); //Unit price for product
             $table->unsignedDecimal('unit_discount', $precision = 19, $scale = 4); //Unit discount for product
             $table->string('batch_code'); //Batch code for product
-            // FK to price
-            // FK to discount
-            // FK to batch
-            // FK to order
-            // FK to product
             $table->unsignedBigInteger('pricing_id'); //FK to id on product_pricings
             $table->unsignedBigInteger('discount_id')->nullable(); //FK to id product_discounts
             $table->unsignedBigInteger('batch_id')->nullable(); //FK to id on product_batches
@@ -42,8 +37,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-          //DROP CONSTRAINTS
-          Schema::table('order_details', function (Blueprint $table) {
+        //DROP CONSTRAINTS
+        Schema::table('order_details', function (Blueprint $table) {
             $table->dropForeign(['pricing_id']);
             $table->dropForeign(['discount_id']);
             $table->dropForeign(['batch_id']);

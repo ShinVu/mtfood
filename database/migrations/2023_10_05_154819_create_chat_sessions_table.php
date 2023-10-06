@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('chat_sessions', function (Blueprint $table) {
             $table->id(); //chat session primary key
             $table->string('name'); //chat name
-            $table->dateTime('start_at'); //chat start at
             $table->dateTime('end_at'); //chat end at
             $table->timestamps(); //created at, update at
         });

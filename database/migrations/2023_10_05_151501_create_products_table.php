@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedInteger('quantity_available'); //product stock available
             $table->unsignedInteger('nums_of_reviews'); //product number of reviews
             $table->unsignedInteger('nums_of_like'); //product number of likes
-            $table->string('origin',20); //product origin
+            $table->string('origin', 20); //product origin
             $table->dateTime('exp_date'); //product expiration date
             $table->string('directionForPreservation'); //product direction for preservation
             $table->string('directionForUse'); //product direction for use
@@ -31,8 +31,8 @@ return new class extends Migration
             $table->string('ingredient'); //product ingredients
             $table->unsignedBigInteger('category_id')->nullable(); //FK to id on table categories
             $table->timestamps(); //created at, update at
-             //CONSTRAINT
-             $table->foreign('category_id')->references('id')->on('categories')->cascadeOnUpdate()->nullOnDelete();
+            //CONSTRAINT
+            $table->foreign('category_id')->references('id')->on('categories')->cascadeOnUpdate()->nullOnDelete();
         });
     }
 
@@ -41,8 +41,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-         //DROP CONSTRAINTS
-         Schema::table('products', function (Blueprint $table) {
+        //DROP CONSTRAINTS
+        Schema::table('products', function (Blueprint $table) {
             $table->dropForeign(['category_id']);
         });
         Schema::dropIfExists('products');

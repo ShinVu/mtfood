@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('chat_session_participations', function (Blueprint $table) {
             $table->id(); //chat session participation primary key
-            //FK for chat session
-            //FK for employee 
-            //FK for customer
+
             $table->boolean('participant_type'); //type of participant {0: employee, 1: customer}
             $table->dateTime('join_at'); //when participant join the chat
             $table->dateTime('last_message_at'); //last message timestamp
