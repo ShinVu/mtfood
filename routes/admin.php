@@ -26,4 +26,19 @@ Route::group(['namespace' => 'Be','prefix' => 'admin'], function (){
     Route::group(['prefix' => 'chat'], function (){
         Route::get('',[Be\BeChatProductController::class,'index'])->name('get_admin.chat.index');
     });
+
+    Route::group(['prefix' => 'user'], function (){
+        Route::get('',[Be\BeUserController::class,'index'])->name('get_admin.user.index');
+    });
+
+    Route::group(['prefix' => 'category'], function (){
+        Route::get('',[Be\BeCategoryController::class,'index'])->name('get_admin.category.index');
+    });
+
+    Route::group(['prefix' => 'admin'], function (){
+        Route::get('',[Be\BeAdminController::class,'index'])->name('get_admin.admin.index');
+    });
+    Route::group(['prefix' => 'role'], function (){
+        Route::get('',[Be\BeRoleController::class,'index'])->name('get_admin.role.index');
+    });
 });
