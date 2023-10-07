@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedDecimal('tax', $precision = 19, $scale = 4); //tax of order
             $table->unsignedDecimal('discount_amount', $precision = 19, $scale = 4); //order discount
             $table->string('order_code'); //order code
-            $table->string('notes'); //order note
+            $table->longText('notes'); //order note
             $table->string('payment_method'); //order payment method
             $table->string('status'); //order status
             $table->unsignedBigInteger('employee_id'); //FK to id on employee
@@ -34,8 +34,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-         //DROP CONSTRAINTS
-         Schema::table('import_orders', function (Blueprint $table) {
+        //DROP CONSTRAINTS
+        Schema::table('import_orders', function (Blueprint $table) {
             $table->dropForeign(['employee_id']);
             $table->dropForeign(['supplier_id']);
         });

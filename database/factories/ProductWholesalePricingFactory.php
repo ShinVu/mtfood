@@ -17,12 +17,12 @@ class ProductWholesalePricingFactory extends Factory
     public function definition(): array
     {
         return [
-            'price',
-            'quantity_apply',
-            'valid_from',
-            'valid_to',
-            'is_active',
-            'product_id'
+            'price' => fake()->randomFloat($nbMaxDecimals = 0, $min = 0, $max = NULL),
+            'quantity_apply' => fake()->numberBetween($min = 100, $max = 1000),
+            'valid_from' => now(),
+            'valid_to' => now(),
+            'is_active' => fake()->boolean(),
+            'product_id' => \App\Models\Product::all()->random()->id
         ];
     }
 }

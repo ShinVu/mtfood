@@ -27,5 +27,6 @@ class ProductWholesalePricing extends Model
         'valid_to',
         'is_active',
         'product_id'
+
     ];
 }

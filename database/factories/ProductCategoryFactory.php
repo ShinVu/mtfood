@@ -16,10 +16,11 @@ class ProductCategoryFactory extends Factory
      */
     public function definition(): array
     {
+
         return [
-            'name',
-            'description',
-            'parent_product_category_id'
+            'name' => fake()->sentence($nbWords = 6, $variableNbWords = true),
+            'description' => fake()->text($maxNbChars = 200),
+            'parent_product_category_id' => (\App\Models\ProductCategory::all()->isEmpty()) ?  NULL : (\App\Models\ProductCategory::all()->random()->id)
         ];
     }
 }

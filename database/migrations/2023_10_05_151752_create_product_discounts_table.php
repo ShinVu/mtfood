@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); //product discount primary key
             $table->unsignedDecimal('discount_amount', $precision = 19, $scale = 4); //discount amount
             $table->string('discount_unit'); //discount unit
-            $table->string('is_active'); //whether the discount is active
+            $table->boolean('is_active'); //whether the discount is active
             $table->unsignedDecimal('minimum_order_value', $precision = 19, $scale = 4); //minimum order value for the discount
             $table->unsignedDecimal('maximum_discount_amount', $precision = 19, $scale = 4); //maximum discount amount
             $table->dateTime('valid_from'); //discount is valid from

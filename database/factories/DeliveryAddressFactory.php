@@ -17,7 +17,11 @@ class DeliveryAddressFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->name(),
+            'phone_number' => fake()->e164PhoneNumber(),
+            'address' => fake()->address(),
+            'ward_code' => \App\Models\Ward::all()->random()->code,
+            'customer_id' => \App\Models\Customer::all()->random()->id
         ];
     }
 }

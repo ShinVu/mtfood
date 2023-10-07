@@ -28,13 +28,7 @@ class Permission extends Model
      * @var array
      */
     protected $fillable = [
-        'start_at',
-        'end_at',
-        'is_present',
-        'is_late',
-        'is_leave_early',
-        'leave_type',
-        'employee_id',
-        'shift_id'
+        'permission',
+        'description'
     ];
 }

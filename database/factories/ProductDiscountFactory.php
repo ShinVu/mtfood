@@ -17,14 +17,14 @@ class ProductDiscountFactory extends Factory
     public function definition(): array
     {
         return [
-            'discount_amount',
-            'discount_unit',
-            'is_active',
-            'minimum_order_value',
-            'maximum_discount_amount',
-            'valid_from',
-            'valid_to',
-            'product_id'
+            'discount_amount' => fake()->randomFloat($nbMaxDecimals = 0, $min = 0, $max = NULL),
+            'discount_unit' => 'VND',
+            'is_active' => fake()->boolean(),
+            'minimum_order_value' => fake()->randomFloat($nbMaxDecimals = 0, $min = 0, $max = NULL),
+            'maximum_discount_amount' => fake()->randomFloat($nbMaxDecimals = 0, $min = 0, $max = NULL),
+            'valid_from' => now(),
+            'valid_to' => now(),
+            'product_id' => \App\Models\Product::all()->random()->id
         ];
     }
 }

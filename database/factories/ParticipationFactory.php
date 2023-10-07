@@ -17,14 +17,14 @@ class ParticipationFactory extends Factory
     public function definition(): array
     {
         return [
-            'start_at',
-            'end_at',
-            'is_present',
-            'is_late',
-            'is_leave_early',
-            'leave_type',
-            'employee_id',
-            'shift_id'
+            'start_at' => now(),
+            'end_at' => now(),
+            'is_present' => fake()->boolean(),
+            'is_late' => fake()->boolean(),
+            'is_leave_early' => fake()->boolean(),
+            'leave_type' => fake()->boolean(),
+            'employee_id' => \App\Models\Employee::all()->random()->id,
+            'shift_id' => \App\Models\Shift::all()->random()->id
         ];
     }
 }

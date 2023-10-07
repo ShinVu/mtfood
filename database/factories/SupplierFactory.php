@@ -17,12 +17,12 @@ class SupplierFactory extends Factory
     public function definition(): array
     {
         return [
-            'name',
-            'contact_name',
-            'contact_email',
-            'address',
-            'phone_number',
-            'ward_code'
+            'name' => fake()->name(),
+            'contact_name' => fake()->name(),
+            'contact_email' => fake()->safeEmail(),
+            'address' => fake()->address(),
+            'phone_number' => fake()->e164PhoneNumber(),
+            'ward_code' => \App\Models\Ward::all()->random()->code,
         ];
     }
 }

@@ -17,14 +17,14 @@ class OrderDiscountFactory extends Factory
     public function definition(): array
     {
         return [
-            'total_discount',
-            'discount_unit',
-            'is_active',
-            'notes',
-            'minimum_order_value',
-            'maximum_discount_amount',
-            'valid_from',
-            'valid_to'
+            'total_discount' => fake()->randomFloat($nbMaxDecimals = 0, $min = 0, $max = NULL),
+            'discount_unit' => 'VND',
+            'is_active' => fake()->boolean(),
+            'notes' => fake()->text($maxNbChars = 200),
+            'minimum_order_value' => fake()->randomFloat($nbMaxDecimals = 0, $min = 0, $max = NULL),
+            'maximum_discount_amount' => fake()->randomFloat($nbMaxDecimals = 0, $min = 0, $max = NULL),
+            'valid_from' => now(),
+            'valid_to' => now()
         ];
     }
 }

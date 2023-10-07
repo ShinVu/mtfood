@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id(); //Employee primary key
             $table->string('name'); //Employee name
-            $table->string('phone_number', 15)->unique(); //Employee phone number
+            $table->string('phone_number', 20)->unique(); //Employee phone number
             $table->string('email')->unique(); //Employee email
             $table->string('password'); //employee password
             $table->string('identification_number', 12); //Employee identification number

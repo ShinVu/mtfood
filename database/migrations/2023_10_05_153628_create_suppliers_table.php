@@ -17,11 +17,11 @@ return new class extends Migration
             $table->string('contact_name'); //name of contact
             $table->string('contact_email'); //email of contact
             $table->string('address'); //address of supplier
-            $table->string('phone_number'); //phone number of supplier
+            $table->string('phone_number', 20); //phone number of supplier
             $table->string('ward_code', 20); //Foreign key to ward_code on table ward
             $table->timestamps(); //created at, update at
-             //CONSTRAINT
-             $table->foreign('ward_code')->references('code')->on('wards')->restrictOnDelete()->cascadeOnUpdate();
+            //CONSTRAINT
+            $table->foreign('ward_code')->references('code')->on('wards')->restrictOnDelete()->cascadeOnUpdate();
         });
     }
 
@@ -30,8 +30,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-          //DROP CONSTRAINTS
-          Schema::table('suppliers', function (Blueprint $table) {
+        //DROP CONSTRAINTS
+        Schema::table('suppliers', function (Blueprint $table) {
             $table->dropForeign(['ward_code']);
         });
         Schema::dropIfExists('suppliers');

@@ -17,8 +17,8 @@ class ProductTagFactory extends Factory
     public function definition(): array
     {
         return [
-            'name',
-            'description'
+            'name' => fake()->text($maxNbChars = 20),
+            'description' => fake()->paragraph()
         ];
     }
 }

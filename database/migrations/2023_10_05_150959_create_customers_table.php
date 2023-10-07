@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id(); //customer primary key
             $table->string('name'); //customer name
-            $table->string('phone_number',15)->unique(); //customer phone number, also used as account
+            $table->string('phone_number', 20)->unique(); //customer phone number, also used as account
             $table->string('email')->unique()->nullable(); //customer email
             $table->string('password'); //customer password
             $table->string('pin_code')->nullable(); //customer pin code
@@ -37,8 +37,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-         //DROP CONSTRAINTS
-         Schema::table('customers', function (Blueprint $table) {
+        //DROP CONSTRAINTS
+        Schema::table('customers', function (Blueprint $table) {
             $table->dropForeign(['ward_code']);
         });
         Schema::dropIfExists('customers');

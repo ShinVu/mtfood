@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); //delivery_address primary key
 
             $table->string('name'); //name of person to delivered to
-            $table->string('phone_number', 15); //number to contact when delivering
+            $table->string('phone_number', 20); //number to contact when delivering
             $table->string('address'); //Exact address to deliver
             $table->string('ward_code', 20); //Foreign key to ward_code on table ward
             $table->unsignedBigInteger('customer_id')->nullable(); //FK to id on customer
@@ -31,8 +31,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-         //DROP CONSTRAINTS
-         Schema::table('delivery_addresses', function (Blueprint $table) {
+        //DROP CONSTRAINTS
+        Schema::table('delivery_addresses', function (Blueprint $table) {
             $table->dropForeign(['ward_code']);
             $table->dropForeign(['customer_id']);
         });

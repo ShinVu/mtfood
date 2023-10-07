@@ -17,14 +17,8 @@ class PermissionFactory extends Factory
     public function definition(): array
     {
         return [
-            'start_at',
-            'end_at',
-            'is_present',
-            'is_late',
-            'is_leave_early',
-            'leave_type',
-            'employee_id',
-            'shift_id'
+            'permission' => 'test',
+            'description' => fake()->text($maxNbChars = 200)
         ];
     }
 }

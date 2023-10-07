@@ -16,16 +16,14 @@ class ImportOrderDetailFactory extends Factory
      */
     public function definition(): array
     {
+        $random_batch = \App\Models\ProductBatch::all()->random();
         return [
-            'total_amount',
-            'tax',
-            'discount_amount',
-            'order_code',
-            'notes',
-            'payment_method',
-            'status',
-            'employee_id',
-            'supplier_id'
+            'quantity' => fake()->numberBetween($int1 = 1, $int2 = 100),
+            'unit_price' => fake()->randomFloat($nbMaxDecimals = 0, $min = 0, $max = NULL),
+            'batch_code' =>   $random_batch->batch_code,
+            'import_order_id' => \App\Models\ImportOrder::all()->random()->id,
+            'product_id' => \App\Models\Product::all()->random()->id,
+            'batch_id' =>   $random_batch->id
         ];
     }
 }

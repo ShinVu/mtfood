@@ -17,8 +17,8 @@ class ShiftFactory extends Factory
     public function definition(): array
     {
         return [
-            'start_at',
-            'end_at'
+            'start_at' => now(),
+            'end_at' => now()
         ];
     }
 }

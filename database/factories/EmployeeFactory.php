@@ -18,24 +18,22 @@ class EmployeeFactory extends Factory
     public function definition(): array
     {
         return [
-            // 'name' => fake()->name(),
-            // 'email' => fake()->unique()->safeEmail(),
-            // 'email_verified_at' => now(),
-            // 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            // 'remember_token' => Str::random(10),
             'name' => fake()->name(),
-            'phone_number',
-            'email',
-            'password',
-            'identification_number',
-            'tax_code',
-            'gender',
-            'address',
-            'status',
-            'date_of_birth',
-            'pay_rate',
-            'job_position',
-            'ward_code'
+            'phone_number' => fake()->unique()->e164PhoneNumber(),
+            'email' => fake()->unique()->safeEmail(),
+            'password' => bcrypt("12345"),
+            'identification_number' => (string) fake()->numberBetween($min = 00000000000, $max = 99999999999),
+            'tax_code' => Str::random(10),
+            'gender' => '0',
+            'address' => fake()->address(),
+            'status' => 0,
+            'date_of_birth' => now(),
+            'pay_rate' => fake()->randomFloat($nbMaxDecimals = 0, $min = 0, $max = NULL),
+            'job_position' => 'employee',
+            'ward_code' => \App\Models\Ward::all()->random()->code,
+            'email_verified_at' => now(),
+            'phone_number_verified_at' => now(),
+            'remember_token' => Str::random(10)
         ];
     }
 }

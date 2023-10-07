@@ -17,11 +17,11 @@ class ProductPricingFactory extends Factory
     public function definition(): array
     {
         return [
-            'price',
-            'valid_from',
-            'valid_to',
-            'is_active',
-            'product_id',
+            'price' => fake()->randomFloat($nbMaxDecimals = 0, $min = 0, $max = NULL),
+            'valid_from' => now(),
+            'valid_to' => now(),
+            'is_active' => fake()->boolean(),
+            'product_id' => \App\Models\Product::all()->random()->id
         ];
     }
 }

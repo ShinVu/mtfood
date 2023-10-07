@@ -17,8 +17,8 @@ class ProductHaveTagFactory extends Factory
     public function definition(): array
     {
         return [
-            'product_id',
-            'tag_id'
+            'product_id' => \App\Models\Product::all()->random()->id,
+            'tag_id' => \App\Models\ProductTag::all()->random()->id
         ];
     }
 }
