@@ -14,7 +14,7 @@ import { colors } from "../../public/theme";
 function Footer() {
     const { t } = useTranslation();
     return (
-        <div className="flex flex-initial flex-row justify-content m-2 justify-evenly">
+        <div className="flex flex-initial flex-row justify-content m-2 justify-evenly p-4">
             <div className="mr-2">
                 <h1 className="font-bold text-base capitalize  ">
                     {t("customerService")}

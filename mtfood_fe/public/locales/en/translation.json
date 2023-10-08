@@ -65,5 +65,17 @@
     "sort": "Sort",
     "ratingHTL": "Rating: From High to Low",
     "ratingLTH": "Rating: From Low to High",
-    "newest": "Newest"
+    "newest": "Newest",
+    "searchFood": "Search food",
+    "home": "Home",
+    "product": "Product",
+    "wholesaleProduct": "Wholesale product",
+    "news": "News",
+    "seen": "Seen",
+    "liked": "Liked",
+    "order": "Order",
+    "useful": "Useful?",
+    "sameCatProduct": "Product from same category",
+    "recommendProduct": "You may also like",
+    "more": "See more"
 }

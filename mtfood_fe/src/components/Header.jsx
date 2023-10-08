@@ -12,7 +12,17 @@ import { useTranslation } from "react-i18next";
 import { FaAngleDown, FaCartShopping } from "react-icons/fa6";
 
 //Import color theme
-import { colors } from "../../public/theme.ts";
+import { colors } from "../../public/theme";
+
+//Import MUI
+import { Stack } from "@mui/material";
+import LoopIcon from "@mui/icons-material/Loop";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+//Import Element
+import SearchBar from "./SearchBar";
+import { IconButton, TextButton } from "./Button";
 
 export default function Header() {
     const { t, i18n } = useTranslation();
@@ -31,8 +41,8 @@ export default function Header() {
         i18n.changeLanguage(lang);
     };
     return (
-        <div className="flex flex-column bg-primary_main  p-2 ">
-            <div className="flex flex-row grow items-center justify-between">
+        <div className="flex flex-column bg-primary_main">
+            <div className="flex flex-row grow items-center justify-between p-2">
                 <div className="flex flex-col md:flex-row md:items-center  ">
                     <p className="font-medium text-xs text-white capitalize  my-0 mx-2">
                         {t("hotline")}:{" "}
@@ -122,7 +132,10 @@ export default function Header() {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-row-reverse grow items-center justify-between mt-3 mx-3">
+            <div className="flex flex-1 items-center justify-between mt-3 px-4">
+                <div className="flex flex-1 mx-4">
+                    <SearchBar />
+                </div>
                 <div className="flex flex-row">
                     <FaCartShopping
                         style={{ color: colors.white }}
@@ -133,6 +146,52 @@ export default function Header() {
                         {t("shoppingCart")}
                     </span>
                 </div>
+            </div>
+            <div className="flex flex-1 justify-between my-0 mt-3 px-2">
+                <Stack direction="row" spacing={2}>
+                    <TextButton
+                        className="text-white text-base"
+                        sx={{
+                            "border-bottom-style": "solid",
+                            "border-width": "2px",
+                            "border-radius": "0",
+                        }}
+                    >
+                        {t("home")}
+                    </TextButton>
+                    <TextButton className="text-white text-base">
+                        {t("product")}
+                    </TextButton>
+                    <TextButton className="text-white text-base">
+                        {t("wholesaleProduct")}
+                    </TextButton>
+                    <TextButton className="text-white text-base">
+                        {t("news")}
+                    </TextButton>
+                </Stack>
+                <Stack direction="row" spacing={2}>
+                    <IconButton
+                        startIcon={<LoopIcon />}
+                        className="text-white text-base"
+                        sx={{ textTransform: "none" }}
+                    >
+                        {t("seen")}
+                    </IconButton>
+                    <IconButton
+                        startIcon={<FavoriteBorderIcon />}
+                        className="text-white text-base"
+                        sx={{ textTransform: "none" }}
+                    >
+                        {t("liked")}
+                    </IconButton>
+                    <IconButton
+                        startIcon={<ReceiptLongIcon />}
+                        className="text-white text-base"
+                        sx={{ textTransform: "none" }}
+                    >
+                        {t("order")}
+                    </IconButton>
+                </Stack>
             </div>
         </div>
     );

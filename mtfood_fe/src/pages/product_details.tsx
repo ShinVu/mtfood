@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Footer } from "../components/footer";
-import Header from "../components/header";
+import { Footer } from "../components/Footer.js";
+import Header from "../components/Header";
 import { useParams } from "react-router-dom";
 
-import Button from "@mui/material/Button";
+//Import MUI
 import Rating from "@mui/material/Rating";
 import Divider from "@mui/material/Divider";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -15,21 +15,20 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { TextField } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import ProductImageSlider from "../features/product/components/productImageSlider";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import Avatar from "@mui/material/Avatar";
+//Import element
+import {
+    ContainedButton,
+    OutlinedButton,
+    TextButton,
+} from "../components/Button.jsx";
 
-function stringAvatar(name: string) {
-    return {
-        sx: {},
-        children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
-    };
-}
+import { Review, ProductCard } from "../features/product";
 
 const product = {
     name: "Khô bò",
@@ -37,8 +36,139 @@ const product = {
     numsOfRating: 10,
     rating: 4.6,
     stock: 200,
+    price: "500.000",
 };
 
+const productSameCat = [
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+    {
+        name: "Khô bò",
+        imgList: ["/assets/image_15.png"],
+        numsOfRating: 10,
+        rating: 4.6,
+        stock: 200,
+        price: "500.000",
+    },
+];
 const user = {
     address: "Bạch Đằng, Quận Tân Bình, TP.HCM",
     avatar: "./assets/image_15.png",
@@ -67,7 +197,7 @@ export default function ProductDetails() {
         <div className="flex flex-1 flex-col">
             <Header />
             <div className="flex flex-1 p-4 flex-col bg-background_main space-y-4">
-                <p className="text-base font-bold">
+                <p className="text-base font-bold my-0">
                     {t("home")} {">"} {t("product")} {">"}
                 </p>
                 <div className="flex p-4 flex-row bg-white">
@@ -106,7 +236,7 @@ export default function ProductDetails() {
                                     }}
                                 />
                                 <div className="mx-1">
-                                    <Button
+                                    <ContainedButton
                                         component="label"
                                         variant="text"
                                         sx={{ textTransform: "none" }}
@@ -121,7 +251,7 @@ export default function ProductDetails() {
                                         <span className="text-base font-semibold text-gray-100 my-0">
                                             {t("favorite")}
                                         </span>
-                                    </Button>
+                                    </ContainedButton>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +299,7 @@ export default function ProductDetails() {
                                 </div>
 
                                 <div className="flex self-start">
-                                    <Button
+                                    <TextButton
                                         component="label"
                                         variant="text"
                                         sx={{ textTransform: "none" }}
@@ -178,7 +308,7 @@ export default function ProductDetails() {
                                         <span className="text-base font-semibold text-primary_main my-0">
                                             {t("change")}
                                         </span>
-                                    </Button>
+                                    </TextButton>
                                 </div>
                             </div>
                             <div className="flex flex-row items-center">
@@ -233,19 +363,19 @@ export default function ProductDetails() {
                                 </div>
                             </div>
                             <div className="flex flex-row space-x-4">
-                                <Button
-                                    variant="contained"
+                                <OutlinedButton
                                     className="min-w-fit"
-                                    startIcon={<AddShoppingCartIcon />}
+                                    startIcon={
+                                        <AddShoppingCartIcon
+                                            sx={{ color: colors.primary_main }}
+                                        />
+                                    }
                                 >
                                     {t("addToCart")}
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    className="min-w-fit"
-                                >
+                                </OutlinedButton>
+                                <ContainedButton className="min-w-fit">
                                     {t("buyNow")}
-                                </Button>
+                                </ContainedButton>
                             </div>
                         </div>
                     </div>
@@ -335,8 +465,11 @@ export default function ProductDetails() {
                                 {t("filterBy")}:
                             </p>
                         </div>
-                        <div className="flex flex-row  flex-wrap w-full space-x-2 space-y-2">
-                            <Chip label="Chip Filled" className="ml-2 mt-2" />
+                        <div className="flex flex-row  flex-wrap w-full max-w-full space-x-2 space-y-2">
+                            <Chip
+                                label="Chip Filled"
+                                className="ml-2 mt-2 max-w-full text-ellipsis"
+                            />
 
                             <Chip label="Chip Filled" />
                             <Chip label="Chip Filled" />
@@ -372,47 +505,42 @@ export default function ProductDetails() {
                     </div>
                     <Divider className="my-4" />
                     <div className="flex flex-col w-full">
-                        <div className="flex flex-row items-start">
-                            {user.avatar ? (
-                                <Avatar alt={user.name} src={user.avatar} />
-                            ) : (
-                                <Avatar {...stringAvatar("Kent Dodds")} />
-                            )}
-                            <div className="ml-5 flex flex-col ">
-                                <p className="text-base font-semibold text-black my-0 py-0">
-                                    {user.name}
-                                </p>
-                                <Rating
-                                    name="simple-controlled"
-                                    defaultValue={product.rating}
-                                    className="-mx-1 my-0"
-                                    size="small"
-                                    precision={0.5}
-                                    readOnly
-                                />
-                                <p className="text-xs font-regular text-gray-100">
-                                    02-9-2023 | 03.00
-                                </p>
-                                <p className="text-base font-regular text-justify">
-                                    {" "}
-                                    Lorem Ipsum is simply dummy text of the
-                                    printing and typesetting industry. Lorem
-                                    Ipsum has been the industry's standard dummy
-                                    text ever since the 1500s, when an unknown
-                                    printer took a galley of type and scrambled
-                                    it to make a type specimen book. It has
-                                    survived not only five centuries, but also
-                                    the leap into electronic typesetting,
-                                    remaining essentially unchanged. It was
-                                    popularised in the 1960s with the release of
-                                    Letraset sheets containing Lorem Ipsum
-                                    passages, and more recently with desktop
-                                    publishing software like Aldus PageMaker
-                                    including versions of Lorem Ipsum.
-                                </p>
-                            </div>
-                        </div>
+                        <Review />
+                        <Divider className="my-4" />
+                        <Review />
                     </div>
+                </div>
+                <div className="flex p-4 flex-col  bg-white">
+                    <h1 className="text-base font-bold uppercase">
+                        {t("sameCatProduct")}
+                    </h1>
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+                        {productSameCat.map((product) => (
+                            <ProductCard
+                                product={product}
+                                className="w-full min-w-fit h-fit"
+                            />
+                        ))}
+                    </div>
+                    <OutlinedButton className="max-w-fit self-center mt-4 mb-2">
+                        {t("more")}
+                    </OutlinedButton>
+                </div>
+                <div className="flex p-4 flex-col  bg-white">
+                    <h1 className="text-base font-bold uppercase">
+                        {t("recommendProduct")}
+                    </h1>
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+                        {productSameCat.map((product) => (
+                            <ProductCard
+                                product={product}
+                                className="w-full min-w-fit h-fit"
+                            />
+                        ))}
+                    </div>
+                    <OutlinedButton className="max-w-fit self-center mt-4 mb-2">
+                        {t("more")}
+                    </OutlinedButton>
                 </div>
             </div>
             <Footer />

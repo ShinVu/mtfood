@@ -9,9 +9,18 @@ import i18n from "i18next";
 import Backend from "i18next-http-backend"; //default location public/locales/{lang}/translation.json
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-
+import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 //import loading screen
-import LoadingScreen from "../components/loading.tsx";
+import LoadingScreen from "../components/Loading.js";
+
+//import font for MUI
+import "typeface-montserrat";
+
+const theme = createTheme({
+    typography: {
+        fontFamily: ["Montserrat", "sans-serif"].join(","),
+    },
+});
 // init translation
 i18n.use(Backend)
     .use(LanguageDetector)
@@ -41,9 +50,11 @@ function App() {
     return (
         <React.StrictMode>
             <Provider store={store}>
-                <Suspense fallback={<LoadingScreen />}>
-                    <RouterProvider router={router} />
-                </Suspense>
+                <ThemeProvider theme={theme}>
+                    <Suspense fallback={<LoadingScreen />}>
+                        <RouterProvider router={router} />
+                    </Suspense>
+                </ThemeProvider>
             </Provider>
         </React.StrictMode>
     );

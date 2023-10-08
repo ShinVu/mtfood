@@ -47,5 +47,6 @@ export default {
         require("flowbite/plugin"),
         require("preline/plugin"),
         require("daisyui"),
+        require('@tailwindcss/line-clamp'),
     ],
 };

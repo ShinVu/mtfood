@@ -67,5 +67,17 @@
     "sort": "Sắp xếp",
     "ratingHTL": "Đánh giá: Từ cao đến thấp",
     "ratingLTH": "Đánh giá: Từ thấp đến cao",
-    "newest": "Gần đây nhất"
+    "newest": "Gần đây nhất",
+    "searchFood": "Tìm món ăn bạn muốn",
+    "home": "Trang chủ",
+    "product": "Sản phẩm",
+    "wholesaleProduct": "Sản phẩm sỉ",
+    "news": "Tin tức",
+    "seen": "Đã xem",
+    "liked": "Yêu thích",
+    "order": "Đơn hàng",
+    "useful": "Hữu ích?",
+    "sameCatProduct": "Sản phẩm cùng loại",
+    "recommendProduct": "Có thể bạn cũng thích",
+    "more": "Xem thêm"
 }
