@@ -16,6 +16,10 @@ import LoadingScreen from "../components/Loading.js";
 //import font for MUI
 import "typeface-montserrat";
 
+//import MUX
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
 const theme = createTheme({
     typography: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
@@ -61,9 +65,11 @@ function App() {
         <React.StrictMode>
             <Provider store={store}>
                 <ThemeProvider theme={theme}>
-                    <Suspense fallback={<LoadingScreen />}>
-                        <RouterProvider router={router} />
-                    </Suspense>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <Suspense fallback={<LoadingScreen />}>
+                            <RouterProvider router={router} />
+                        </Suspense>
+                    </LocalizationProvider>
                 </ThemeProvider>
             </Provider>
         </React.StrictMode>

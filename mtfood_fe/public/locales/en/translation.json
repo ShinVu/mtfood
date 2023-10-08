@@ -86,6 +86,23 @@
     "seenProduct": "Seen Product",
     "likedProduct": "Liked Product",
     "notification": "Notifications",
-    "editProfile": "Edit profile"
-
+    "editProfile": "Edit profile",
+    "personalInformation": "Personal Information",
+    "nameFAL": "Name",
+    "phoneNumber": "Phone number",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "dateOfBirth": "Date of birth",
+    "identificationNumber": "Identification Number",
+    "phoneNumberAndEmail": "Phone number & Email",
+    "update": "Update",
+    "email": "Mail",
+    "security": "Security",
+    "setPassword": "Set Password",
+    "setPin": "Set Pin number",
+    "link": "Link",
+    "phoneNumberChangeMessage": "Verification code (OTP) will be send to this phone number.",
+    "cancel": "Hủy"
 }
