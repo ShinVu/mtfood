@@ -17,7 +17,6 @@ import { colors } from "../../public/theme";
 //Import MUI
 import { Stack } from "@mui/material";
 import LoopIcon from "@mui/icons-material/Loop";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 //Import Element

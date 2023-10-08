@@ -1,0 +1,1 @@
+export {default as ProfileNavigation} from "./components/navigation";

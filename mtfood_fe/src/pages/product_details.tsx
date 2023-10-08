@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Footer } from "../components/Footer.js";
-import Header from "../components/Header";
+import Header from "../components/Header.jsx";
 import { useParams } from "react-router-dom";
 
 //Import MUI
 import Rating from "@mui/material/Rating";
 import Divider from "@mui/material/Divider";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { colors } from "../../public/theme";
+import { colors } from "../../public/theme.js";
 import { TbTruckDelivery } from "react-icons/tb";
 import IconButton from "@mui/material/IconButton";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -28,7 +28,7 @@ import {
     TextButton,
 } from "../components/Button.jsx";
 
-import { Review, ProductCard } from "../features/product";
+import { Review, ProductCard } from "../features/product/index.js";
 
 const product = {
     name: "Khô bò",

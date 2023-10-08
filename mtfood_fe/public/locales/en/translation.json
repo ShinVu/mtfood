@@ -77,5 +77,15 @@
     "useful": "Useful?",
     "sameCatProduct": "Product from same category",
     "recommendProduct": "You may also like",
-    "more": "See more"
+    "more": "See more",
+    "myAccount": "My account",
+    "profile": "Profile",
+    "bank": "Bank",
+    "accountAddress": "Address",
+    "notificationSetting": "Notification settings",
+    "seenProduct": "Seen Product",
+    "likedProduct": "Liked Product",
+    "notification": "Notifications",
+    "editProfile": "Edit profile"
+
 }

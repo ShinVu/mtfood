@@ -20,6 +20,16 @@ const theme = createTheme({
     typography: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),
     },
+    palette: {
+        primary: {
+            main: "#47AD97",
+            contrastText: "#fff",
+        },
+        secondary: {
+            main: "#B73225",
+            contrastText: "#fff",
+        },
+    },
 });
 // init translation
 i18n.use(Backend)
