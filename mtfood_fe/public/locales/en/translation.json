@@ -104,5 +104,13 @@
     "setPin": "Set Pin number",
     "link": "Link",
     "phoneNumberChangeMessage": "Verification code (OTP) will be send to this phone number.",
-    "cancel": "Hủy"
+    "emailChangeMessage": "Verification code (OTP) will be send to this email.",
+    "cancel": "Hủy",
+    "phoneNumberVerify": "Verification",
+    "phoneNumberVerifyMessage": "To verify your phone number, please enter 6-digit code sent to this phone number",
+    "emailVerify": "Verification",
+    "emailVerifyMessage": "To verify your email, please enter 6-digit code sent to this email",
+    "verify": "Verify",
+    "changePassword": "Change password",
+    "changePin": "Change Pin"
 }

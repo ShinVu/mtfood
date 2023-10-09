@@ -106,5 +106,14 @@
     "setPin": "Thiết lập số PIN",
     "link": "Liên kết",
     "phoneNumberChangeMessage": "Mã xác thực (OTP) sẽ được gửi đến số điện thoại này để xác minh số điện thoại là của bạn.",
-    "cancel": "Hủy"
+    "emailChangeMessage": "Mã xác thực (OTP) sẽ được gửi đến email này để xác minh số điện thoại là của bạn." ,
+    "cancel": "Hủy",
+    "phoneNumberVerify": "Nhập mã xác minh",
+    "phoneNumberVerifyMessage": "Để xác minh số điện thoại của bạn, nhập mã xác minh gồm 6 ký tự được gửi đến số điện thoại bên dưới",
+    "emailVerify": "Nhập mã xác minh",
+    "emailVerifyMessage": "Để xác minh email của bạn, nhập mã xác minh gồm 6 ký tự được gửi đến email bên dưới",
+    "verify": "Xác nhận",
+    "changePassword": "Thay đổi mật khẩu",
+    "changePin": "Thay đổi mã PIN"
+
 }

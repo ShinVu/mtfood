@@ -46,8 +46,9 @@ const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
 import {
     ProfileNavigation,
     DatePicker,
-    ChangePhoneDialog,
+    ChangeDialog,
 } from "../features/profile";
+
 const user = {
     address: "Bạch Đằng, Quận Tân Bình, TP.HCM",
     avatar: "./assets/image_15.png",
@@ -66,20 +67,13 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 export default function Profile() {
     const { t } = useTranslation();
-    const [open, setOpen] = React.useState(0); //0: no modal , 1: change phone number modal, 2: change phone number verify modal
-    const handleChangePhoneNumberOpen = () => {
-        setOpen(1);
+    const [open, setOpen] = React.useState({ state: false, type: "" });
+    const handleModalOpen = (type: string) => {
+        setOpen({ state: true, type: type });
     };
-
-    const handleChangePhoneNumberVerifyOpen = () => {
-        setOpen(2);
-    };
-
     const handleClose = () => {
-        setOpen(0);
+        setOpen({ state: false, type: "" });
     };
-
-    console.log(open);
     return (
         <div className="flex flex-1 flex-col">
             <Header />
@@ -283,8 +277,8 @@ export default function Profile() {
                                     <TableCell>
                                         <OutlinedButton
                                             className="w-fit min-w-fit"
-                                            onClick={
-                                                handleChangePhoneNumberOpen
+                                            onClick={() =>
+                                                handleModalOpen("phoneNumber")
                                             }
                                         >
                                             {t("update")}
@@ -311,7 +305,12 @@ export default function Profile() {
                                         </div>
                                     </TableCell>
                                     <TableCell>
-                                        <OutlinedButton className="max-w-fit">
+                                        <OutlinedButton
+                                            className="max-w-fit"
+                                            onClick={() =>
+                                                handleModalOpen("email")
+                                            }
+                                        >
                                             {t("update")}
                                         </OutlinedButton>
                                     </TableCell>
@@ -339,7 +338,14 @@ export default function Profile() {
                                         </div>
                                     </TableCell>
                                     <TableCell>
-                                        <OutlinedButton className="max-w-fit">
+                                        <OutlinedButton
+                                            className="max-w-fit"
+                                            onClick={() =>
+                                                handleModalOpen(
+                                                    "changePassword"
+                                                )
+                                            }
+                                        >
                                             {t("update")}
                                         </OutlinedButton>
                                     </TableCell>
@@ -359,7 +365,12 @@ export default function Profile() {
                                         </div>
                                     </TableCell>
                                     <TableCell>
-                                        <OutlinedButton className="max-w-fit">
+                                        <OutlinedButton
+                                            className="max-w-fit"
+                                            onClick={() =>
+                                                handleModalOpen("changePin")
+                                            }
+                                        >
                                             {t("update")}
                                         </OutlinedButton>
                                     </TableCell>
@@ -412,12 +423,10 @@ export default function Profile() {
                     </div>
                 </div>
             </div>
-            <ChangePhoneDialog
-                open={open}
-                handleChangePhoneNumberOpen={handleChangePhoneNumberOpen}
-                handleChangePhoneNumberVerifyOpen={
-                    handleChangePhoneNumberVerifyOpen
-                }
+            <ChangeDialog
+                open={open.state}
+                type={open.type}
+                handleModalOpen={handleModalOpen}
                 handleClose={handleClose}
             />
             <Footer />

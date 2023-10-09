@@ -1,30 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Footer } from "../components/Footer";
-import TextField from "@mui/material/TextField";
 import { useTranslation } from "react-i18next";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Google from "/assets/google.svg";
-import Facebook from "/assets/facebook.svg";
 import styled from "styled-components";
-import { MuiOtpInput } from "mui-one-time-password-input";
-
-const MuiOtpInputStyled = styled(MuiOtpInput)`
-    display: flex;
-    gap: 10px;
-    max-width: 350px;
-    margin-inline: auto;
-    .MuiOtpInput-TextField {
-        height: fit-content;
-        width: fit-content;
-        margin: 0;
-    }
-`;
-
-function matchIsNumeric(text) {
-    const isNumber = typeof text === "number";
-    return isNumber && !isNaN(Number(text));
-}
+import OtpInputStyled from "../components/OtpInput";
+import { matchIsNumeric } from "../utils";
 
 export default function SignUpVerify() {
     const { t } = useTranslation();
@@ -58,14 +38,13 @@ export default function SignUpVerify() {
                     <h1 className="uppercase text-xl font-bold">
                         {t("enterVerificationCode")}
                     </h1>
-                    <MuiOtpInputStyled
-                        className="mt-24 mb-12"
-                        value={otp}
-                        onChange={handleChange}
-                        length={6}
-                        autoFocus
-                        validateChar={validateChar}
-                    />
+                    <div className="mt-24 mb-12">
+                        <OtpInputStyled
+                            otp={otp}
+                            handleChange={handleChange}
+                            validateChar={validateChar}
+                        />
+                    </div>
                     <div className="p-3">
                         <Button variant="contained" className="w-full">
                             {t("continue")}
