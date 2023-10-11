@@ -8,6 +8,13 @@ import SignUpVerify from "../pages/Signup_verify";
 import SignUpNewPassword from "../pages/Signup_password";
 import ProductDetails from "../pages/Product_details";
 import Profile from "../pages/Profile";
+import UserAddress from "../pages/Address";
+import UserSeenProduct from "../pages/SeenProduct";
+import UserLikedProduct from "../pages/LikedProduct";
+import UserNotificationSetting from "../pages/NotificationSetting";
+import UserNotification from "../pages/Notification";
+import UserOrder from "../pages/Order";
+import OrderDetail from "../pages/OrderDetail";
 const router = createBrowserRouter([
     {
         path: "/login",
@@ -32,6 +39,34 @@ const router = createBrowserRouter([
     {
         path: "/user/account",
         element: <Profile />,
+    },
+    {
+        path: "/user/address",
+        element: <UserAddress />,
+    },
+    {
+        path: "/user/seen",
+        element: <UserSeenProduct />,
+    },
+    {
+        path: "/user/liked",
+        element: <UserLikedProduct />,
+    },
+    {
+        path: "/user/notification/settings",
+        element: <UserNotificationSetting />,
+    },
+    {
+        path: "/user/notification",
+        element: <UserNotification />,
+    },
+    {
+        path: "/user/order/:type?",
+        element: <UserOrder />,
+    },
+    {
+        path: "/user/order/details/:id",
+        element: <OrderDetail />,
     },
 ]);
 

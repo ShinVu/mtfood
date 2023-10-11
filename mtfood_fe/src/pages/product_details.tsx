@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Footer } from "../components/Footer.js";
-import Header from "../components/Header.jsx";
+import Header from "../components/header";
+import Footer from "../components/Footer.js";
 import { useParams } from "react-router-dom";
 
 //Import MUI
@@ -26,7 +26,7 @@ import {
     ContainedButton,
     OutlinedButton,
     TextButton,
-} from "../components/Button.jsx";
+} from "../components/button.jsx";
 
 import { Review, ProductCard } from "../features/product/index.js";
 

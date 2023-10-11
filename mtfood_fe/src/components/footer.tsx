@@ -26,7 +26,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-function Footer() {
+export default function Footer() {
     const { t } = useTranslation();
     return (
         <div className="p-4 flex  flex-1 justify-center items-center bg-background_footer">

@@ -12,16 +12,15 @@ import {
     ContainedButton,
     OutlinedButton,
     TextButton,
-} from "../../../components/Button";
-import OtpInputStyled from "../../../components/OtpInput";
-import { colors } from "../../../../public/theme";
+} from "../../../../components/button";
+import OtpInputStyled from "../../../../components/OtpInput";
+import { colors } from "../../../../../public/theme";
 import PhoneNumberDialog from "./phoneNumberDialog";
 import EmailDialog from "./emailDialog";
-//Import utils
-import { matchIsNumeric } from "../../../utils";
-import EmailVerifyDialog from "./emailVerifyDialog";
 import PasswordDialog from "./passwordDialog";
 import PinDialog from "./pinDialog";
+//Import utils
+import { matchIsNumeric } from "../../../../utils";
 
 export default function ChangeDialog(props) {
     const { t } = useTranslation();

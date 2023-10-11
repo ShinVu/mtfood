@@ -20,6 +20,10 @@ import "typeface-montserrat";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
+const { palette } = createTheme();
+const { augmentColor } = palette;
+const createColor = (mainColor: string) =>
+    augmentColor({ color: { main: mainColor } });
 const theme = createTheme({
     typography: {
         fontFamily: ["Montserrat", "sans-serif"].join(","),

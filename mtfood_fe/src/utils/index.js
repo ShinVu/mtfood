@@ -4,4 +4,19 @@ function matchIsNumeric(text) {
     return isNumber && !isNaN(Number(text));
 }
 
-export {matchIsNumeric};
+//Get size for dialog
+function getSizeDialog(size) {
+    switch (size) {
+        case "sm":
+            return "sm";
+        case "xs":
+            return "xs";
+        case "md":
+            return "md";
+        case "lg":
+            return "md";
+        case "xl":
+            return "md";
+    }
+}
+export { matchIsNumeric, getSizeDialog };

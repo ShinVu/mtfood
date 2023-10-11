@@ -12,19 +12,19 @@ import {
     ContainedButton,
     OutlinedButton,
     TextButton,
-} from "../../../components/Button";
-import OtpInputStyled from "../../../components/OtpInput";
-import { colors } from "../../../../public/theme";
+} from "../../../../components/button";
+import OtpInputStyled from "../../../../components/OtpInput";
+import { colors } from "../../../../../public/theme";
 
 //Import utils
-import { matchIsNumeric } from "../../../utils";
+import { matchIsNumeric } from "../../../../utils";
 
-function ChangeNumberDialog({ handleClose, handleSubmitSuccess }) {
+function ChangeEmailDialog({ handleClose, handleSubmitSuccess }) {
     const { t } = useTranslation();
     return (
         <>
             <DialogTitle>
-                <span>{t("phoneNumber")}</span>
+                <span>{t("email")}</span>
             </DialogTitle>
             <DialogContent>
                 <TextField
@@ -34,11 +34,11 @@ function ChangeNumberDialog({ handleClose, handleSubmitSuccess }) {
                     type="email"
                     fullWidth
                     size="small"
-                    placeholder={t("phoneNumber")}
+                    placeholder={t("email")}
                 />
 
                 <DialogContentText className="mt-4">
-                    <span>{t("phoneNumberChangeMessage")}</span>
+                    <span>{t("emailChangeMessage")}</span>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -54,7 +54,7 @@ function ChangeNumberDialog({ handleClose, handleSubmitSuccess }) {
     );
 }
 
-function ChangeNumberVerifyDialog({ handleClose }) {
+function ChangeEmailVerifyDialog({ handleClose }) {
     const { t } = useTranslation();
     const [otp, setOtp] = React.useState("");
     const [count, setCount] = useState(2);
@@ -81,14 +81,16 @@ function ChangeNumberVerifyDialog({ handleClose }) {
     return (
         <>
             <DialogTitle>
-                <span>{t("phoneNumberVerify")}</span>
+                <span>{t("emailVerify")}</span>
             </DialogTitle>
             <DialogContent>
                 <DialogContentText className="">
-                    <span>{t("phoneNumberVerifyMessage")}:</span>
+                    <span>{t("emailVerifyMessage")}:</span>
                 </DialogContentText>
                 <DialogContentText className="mb-4">
-                    <span className="text-black font-semibold">123456</span>
+                    <span className="text-black font-semibold">
+                        dat.vumaple@hcmut.edu.vn
+                    </span>
                 </DialogContentText>
                 <OtpInputStyled
                     otp={otp}
@@ -137,21 +139,21 @@ function ChangeNumberVerifyDialog({ handleClose }) {
         </>
     );
 }
-export default function PhoneNumberDialog({ handleClose }) {
-    const [type, setType] = useState("phoneNumber");
+export default function EmailDialog({ handleModalOpen, handleClose }) {
+    const [type, setType] = useState("email");
     const handleSubmitSuccess = () => {
-        setType("phoneNumberVerify");
+        setType("emailVerify");
     };
 
     switch (type) {
-        case "phoneNumber":
+        case "email":
             return (
-                <ChangeNumberDialog
+                <ChangeEmailDialog
                     handleClose={handleClose}
                     handleSubmitSuccess={handleSubmitSuccess}
                 />
             );
-        case "phoneNumberVerify":
-            return <ChangeNumberVerifyDialog handleClose={handleClose} />;
+        case "emailVerify":
+            return <ChangeEmailVerifyDialog handleClose={handleClose} />;
     }
 }

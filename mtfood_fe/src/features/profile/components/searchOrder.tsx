@@ -8,7 +8,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 
 //Import color theme
-import { colors } from "../../public/theme.js";
+import { colors } from "../../../../public/theme";
 import { useTranslation } from "react-i18next";
 
 // const options = [
@@ -71,7 +71,7 @@ import { useTranslation } from "react-i18next";
 //     );
 // }
 
-export default function SearchBar() {
+export default function SearchOrderBar() {
     const { t } = useTranslation();
     return (
         <Autocomplete
@@ -79,14 +79,14 @@ export default function SearchBar() {
             id="combo-box-demo"
             sx={{
                 width: "100%",
+                "background-color": colors.white,
             }}
             size="small"
             options={["a", "b", "c"]}
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    className="bg-white"
-                    placeholder={t("searchFood")}
+                    placeholder={t("searchOrder")}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start" className="mx-2">

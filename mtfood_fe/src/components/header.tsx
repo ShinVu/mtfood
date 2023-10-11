@@ -21,7 +21,7 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 //Import Element
 import SearchBar from "./SearchBar";
-import { IconButton, TextButton } from "./Button";
+import { IconButton, TextButton } from "./button";
 
 export default function Header() {
     const { t, i18n } = useTranslation();

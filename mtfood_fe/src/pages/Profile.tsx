@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Footer } from "../components/Footer.js";
-import Header from "../components/Header.jsx";
-import { useParams } from "react-router-dom";
 import { colors } from "../../public/theme.js";
 import styled from "styled-components";
 //Import MUI
@@ -31,11 +28,14 @@ import Google from "/assets/google.svg";
 import Facebook from "/assets/facebook.svg";
 
 //Import components
+import Header from "../components/header";
+import Footer from "../components/Footer.js";
 import {
     ContainedButton,
     OutlinedButton,
     TextButton,
-} from "../components/Button";
+} from "../components/button.jsx";
+
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
         border: 0,
@@ -77,7 +77,7 @@ export default function Profile() {
     return (
         <div className="flex flex-1 flex-col">
             <Header />
-            <div className="flex flex-row flex-1 w-full p-4 bg-background_main">
+            <div className="flex flex-row flex-1 w-full px-4 py-12 bg-background_main">
                 <ProfileNavigation user={user} />
                 <div className="flex flex-col flex-1 mx-12 space-y-4">
                     <div>

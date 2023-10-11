@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import { useTranslation } from "react-i18next";
+import { Footer } from "../components/Footer";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Google from "/assets/google.svg";
@@ -18,12 +24,20 @@ import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+//Import element
+import {
+    ContainedButton,
+    OutlinedButton,
+    TextButton,
+} from "../../../../components/button";
+import OtpInputStyled from "../../../../components/OtpInput";
+import { colors } from "../../../../../public/theme";
 
-import Header from "../components/header";
-import Footer from "../components/Footer";
-export default function SignUpNewPassword() {
+//Import utils
+import { matchIsNumeric } from "../../../../utils";
+
+export default function PasswordDialog({ handleClose }) {
     const { t } = useTranslation();
-
     const [showPasswords, setShowPasswords] = React.useState({
         input1: false,
         input2: false,
@@ -49,17 +63,15 @@ export default function SignUpNewPassword() {
         event.preventDefault();
     };
     return (
-        <div className="flex flex-col flex-1 min-h-screen w-full ">
-            <div className="flex flex-1 py-5 bg-signUp bg-center bg-cover justify-center items-center">
-                <div className="flex flex-col p-4 bg-white shadow">
-                    <h1 className="uppercase text-xl font-bold">
-                        {t("enterInformation")}
-                    </h1>
+        <>
+            <DialogTitle>
+                <span>{t("changePassword")}</span>
+            </DialogTitle>
+            <DialogContent>
+                <div className="flex flex-1 flex-col">
                     <FormControl className="w-96 my-2" variant="outlined">
-                        <InputLabel htmlFor="outlined-adornment-password">
-                            {t("password")}
-                        </InputLabel>
                         <OutlinedInput
+                            placeholder={t("password")}
                             id="outlined-adornment-password"
                             type={showPasswords.input1 ? "text" : "password"}
                             endAdornment={
@@ -80,14 +92,11 @@ export default function SignUpNewPassword() {
                                     </IconButton>
                                 </InputAdornment>
                             }
-                            label={t("password")}
                         />
                     </FormControl>
                     <FormControl className="w-96 my-2" variant="outlined">
-                        <InputLabel htmlFor="outlined-adornment-password">
-                            {t("reEnterPassword")}
-                        </InputLabel>
                         <OutlinedInput
+                            placeholder={t("reEnterPassword")}
                             id="outlined-adornment-password"
                             type={showPasswords.input2 ? "text" : "password"}
                             endAdornment={
@@ -108,17 +117,19 @@ export default function SignUpNewPassword() {
                                     </IconButton>
                                 </InputAdornment>
                             }
-                            label={t("reEnterPassword")}
                         />
                     </FormControl>
-                    <div className="p-3">
-                        <Button variant="contained" className="w-full">
-                            {t("continue")}
-                        </Button>
-                    </div>
                 </div>
-            </div>
-            <Footer />
-        </div>
+            </DialogContent>
+            <DialogActions>
+                <TextButton
+                    onClick={handleClose}
+                    sx={{ color: colors.gray[200] }}
+                >
+                    {t("cancel")}
+                </TextButton>
+                <Button onClick={handleClose}>{t("verify")}</Button>
+            </DialogActions>
+        </>
     );
 }

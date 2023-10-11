@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Footer } from "../components/Footer";
 import TextField from "@mui/material/TextField";
 import { useTranslation } from "react-i18next";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Google from "/assets/google.svg";
 import Facebook from "/assets/facebook.svg";
+import Header from "../components/header";
+import Footer from "../components/Footer";
 export default function SignUp() {
     const { t } = useTranslation();
     return (

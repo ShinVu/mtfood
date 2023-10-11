@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Footer } from "../components/Footer";
 import { useTranslation } from "react-i18next";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
 import OtpInputStyled from "../components/OtpInput";
 import { matchIsNumeric } from "../utils";
+import Header from "../components/header";
+import Footer from "../components/Footer";
 
 export default function SignUpVerify() {
     const { t } = useTranslation();
