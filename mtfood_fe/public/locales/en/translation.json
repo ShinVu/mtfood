@@ -141,6 +141,26 @@
     "totalOrderAmount": "Total amount",
     "seeOrderDetail": "Order detail",
     "seeMore": "More",
-    "back": "Return"
+    "back": "Return",
+    "orderCreated": "Order created",
+    "paymentConfirmed": "Payment Confirmed",
+    "preparingOrder": "Preparing order",
+    "waitingShipment": "Waiting Shipment",
+    "shipmentConfirmed": "Shipped out",
+    "shipping":"Shipping",
+    "shipped": "Order received",
+    "rate": "To rate",
+    "orderAddress": "Deliver to",
+    "orderDelivery": "Delivery method",
+    "orderPayment": "Payment method",
+    "productPrice": "Price",
+    "productQuantity": "Quantity",
+    "subTotal": "SubTotal",
+    "deliveryFee": "Delivery fee",
+    "deliveryFeeDiscount": "Delivery fee discount",
+    "voucherDiscount": "Voucher",
+    "total": "Total"
+
+
 
 }

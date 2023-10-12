@@ -143,6 +143,23 @@
     "totalOrderAmount": "Tổng thanh toán",
     "seeOrderDetail": "Xem chi tiết",
     "seeMore": "Thêm",
-    "back": "Trở lại"
-
+    "back": "Trở lại",
+    "orderCreated": "Đơn hàng đã đặt",
+    "paymentConfirmed": "Thanh toán thành công",
+    "preparingOrder": "Đang chuẩn bị đơn",
+    "waitingShipment": "Chờ lấy hàng",
+    "shipmentConfirmed": "Đã giao cho ĐVVT",
+    "shipping":"Đang giao hàng",
+    "shipped": "Đơn hàng đã nhận",
+    "rate": "Đánh giá",
+    "orderAddress": "Địa chỉ nhận hàng",
+    "orderDelivery": "Phương thức vận chuyển",
+    "orderPayment": "Phương thức giao hàng",
+    "productPrice": "Đơn giá",
+    "productQuantity": "Số lượng",
+    "subTotal": "Tạm tính",
+    "deliveryFee": "Phí vận chuyển",
+    "deliveryFeeDiscount": "Giảm giá phí vận chuyển",
+    "voucherDiscount": "Giảm giá voucher",
+    "total": "Thành tiền"
 }

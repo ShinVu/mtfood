@@ -5,3 +5,5 @@ export { default as AddAddressDialog } from "./components/addAddressDialog";
 export { default as UserAddressItem } from "./components/userAddressItem";
 export { default as OrderSearchBar } from "./components/searchOrder";
 export { default as OrderItem } from "./components/orderItem";
+export { default as OrderStepper } from "./components/orderStepper";
+export { default as OrderItemCard } from "./components/orderItemsDetailCard";
