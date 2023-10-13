@@ -37,6 +37,12 @@ Route::group(['namespace' => 'Be','prefix' => 'admin'], function (){
 
     Route::group(['prefix' => 'user'], function (){
         Route::get('',[Be\BeUserController::class,'index'])->name('get_admin.user.index');
+        Route::get('create',[Be\BeUserController::class,'create'])->name('get_admin.user.create');
+        Route::post('create',[Be\BeUserController::class,'store'])->name('get_admin.user.store');
+
+        Route::get('update/{id}',[Be\BeUserController::class,'edit'])->name('get_admin.user.update');
+        Route::post('update/{id}',[Be\BeUserController::class,'update'])->name('get_admin.user.update');
+        Route::get('delete/{id}',[Be\BeUserController::class,'delete'])->name('get_admin.user.delete');
     });
 
     Route::group(['prefix' => 'category'], function (){
