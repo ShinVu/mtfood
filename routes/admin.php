@@ -21,6 +21,14 @@ Route::group(['namespace' => 'Be','prefix' => 'admin'], function (){
 
     Route::group(['prefix' => 'product'], function (){
         Route::get('',[Be\BeProductController::class,'index'])->name('get_admin.product.index');
+
+        Route::get('create',[Be\BeProductController::class,'create'])->name('get_admin.product.create');
+        Route::post('create',[Be\BeProductController::class,'store']);
+
+        Route::get('update/{id}',[Be\BeProductController::class,'edit'])->name('get_admin.product.update');
+        Route::post('update/{id}',[Be\BeProductController::class,'update']);
+
+        Route::get('delete/{id}',[Be\BeProductController::class,'delete'])->name('get_admin.product.delete');
     });
 
     Route::group(['prefix' => 'chat'], function (){
@@ -33,6 +41,13 @@ Route::group(['namespace' => 'Be','prefix' => 'admin'], function (){
 
     Route::group(['prefix' => 'category'], function (){
         Route::get('',[Be\BeCategoryController::class,'index'])->name('get_admin.category.index');
+        Route::get('create',[Be\BeCategoryController::class,'create'])->name('get_admin.category.create');
+        Route::post('create',[Be\BeCategoryController::class,'store']);
+
+        Route::get('update/{id}',[Be\BeCategoryController::class,'edit'])->name('get_admin.category.update');
+        Route::post('update/{id}',[Be\BeCategoryController::class,'update']);
+
+        Route::get('delete/{id}',[Be\BeCategoryController::class,'delete'])->name('get_admin.category.delete');
     });
 
     Route::group(['prefix' => 'admin'], function (){

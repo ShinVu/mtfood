@@ -6,7 +6,7 @@
         </div>
         <div>
             <form class="form-inline">
-                <a href="" class="btn btn-primary mb-2 mr-2">Thêm mới</a>
+                <a href="{{ route('get_admin.category.create') }}" class="btn btn-primary mb-2 mr-2">Thêm mới</a>
 {{--                <div class="form-group mb-2 mr-2">--}}
 {{--                    <label for="inputPassword2" class="sr-only">Danh mục</label>--}}
 {{--                    <select name="status" id="" class="form-control">--}}
@@ -18,45 +18,37 @@
                 </div>
             </form>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive" style="min-height: 60vh">
             <table class="table table-striped table-sm">
                 <thead>
                 <tr>
-                    <th style="width: 100px;"></th>
-                    <th style="width: 50px;text-align: center">ID</th>
-                    <th>Tên</th>
+                    <th>#</th>
+                    <th>Avatar</th>
+                    <th>Tên danh mục</th>
                     <th>Slug</th>
-                    <th>Trạng thái</th>
-                    <th></th>
+                    <th>Mô tả</th>
+                    <th>Ngày tạo</th>
+                    <th>Thao tác</th>
                 </tr>
                 </thead>
                 <tbody>
-                @for($i = 1 ; $i <= 10 ; $i ++)
+                @foreach($categories ?? [] as $item)
                     <tr>
-                        <td style="text-align: center">
-                            <a href="">
-                                <img src="{{ asset('user.png') }}" alt="" style="width: 60px;height: 60px;object-fit: cover">
-                            </a>
-                        </td>
-                        <td class="text-center">
-                            <span>{{ $i }}</span>
-                        </td>
+                        <td>{{ $item->id }}</td>
                         <td>
-                            <span>Đồ ăn</span>
+                            <img src="{{ pare_url_file($item->image_url) }}" style="width: 60px;height: 60px; border-radius: 10px" alt="">
                         </td>
+                        <td>{{ $item->name }}</td>
+                        <td>{{ $item->slug }}</td>
+                        <td>{{ $item->description }}</td>
+                        <td>{{ $item->created_at }}</td>
                         <td>
-                            <span>do-an</span>
-                        </td>
-                        <td>
-                            <span>Hiển thị</span>
-                        </td>
-                        <td>
-                            <a href="">Cập nhật</a>
+                            <a href="{{ route('get_admin.category.update', $item->id) }}">Edit</a>
                             <a href="javascript:;void(0)">|</a>
-                            <a href="">Xoá</a>
+                            <a href="{{ route('get_admin.category.delete', $item->id) }}">Delete</a>
                         </td>
                     </tr>
-                @endfor
+                @endforeach
                 </tbody>
             </table>
         </div>
