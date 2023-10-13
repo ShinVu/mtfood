@@ -183,5 +183,6 @@
     "totalProduct": "Total",
     "choosePaymentOption": "Choose Payment method",
     "seeInformation": "View details",
-    "orderNow": "Make order"
+    "orderNow": "Make order",
+    "tag": "Tag card"
 }
