@@ -167,9 +167,21 @@
     "addFavorite" : "Add to favorite",
     "totalOrder": "Total payment",
     "saving": "Save",
-    "buy": "Buy now"
-    
-
-
-
+    "buy": "Buy now",
+    "discountDetail": "Discount detail",
+    "productSum": "Product total",
+    "productDiscount": "Product discount",
+    "voucherDiscounts": "Voucher discount",
+    "totalPayment": "Total payment",
+    "shippingNotIncluded": "(Shipping fee not included)",
+    "chooseDeliveryOption": "Choose Delivery option",
+    "fastDelivery": "Fast delivery",
+    "normalDelivery": "Economic delivery",
+    "instantDelivery": "Instant delivery",
+    "message": "Message",
+    "note": "Note",
+    "totalProduct": "Total",
+    "choosePaymentOption": "Choose Payment method",
+    "seeInformation": "View details",
+    "orderNow": "Make order"
 }

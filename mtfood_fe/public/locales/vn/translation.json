@@ -169,5 +169,21 @@
     "addFavorite" : "Thêm vào yêu thích",
     "totalOrder": "Tổng thanh toán",
     "saving": "Tiết kiệm",
-    "buy": "Mua ngay"
+    "buy": "Mua ngay",
+    "discountDetail": "Chi tiết khuyến mãi",
+    "productSum": "Tổng tiền hàng",
+    "productDiscount": "Giảm giá sản phẩm",
+    "voucherDiscounts": "Giảm giá voucher",
+    "totalPayment": "Tổng số tiền",
+    "shippingNotIncluded": "Chưa bao gồm phí vận chuyển",
+    "chooseDeliveryOption": "Chọn hình thức vận chuyển",
+    "fastDelivery": "Giao nhanh",
+    "normalDelivery": "Giao tiết kiệm",
+    "instantDelivery": "Giao hỏa tốc",
+    "message": "Lời nhắn",
+    "note": "Ghi chú",
+    "totalProduct": "Tổng tiền sản phẩm",
+    "choosePaymentOption": "Chọn hình thức thanh toán",
+    "seeInformation": "Xem thông tin",
+    "orderNow": "Đặt hàng"
 }
