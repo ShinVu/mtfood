@@ -161,5 +161,13 @@
     "deliveryFee": "Phí vận chuyển",
     "deliveryFeeDiscount": "Giảm giá phí vận chuyển",
     "voucherDiscount": "Giảm giá voucher",
-    "total": "Thành tiền"
+    "total": "Thành tiền",
+    "allProduct": "Tất cả sản phẩm",
+    "mtfoodVoucher": "MTFood Voucher",
+    "enterVoucher": "Chọn hoặc nhập mã",
+    "chooseAll": "Chọn tất cả",
+    "addFavorite" : "Thêm vào yêu thích",
+    "totalOrder": "Tổng thanh toán",
+    "saving": "Tiết kiệm",
+    "buy": "Mua ngay"
 }

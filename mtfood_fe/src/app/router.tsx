@@ -15,6 +15,10 @@ import UserNotificationSetting from "../pages/NotificationSetting";
 import UserNotification from "../pages/Notification";
 import UserOrder from "../pages/Order";
 import OrderDetail from "../pages/OrderDetail";
+import Home from "../pages/Home";
+import Cart from "../pages/Cart";
+import Checkout from "../pages/Checkout";
+
 const router = createBrowserRouter([
     {
         path: "/login",
@@ -67,6 +71,22 @@ const router = createBrowserRouter([
     {
         path: "/user/order/details/:id",
         element: <OrderDetail />,
+    },
+    {
+        path: "/",
+        element: <Home />,
+    },
+    {
+        path: "/home",
+        element: <Home />,
+    },
+    {
+        path: "/cart",
+        element: <Cart />,
+    },
+    {
+        path: "/checkout",
+        element: <Checkout />,
     },
 ]);
 

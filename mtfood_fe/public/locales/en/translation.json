@@ -159,7 +159,16 @@
     "deliveryFee": "Delivery fee",
     "deliveryFeeDiscount": "Delivery fee discount",
     "voucherDiscount": "Voucher",
-    "total": "Total"
+    "total": "Total",
+    "allProduct": "All Product",
+    "mtfoodVoucher": "MTFood Voucher",
+    "enterVoucher": "Choose or enter Voucher",
+    "chooseAll": "Choose all",
+    "addFavorite" : "Add to favorite",
+    "totalOrder": "Total payment",
+    "saving": "Save",
+    "buy": "Buy now"
+    
 
 
 
