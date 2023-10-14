@@ -19,7 +19,7 @@ class BeUserController extends Controller
 {
     public function index(Request $request)
     {
-        $users = User::with('userType');
+        $users = User::whereRaw(1);
         if ($n = $request->n) $users->where('name', 'like', '%' . $n . '%');
 
         $users = $users->orderByDesc('id')
@@ -38,7 +38,7 @@ class BeUserController extends Controller
         $roles      = Role::all();
         $roleActive = $userHasType = [];
 
-        return view('backend.user.create', compact( 'roles', 'roleActive', 'userHasType'));
+        return view('be.user.create', compact( 'roles', 'roleActive', 'userHasType'));
     }
 
     public function store(Request $request)
@@ -50,8 +50,6 @@ class BeUserController extends Controller
             $data['password']          = bcrypt(Carbon::now());
             $data['status']            = $request->status ?? 1;
 
-            $data['is_wholesale'] = false;
-            if ($request->is_wholesale) $data['is_wholesale'] = true;
 
             if ($request->avatar) {
                 $file = upload_image('avatar');
@@ -79,12 +77,12 @@ class BeUserController extends Controller
     public function edit($id)
     {
         $user        = User::findOrFail($id);
-        $usersType   = UserType::all();
+
         $roles       = Role::all();
-        $userHasType = DB::table('users_has_types')->where('user_id', $id)->pluck('user_type_id')->toArray();
+//        $userHasType = DB::table('users_has_types')->where('user_id', $id)->pluck('user_type_id')->toArray();
         $roleActive  = DB::table('model_has_roles')->where('model_id', $id)->pluck('role_id')->toArray();
 
-        return view('backend.user.update', compact('user', 'usersType', 'roles', 'roleActive', 'userHasType'));
+        return view('be.user.update', compact('user', 'roles', 'roleActive'));
     }
 
     protected function insertOrUpdateUserHasType($user, $typeID)
@@ -104,7 +102,7 @@ class BeUserController extends Controller
         }
     }
 
-    public function update(UserRequest $request, $id)
+    public function update(Request $request, $id)
     {
         try {
             $data               = $request->except('_token', 'avatar', 'user_type', 'roles');
@@ -114,13 +112,11 @@ class BeUserController extends Controller
                 $file = upload_image('avatar');
                 if (isset($file['code']) && $file['code'] == 1) $data['avatar'] = $file['name'];
             }
-            $data['is_wholesale'] = false;
-            if ($request->is_wholesale) $data['is_wholesale'] = true;
 
             $update = User::find($id)->update($data);
             if ($update) {
                 $user = User::find($id);
-                $this->insertOrUpdateUserHasType($user, $request->user_type);
+//                $this->insertOrUpdateUserHasType($user, $request->user_type);
 
                 if ($request->roles) {
                     $roleActive = DB::table('model_has_roles')->where('model_id', $id)->pluck('role_id')->toArray();
@@ -134,7 +130,7 @@ class BeUserController extends Controller
 
             }
         } catch (\Exception $exception) {
-            Log::error("ERROR => UserController@store => " . $exception->getMessage());
+            Log::error("ERROR => BeUserController@store => " . $exception->getMessage());
             toastr()->error('Update thất bại!', 'Thông báo');
             return redirect()->route('get_admin.user.update', $id);
         }
@@ -148,13 +144,12 @@ class BeUserController extends Controller
         try {
             $user = User::findOrFail($id);
             if ($user) {
-                UserHasType::where('user_id', $id)->delete();
                 $user->delete();
             }
 
         } catch (\Exception $exception) {
             toastr()->error('Update thất bại!', 'Thông báo');
-            Log::error("ERROR => UserController@delete => " . $exception->getMessage());
+            Log::error("ERROR => BeUserController@delete => " . $exception->getMessage());
             return redirect()->route('get_admin.user.index');
         }
 

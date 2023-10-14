@@ -53,7 +53,7 @@ return [
     [
         'icon'   => 'user',
         'name'   => 'QL Nhân viên',
-        'route'  => 'get_admin.admin.index',
+        'route'  => 'get_admin.user.index',
         'prefix' => ['admin'],
         'group' => 'admin'
     ],
