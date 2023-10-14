@@ -10,6 +10,10 @@ import {
     OutlinedButton,
     TextButton,
 } from "../components/button.jsx";
+import ImageSlider from "../components/imageSwiper.js";
+import ImageSwiper from "../components/imageSwiper.js";
+import ProductSwiper from "../components/productSwiper/productSwiper.js";
+import { Divider } from "@mui/material";
 
 const categories = [
     { name: "Kho bo" },
@@ -33,6 +37,66 @@ const tags = [
         name: "mon an chay",
     },
 ];
+
+const products = [
+    {
+        id: 1,
+        name: "Khô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bò",
+        basePrice: "đ1.000.000",
+        quantity: "12",
+        price: "đ500.000",
+    },
+    {
+        id: 1,
+        name: "Khô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bò",
+        basePrice: "đ1.000.000",
+        quantity: "12",
+        price: "đ500.000",
+    },
+    {
+        id: 1,
+        name: "Khô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bò",
+        basePrice: "đ1.000.000",
+        quantity: "12",
+        price: "đ500.000",
+    },
+    {
+        id: 1,
+        name: "Khô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bò",
+        basePrice: "đ1.000.000",
+        quantity: "12",
+        price: "đ500.000",
+    },
+    {
+        id: 1,
+        name: "Khô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bò",
+        basePrice: "đ1.000.000",
+        quantity: "12",
+        price: "đ500.000",
+    },
+    {
+        id: 1,
+        name: "Khô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bò",
+        basePrice: "đ1.000.000",
+        quantity: "12",
+        price: "đ500.000",
+    },
+    {
+        id: 1,
+        name: "Khô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bò",
+        basePrice: "đ1.000.000",
+        quantity: "12",
+        price: "đ500.000",
+    },
+    {
+        id: 1,
+        name: "Khô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bòKhô bò",
+        basePrice: "đ1.000.000",
+        quantity: "12",
+        price: "đ500.000",
+    },
+];
+
 function CategoryCardItem(props) {
     const { category } = props;
     return (
@@ -83,12 +147,16 @@ function ProductSlideCard(props) {
     const { t } = useTranslation();
     const { header, newType } = props;
     return (
-        <div className="flex flex-col flex-1 bg-white p-4">
+        <div className="flex flex-col flex-1 bg-white p-4 h-fit">
             <div className="flex flex-row flex-1 justify-between items-center">
                 <h5 className="font-medium my-0 text-base">{header}</h5>
                 <TextButton endIcon={<KeyboardArrowRightIcon />}>
                     {t("more")}
                 </TextButton>
+            </div>
+            <Divider className="mb-3 mt-0" />
+            <div className="flex w-full h-fit max-w-full">
+                <ProductSwiper products={products} />
             </div>
         </div>
     );
@@ -101,7 +169,12 @@ export default function Home() {
             <div className="flex flex-col flex-1 w-full p-4 bg-background_main space-y-4">
                 <CategoryCard />
                 <TagCard />
+                <div className="w-full h-96 bg-white  max-w-full">
+                    <ImageSwiper />
+                </div>
                 <ProductSlideCard header="Món ăn mới" type="newDish" />
+                <ProductSlideCard header="Món yêu thích" type="newDish" />
+                <ProductSlideCard header="Món khuyến mãi" type="newDish" />
             </div>
             <Footer />
         </div>

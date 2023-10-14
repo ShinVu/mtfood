@@ -20,6 +20,12 @@ import "typeface-montserrat";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
+//import Swiper
+// import function to register Swiper custom elements
+import { register } from "swiper/element/bundle";
+// register Swiper custom elements
+register();
+
 const { palette } = createTheme();
 const { augmentColor } = palette;
 const createColor = (mainColor: string) =>
