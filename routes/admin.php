@@ -61,5 +61,21 @@ Route::group(['namespace' => 'Be','prefix' => 'admin'], function (){
     });
     Route::group(['prefix' => 'role'], function (){
         Route::get('',[Be\BeRoleController::class,'index'])->name('get_admin.role.index');
+        Route::get('create',[Be\BeRoleController::class,'create'])->name('get_admin.role.create');
+        Route::post('create',[Be\BeRoleController::class,'store'])->name('get_admin.role.store');
+
+        Route::get('update/{id}',[Be\BeRoleController::class,'edit'])->name('get_admin.role.update');
+        Route::post('update/{id}',[Be\BeRoleController::class,'update'])->name('get_admin.role.update');
+        Route::get('delete/{id}',[Be\BeRoleController::class,'delete'])->name('get_admin.role.delete');
+    });
+
+    Route::group(['prefix' => 'permission'], function (){
+        Route::get('',[Be\BePermissionController::class,'index'])->name('get_admin.permission.index');
+        Route::get('create',[Be\BePermissionController::class,'create'])->name('get_admin.permission.create');
+        Route::post('create',[Be\BePermissionController::class,'store'])->name('get_admin.permission.store');
+
+        Route::get('update/{id}',[Be\BePermissionController::class,'edit'])->name('get_admin.permission.update');
+        Route::post('update/{id}',[Be\BePermissionController::class,'update'])->name('get_admin.permission.update');
+        Route::get('delete/{id}',[Be\BePermissionController::class,'delete'])->name('get_admin.permission.delete');
     });
 });

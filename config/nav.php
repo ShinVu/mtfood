@@ -64,6 +64,13 @@ return [
         'prefix' => ['role'],
         'group' => 'role'
     ],
+    [
+        'icon'   => 'key',
+        'name'   => 'Permission',
+        'route'  => 'get_admin.permission.index',
+        'prefix' => ['permission'],
+        'group' => 'permission'
+    ],
 //    [
 //        'icon'   => 'database',
 //        'name'   => 'Option',
