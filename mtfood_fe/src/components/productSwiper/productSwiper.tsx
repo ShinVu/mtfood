@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { ProductCard } from "../../features/product";
 // import Swiper core and required modules
 import {
@@ -9,7 +9,7 @@ import {
     Virtual,
 } from "swiper/modules";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "./styles.css";
@@ -55,39 +55,41 @@ function ProductSwiperCard(props) {
 
 export default function ProductSwiper(props) {
     const { header, products } = props;
+    const [progress, setProgress] = useState(0);
+    const swiperRef = useRef();
+    const getProgress = (progress) => {
+        setProgress(progress);
+    };
+    const handlePrev = useCallback(() => {
+        if (!swiperRef.current) return;
+        swiperRef.current.slidePrev();
+    }, []);
+
+    const handleNext = useCallback(() => {
+        if (!swiperRef.current) return;
+        swiperRef.current.slideNext();
+    }, []);
+
     return (
         <div className="w-full h-fit  relative px-4">
-            <div className="flex absolute top-[calc(50%-24px)] z-10 cursor-pointer -right-0 image-swiper-button-next">
-                <div className="h-12 w-12 bg-white flex items-center justify-center shadow rounded-[6rem]">
-                    <IoIosArrowForward className="h-6 w-6" />
-                </div>
-            </div>
-            <div className="flex absolute top-[calc(50%-24px)] z-10 cursor-pointer  -left-0 image-swiper-button-prev">
-                <div className="h-12 w-12 bg-white flex items-center justify-center shadow rounded-[6rem]">
-                    <IoIosArrowBack className="h-6 w-6" />
-                </div>
-            </div>
-
             <Swiper
                 // install Swiper modules
-                modules={[Navigation, A11y, Scrollbar, Virtual]}
+                modules={[Navigation, A11y, Scrollbar]}
                 breakpoints={{
                     640: { slidesPerView: 2 },
                     768: { slidesPerView: 3 },
                     1024: { slidesPerView: 5 },
-                    1280: { slidesPerView: 6 },
+                    1280: { slidesPerView: 7 },
                 }}
                 spaceBetween={15}
-                navigation={{
-                    nextEl: ".image-swiper-button-next",
-                    prevEl: ".image-swiper-button-prev",
-                    disabledClass: "swiper-button-disabled",
+                scrollbar={{
+                    draggable: true,
+                    hide: true,
                 }}
-                scrollbar={{ draggable: true }}
-                onSwiper={(swiper) => console.log(swiper)}
-                onSlideChange={() => console.log("slide change")}
+                onSwiper={(swiper) => (swiperRef.current = swiper)}
+                onSlideChange={(swiper) => getProgress(swiper.progress)}
                 cssMode={true}
-                className="pb-3 "
+                className="pb-4"
             >
                 {products &&
                     products.map((product) => (
@@ -99,6 +101,31 @@ export default function ProductSwiper(props) {
                         </SwiperSlide>
                     ))}
             </Swiper>
+
+            <div
+                className={
+                    progress === 1
+                        ? "flex absolute top-[calc(50%-24px)] z-10 cursor-pointer -right-0 image-swiper-button-next opacity-50 pointer-events-none"
+                        : "flex absolute top-[calc(50%-24px)] z-10 cursor-pointer -right-0 image-swiper-button-next "
+                }
+                onClick={handleNext}
+            >
+                <div className="h-12 w-12 bg-white flex items-center justify-center shadow rounded-[6rem]">
+                    <IoIosArrowForward className="h-6 w-6" />
+                </div>
+            </div>
+            <div
+                className={
+                    progress === 0
+                        ? "flex absolute top-[calc(50%-24px)] z-10 cursor-pointer  -left-0 image-swiper-button-prev opacity-50 pointer-events-none"
+                        : "flex absolute top-[calc(50%-24px)] z-10 cursor-pointer -left-0 image-swiper-button-next "
+                }
+                onClick={handlePrev}
+            >
+                <div className="h-12 w-12 bg-white flex items-center justify-center shadow rounded-[6rem]">
+                    <IoIosArrowBack className="h-6 w-6" />
+                </div>
+            </div>
         </div>
     );
 }
