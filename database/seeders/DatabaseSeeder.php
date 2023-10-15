@@ -23,7 +23,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SqlFileSeeder::class,  //Seeder to import locations file, only work if config {1. Go to PhpMyadmin, 2. Query: SET GLOBAL max_allowed_packet=1073741824;}
             EmployeeSeeder::class,
-            PermissionSeeder::class,
             ShiftSeeder::class,
             ParticipationSeeder::class,
             CustomerSeeder::class,
