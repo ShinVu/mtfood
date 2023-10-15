@@ -53,7 +53,7 @@ return [
     [
         'icon'   => 'user',
         'name'   => 'QL Nhân viên',
-        'route'  => 'get_admin.admin.index',
+        'route'  => 'get_admin.user.index',
         'prefix' => ['admin'],
         'group' => 'admin'
     ],
@@ -63,6 +63,13 @@ return [
         'route'  => 'get_admin.role.index',
         'prefix' => ['role'],
         'group' => 'role'
+    ],
+    [
+        'icon'   => 'key',
+        'name'   => 'Permission',
+        'route'  => 'get_admin.permission.index',
+        'prefix' => ['permission'],
+        'group' => 'permission'
     ],
 //    [
 //        'icon'   => 'database',

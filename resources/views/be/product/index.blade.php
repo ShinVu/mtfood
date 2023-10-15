@@ -6,7 +6,7 @@
         </div>
         <div>
             <form class="form-inline">
-                <a href="" class="btn btn-primary mb-2 mr-2">Thêm mới</a>
+                <a href="{{ route('get_admin.product.create') }}" class="btn btn-primary mb-2 mr-2">Thêm mới</a>
                 <div class="form-group mb-2 mr-2">
                     <label for="inputPassword2" class="sr-only">Danh mục</label>
                     <select name="status" id="" class="form-control">
@@ -22,48 +22,50 @@
             <table class="table table-striped table-sm">
                 <thead>
                 <tr>
-                    <th style="width: 100px;"></th>
-                    <th style="width: 50px;text-align: center">ID</th>
-                    <th>Mô tả</th>
+                    <th>#</th>
+                    <th>Avatar</th>
+                    <th style="width: 30%">Tên sản phẩm</th>
+                    <th>Danh mục</th>
+                    <th>Author</th>
                     <th>Giá</th>
-                    <th>Tồn kho</th>
-                    <th>Đã bán</th>
-                    <th></th>
+                    <th>Trạng thái</th>
+                    <th>Ngày tạo</th>
+                    <th>Thao tác</th>
                 </tr>
                 </thead>
                 <tbody>
-                @for($i = 1 ; $i <= 10 ; $i ++)
+                @foreach($products ?? [] as $item)
                     <tr>
-                        <td style="text-align: center">
-                            <a href="">
-                                <img src="{{ asset('sp1.png') }}" alt="" style="width: 100px;height: 100px;object-fit: cover">
+                        <td>{{ $item->id }}</td>
+                        <td>
+                            <a href="" style="display: inline-block;position: relative">
+                                <img src="{{ pare_url_file($item->image_url) }}" style="width: 60px;height: 60px; border-radius: 10px" alt="">
+                                <span class="badge badge-danger" style="position: absolute;right: 10px;top: 10px">{{ $item->images_count }}</span>
                             </a>
                         </td>
-                        <td class="text-center">
-                            <span>{{ $i }}</span>
-                        </td>
                         <td>
-                            <span>Tên:  Khô gà lá chanh</span> <br>
-                            <span>Khối lượng: 300g</span>
+                            {{ $item->name }} <br>
+{{--                            <span>{{ $item->province->name ?? "..." }} - {{ $item->district->name ?? "..." }} - {{ $item->ward->name ?? "..." }}</span>--}}
                         </td>
+                        <td>{{ $item->category->name ?? "[N\A]" }}</td>
+                        <td>{{ $item->user->name ?? "[N\A]" }}</td>
+                        <td>{{ number_format($item->price,0,',','.') }}đ</td>
                         <td>
-                            <span>20.450.000 đ</span>
+                            <span class="{{ $item->getStatus($item->status)['class'] ?? "badge badge-light" }}">{{ $item->getStatus($item->status)['name'] ?? "Tạm dừng" }}</span>
                         </td>
+                        <td>{{ $item->created_at }}</td>
                         <td>
-                            <span>20</span> <br>
-                        </td>
-                        <td>
-                            <span>19</span> <br>
-                        </td>
-                        <td>
-                            <a href="">Cập nhật</a>
+                            <a href="{{ route('get_admin.product.update', $item->id) }}">Edit</a>
                             <a href="javascript:;void(0)">|</a>
-                            <a href="">Xoá</a>
+                            <a href="{{ route('get_admin.product.delete', $item->id) }}">Delete</a>
                         </td>
                     </tr>
-                @endfor
+                @endforeach
                 </tbody>
             </table>
+            <div class="col-12">
+                {!! $products->appends($query ?? [])->links() !!}
+            </div>
         </div>
     </div>
 @stop
