@@ -18,6 +18,7 @@ import OrderDetail from "../pages/OrderDetail";
 import Home from "../pages/Home";
 import Cart from "../pages/Cart";
 import Checkout from "../pages/Checkout";
+import Product from "../pages/Product";
 
 const router = createBrowserRouter([
     {
@@ -37,7 +38,7 @@ const router = createBrowserRouter([
         element: <SignUpNewPassword />,
     },
     {
-        path: "/product/:id",
+        path: "/product/details/:id",
         element: <ProductDetails />,
     },
     {
@@ -88,6 +89,7 @@ const router = createBrowserRouter([
         path: "/checkout",
         element: <Checkout />,
     },
+    { path: "/product/:type?", element: <Product /> },
 ]);
 
 export default router;

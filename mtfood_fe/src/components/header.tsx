@@ -168,7 +168,7 @@ export default function Header() {
                         {t("news")}
                     </TextButton>
                 </Stack>
-                <Stack direction="row" spacing={2}>
+                <Stack direction="row" spacing={2} className="pr-2">
                     <IconButton
                         startIcon={<LoopIcon />}
                         className="text-white text-base"

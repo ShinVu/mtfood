@@ -186,5 +186,14 @@
     "choosePaymentOption": "Chọn hình thức thanh toán",
     "seeInformation": "Xem thông tin",
     "orderNow": "Đặt hàng",
-    "tag": "Thẻ Tag"
+    "tag": "Thẻ Tag",
+    "filter": "Bộ lọc",
+    "priceRange": "Khoảng giá",
+    "from": "Từ",
+    "to": "Đến",
+    "apply": "Áp dụng",
+    "serviceAndDiscount": "Dịch vụ và khuyến mãi",
+    "onSale": "Đang giảm giá",
+    "voucher": "Voucher",
+    "available": "Còn hàng"
 }

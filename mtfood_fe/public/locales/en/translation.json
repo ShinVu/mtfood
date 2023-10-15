@@ -184,5 +184,14 @@
     "choosePaymentOption": "Choose Payment method",
     "seeInformation": "View details",
     "orderNow": "Make order",
-    "tag": "Tag card"
+    "tag": "Tag card",
+    "filter": "Filter",
+    "priceRange": "Price range",
+    "from": "From",
+    "to": "To",
+    "apply": "Apply",
+    "serviceAndDiscount": "Services & Discounts",
+    "onSale": "On Sale",
+    "voucher": "Voucher",
+    "available": "Available"
 }

@@ -10,7 +10,6 @@ import {
     OutlinedButton,
     TextButton,
 } from "../components/button.jsx";
-import ImageSlider from "../components/imageSwiper.js";
 import ImageSwiper from "../components/imageSwiper.js";
 import ProductSwiper from "../components/productSwiper/productSwiper.js";
 import { Divider } from "@mui/material";
@@ -101,8 +100,11 @@ function CategoryCardItem(props) {
     const { category } = props;
     return (
         <div className="flex flex-col items-center">
-            <img src="/assets/image_14.png" className="w-12 h-12" />
-            <p className="text-xs mt-2">{category.name}</p>
+            <img
+                src="/assets/image_14.png"
+                className="w-12 h-12 rounded-[6rem]"
+            />
+            <p className="text-sm mt-2 font-medium">{category.name}</p>
         </div>
     );
 }
@@ -111,7 +113,7 @@ function TagCardItem(props) {
     const { tag } = props;
     return (
         <div className="flex flex-col items-center">
-            <p className="text-xs mt-2">{tag.name}</p>
+            <p className="text-sm mt-2">{tag.name}</p>
         </div>
     );
 }
@@ -169,7 +171,7 @@ export default function Home() {
             <div className="flex flex-col flex-1 w-full p-4 bg-background_main space-y-4">
                 <CategoryCard />
                 <TagCard />
-                <div className="w-full h-96 bg-white  max-w-full">
+                <div className="w-full h-[36rem]   max-w-full">
                     <ImageSwiper />
                 </div>
                 <ProductSlideCard header="Món ăn mới" type="newDish" />
