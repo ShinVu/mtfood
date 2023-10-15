@@ -20,6 +20,8 @@ import "typeface-montserrat";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
+//import Google Provider
+import { GoogleOAuthProvider } from "@react-oauth/google";
 //import Swiper
 // import function to register Swiper custom elements
 import { register } from "swiper/element/bundle";
@@ -50,7 +52,7 @@ i18n.use(Backend)
     .use(LanguageDetector)
     .use(initReactI18next)
     .init({
-        supportedLngs: ["en", "vn"],
+        supportedLngs: ["vn", "en"],
         fallbackLng: "vn", //fallback language
         debug: true, //Change to false in production
         interpolation: { escapeValue: false }, //escapeValue has already been handled by React
@@ -73,15 +75,17 @@ i18n.use(Backend)
 function App() {
     return (
         <React.StrictMode>
-            <Provider store={store}>
-                <ThemeProvider theme={theme}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <Suspense fallback={<LoadingScreen />}>
-                            <RouterProvider router={router} />
-                        </Suspense>
-                    </LocalizationProvider>
-                </ThemeProvider>
-            </Provider>
+            <GoogleOAuthProvider clientId="557838967224-01nbpbjlmb6oinhrpohi5bj40sakjneu.apps.googleusercontent.com">
+                <Provider store={store}>
+                    <ThemeProvider theme={theme}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <Suspense fallback={<LoadingScreen />}>
+                                <RouterProvider router={router} />
+                            </Suspense>
+                        </LocalizationProvider>
+                    </ThemeProvider>
+                </Provider>
+            </GoogleOAuthProvider>
         </React.StrictMode>
     );
 }

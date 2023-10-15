@@ -195,5 +195,6 @@
     "serviceAndDiscount": "Dịch vụ và khuyến mãi",
     "onSale": "Đang giảm giá",
     "voucher": "Voucher",
-    "available": "Còn hàng"
+    "available": "Còn hàng",
+    "accountRequired": "Vui lòng nhập Email/Số điện thoại/Tên đăng nhập"
 }

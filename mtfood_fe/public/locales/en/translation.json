@@ -193,5 +193,6 @@
     "serviceAndDiscount": "Services & Discounts",
     "onSale": "On Sale",
     "voucher": "Voucher",
-    "available": "Available"
+    "available": "Available",
+    "accountRequired": "Please enter Email/Phone number/Username"
 }
