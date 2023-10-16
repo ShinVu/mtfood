@@ -22,6 +22,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 //import Google Provider
 import { GoogleOAuthProvider } from "@react-oauth/google";
+
 //import Swiper
 // import function to register Swiper custom elements
 import { register } from "swiper/element/bundle";

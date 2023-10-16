@@ -15,14 +15,13 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 //Import component
-import Google from "/assets/google.svg";
 import Facebook from "/assets/facebook.svg";
 import Header from "../components/header";
 import Footer from "../components/Footer";
 import { OutlinedInput } from "@mui/material";
-//Import google provider
-import { GoogleLogin, googleLogout, useGoogleLogin } from "@react-oauth/google";
+
 import GoogleSignIn from "../components/googleLogin";
+import FacebookSignIn from "../components/facebookLogin";
 const schema = yup
     .object({
         account: yup.string().trim().required("accountRequired"),
@@ -37,7 +36,6 @@ export default function SignUp() {
     } = useForm({
         resolver: yupResolver(schema),
     });
-
     return (
         <div className="flex flex-col flex-1 min-h-screen w-full ">
             <div className="flex flex-1 py-5 bg-signUp bg-center bg-cover justify-center items-center">
@@ -80,16 +78,7 @@ export default function SignUp() {
                             <GoogleSignIn />
                         </div>
                         <div className="my-3">
-                            <Button
-                                component="label"
-                                variant="contained"
-                                className="w-full"
-                                startIcon={
-                                    <img src={Facebook} className="w-4 h-4" />
-                                }
-                            >
-                                {t("logInFacebook")}
-                            </Button>
+                            <FacebookSignIn />
                         </div>
                         <div className="my-3 flex flex-row items-center mx-2 ">
                             <p className="text-base font-medium my-0 ">
