@@ -25,7 +25,7 @@ import {
 } from "../components/button.jsx";
 import PaginatedProducts from "../components/paginateProduct.js";
 import Header from "../components/header";
-import Footer from "../components/Footer";
+import Footer from "../components/footer";
 import ImageSwiper from "../components/imageSwiper.js";
 
 //Import React router
@@ -67,11 +67,13 @@ function CategoryBar() {
     const { t } = useTranslation();
     return (
         <div className="flex flex-col bg-white p-4">
-            <p className="font-bold text-base my-0">{t("category")}</p>
+            <p className="font-bold text-base my-0 text-black">
+                {t("category")}
+            </p>
             <div className="mt-2">
                 {categories.map((category) => (
                     <p
-                        className="text-sm font-medium my-0 mt-2"
+                        className="text-sm font-medium my-0 mt-2 text-black"
                         key={category.name}
                     >
                         {category.name}
@@ -86,10 +88,13 @@ function TagBar() {
     const { t } = useTranslation();
     return (
         <div className="flex flex-col bg-white p-4">
-            <p className="font-bold text-base my-0">{t("tag")}</p>
+            <p className="font-bold text-base my-0 text-black">{t("tag")}</p>
             <div className="mt-2">
                 {tags.map((tag) => (
-                    <p className="text-sm font-medium my-0 mt-2" key={tag.name}>
+                    <p
+                        className="text-sm font-medium my-0 mt-2 text-black"
+                        key={tag.name}
+                    >
                         {tag.name}
                     </p>
                 ))}
@@ -103,7 +108,7 @@ function Filter() {
     return (
         <div className="flex flex-row items-center">
             <FilterListIcon sx={{ fontSize: 40 }} />
-            <p className="my-0 font-bold text-xl ml-2 uppercase">
+            <p className="my-0 font-bold text-xl ml-2 uppercase text-black">
                 {t("filter")}
             </p>
         </div>
@@ -114,8 +119,10 @@ function PriceFilter() {
     const { t } = useTranslation();
     return (
         <div className="flex flex-col bg-white p-4">
-            <p className="font-bold text-base my-0">{t("priceRange")}</p>
-            <div className="mt-4 flex flex-col items-center space-y-1">
+            <p className="font-bold text-base my-0 text-black">
+                {t("priceRange")}
+            </p>
+            <div className="mt-4 flex flex-col items-center">
                 <TextField
                     InputProps={{
                         startAdornment: (
@@ -135,7 +142,11 @@ function PriceFilter() {
                     sx={{ width: "22ch" }}
                     placeholder={t("to")}
                 />
-                <ContainedButton className="mt-3">{t("apply")}</ContainedButton>
+                <div className="mt-5">
+                    <ContainedButton className="bg-primary_main">
+                        {t("apply")}
+                    </ContainedButton>
+                </div>
             </div>
         </div>
     );
@@ -163,7 +174,7 @@ function ServiceFilter() {
 
     return (
         <div className="flex flex-col w-full bg-white p-4">
-            <p className="font-bold text-base my-0">
+            <p className="font-bold text-base my-0 text-black">
                 {t("serviceAndDiscount")}
             </p>
             <div className="mt-2 w-fit ">
@@ -178,7 +189,7 @@ function ServiceFilter() {
                                 />
                             }
                             label={
-                                <span className="font-medium text-sm">
+                                <span className="font-medium text-sm text-black">
                                     {t("onSale")}
                                 </span>
                             }
@@ -192,7 +203,7 @@ function ServiceFilter() {
                                 />
                             }
                             label={
-                                <span className="font-medium text-sm">
+                                <span className="font-medium text-sm text-black">
                                     {t("Voucher")}
                                 </span>
                             }
@@ -206,7 +217,7 @@ function ServiceFilter() {
                                 />
                             }
                             label={
-                                <span className="font-medium text-sm">
+                                <span className="font-medium text-sm text-black">
                                     {t("available")}
                                 </span>
                             }
@@ -220,7 +231,7 @@ function ServiceFilter() {
                                 />
                             }
                             label={
-                                <span className="font-medium text-sm">
+                                <span className="font-medium text-sm text-black">
                                     {t("wholesaleProduct")}
                                 </span>
                             }
@@ -236,7 +247,9 @@ function RatingFilter() {
     const { t } = useTranslation();
     return (
         <div className="flex flex-col w-full bg-white p-4">
-            <p className="font-bold text-base my-0 capitalize">{t("rating")}</p>
+            <p className="font-bold text-base my-0 capitalize text-black">
+                {t("rating")}
+            </p>
             <div className="mt-3 w-fit -ml-1 flex flex-col space-y-1">
                 <Rating name="read-only" value={5} readOnly />
                 <Rating name="read-only" value={4} readOnly />

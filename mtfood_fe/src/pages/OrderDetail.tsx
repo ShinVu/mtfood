@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { colors } from "../../public/theme.js";
 //Import components
 import Header from "../components/header";
-import Footer from "../components/Footer";
+import Footer from "../components/footer";
 import {
     ProfileNavigation,
     OrderStepper,
@@ -84,7 +84,9 @@ export default function OrderDetail() {
                                 <p className="text-base text-gray-100">Lorem</p>
                             </div>
                             <div className="flex flex-col space-y-4">
-                                <ContainedButton>Liên hệ</ContainedButton>
+                                <ContainedButton className=" bg-primary_main">
+                                    Liên hệ
+                                </ContainedButton>
                                 <OutlinedButton>Thanh toán ngay</OutlinedButton>
                             </div>
                         </div>

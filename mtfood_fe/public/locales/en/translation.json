@@ -5,6 +5,7 @@
     "address": "address",
     "login": "log in",
     "logout": "log out",
+    "signup": "Sign up",
     "hello": "hello",
     "shoppingCart" : "Shopping Cart",
     "customerService" : "Customer Service",
@@ -194,5 +195,18 @@
     "onSale": "On Sale",
     "voucher": "Voucher",
     "available": "Available",
-    "accountRequired": "Please enter Email/Phone number/Username"
+    "accountRequired": "Please enter Email/Phone number/Username",
+    "invalidAccount": "Invalid phone number or email",
+    "verificationCodeInvalid": "Verification code is not valid",
+    "verificationCodeIncorrect": "Verification code is incorrect",
+    "passwordNotMatch": "Password does not match",
+    "passwordRequired": "Password required",
+    "reEnterPasswordRequired": "Re enter Password required",
+    "emailAlreadyExist": "Email has already existed",
+    "phoneNumberAlreadyExist": "Phone number has already existed",
+    "phoneNumberOrEmail": "Please enter valid phone number or email",
+    "serverError": "Server encounter unexpected errors, please try again later",
+    "haveAccount?": "Already have an account?",
+    "account": "Email/Phone number",
+    "emailAlreadyVerified": "Email has already been verified"
 }

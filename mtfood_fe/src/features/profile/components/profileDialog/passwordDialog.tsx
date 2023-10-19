@@ -1,49 +1,36 @@
 import React, { useState, useEffect } from "react";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
+
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
+
 import DialogTitle from "@mui/material/DialogTitle";
 import { useTranslation } from "react-i18next";
-import { Footer } from "../components/Footer";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Google from "/assets/google.svg";
-import Facebook from "/assets/facebook.svg";
-import styled from "styled-components";
-import { MuiOtpInput } from "mui-one-time-password-input";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import Input from "@mui/material/Input";
-import FilledInput from "@mui/material/FilledInput";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
+
 import InputAdornment from "@mui/material/InputAdornment";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import IconButton from "@mui/material/IconButton";
 //Import element
-import {
-    ContainedButton,
-    OutlinedButton,
-    TextButton,
-} from "../../../../components/button";
-import OtpInputStyled from "../../../../components/OtpInput";
+import { TextButton } from "../../../../components/button";
+
+//Import color
 import { colors } from "../../../../../public/theme";
 
-//Import utils
-import { matchIsNumeric } from "../../../../utils";
-
-export default function PasswordDialog({ handleClose }) {
+export default function PasswordDialog({
+    handleClose,
+}: {
+    handleClose: () => void;
+}) {
     const { t } = useTranslation();
     const [showPasswords, setShowPasswords] = React.useState({
         input1: false,
         input2: false,
     });
 
-    const handleClickShowPassword = (input) => {
+    const handleClickShowPassword = (input: 1 | 2) => {
         if (input === 1) {
             setShowPasswords({
                 ...showPasswords,

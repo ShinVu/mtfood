@@ -2,26 +2,11 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 //Import MUI
-import Avatar from "@mui/material/Avatar";
-import Badge from "@mui/material/Badge";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import TextField from "@mui/material/TextField";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import { styled as mui_styled } from "@mui/material/styles";
+
 import AddIcon from "@mui/icons-material/Add";
 //Import components
 import Header from "../components/header";
-import Footer from "../components/Footer";
+import Footer from "../components/footer";
 import {
     ContainedButton,
     OutlinedButton,
@@ -34,45 +19,17 @@ import {
     UserAddressItem,
 } from "../features/profile/index.js";
 
-const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
-    "& td, & th": {
-        border: 0,
-    },
-}));
-
-const users = [
-    {
-        address: "Bạch Đằng, Quận Tân Bình, TP.HCM",
-        avatar: "./assets/image_15.png",
-        name: "Lorem",
-    },
-    {
-        address: "Bạch Đằng, Quận Tân Bình, TP.HCM",
-        avatar: "./assets/image_15.png",
-        name: "Lorem",
-    },
-];
-
 const user = {
     address: "Bạch Đằng, Quận Tân Bình, TP.HCM",
     avatar: "./assets/image_15.png",
     name: "Lorem",
     phoneNumber: "12312412412",
 };
-const StyledBadge = styled(Badge)(({ theme }) => ({
-    "& .MuiBadge-badge": {
-        right: 10,
-        bottom: 10,
-        width: 28,
-        height: 28,
-        borderRadius: 28,
-        boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-    },
-}));
+
 export default function UserAddress() {
     const { t } = useTranslation();
     const [open, setOpen] = React.useState(false);
-    const handleModalOpen = (type) => {
+    const handleModalOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
@@ -89,7 +46,7 @@ export default function UserAddress() {
                             {t("address")}
                         </p>
                         <ContainedButton
-                            className="h-fit w-fit"
+                            className="h-fit w-fit bg-primary_main"
                             startIcon={<AddIcon />}
                             onClick={handleModalOpen}
                         >

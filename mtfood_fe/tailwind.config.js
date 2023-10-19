@@ -8,7 +8,7 @@ export default {
     theme: {
         extend: {
             colors: {
-                primary_main: "#47AD97",
+                primary_main: "#333333",
                 primary_light: "#47AD9780",
                 white: "#fff",
                 black: "#000",
@@ -38,15 +38,15 @@ export default {
                 xl: "1280px",
             },
             backgroundImage: {
-                'signUp': "url('/assets/image_15.png')",
-                'signIn': "url('/assets/image_14.png')",
-              }
+                signUp: "url('/assets/image_15.png')",
+                signIn: "url('/assets/image_14.png')",
+            },
         },
     },
     plugins: [
         require("flowbite/plugin"),
         require("preline/plugin"),
         require("daisyui"),
-        require('@tailwindcss/line-clamp'),
+        require("@tailwindcss/line-clamp"),
     ],
 };

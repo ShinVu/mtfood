@@ -4,9 +4,8 @@ import { useTranslation } from "react-i18next";
 import Facebook from "/assets/facebook.svg";
 import Button from "@mui/material/Button";
 
-function FacebookButton(props) {
+function FacebookButton(props: any) {
     const { t } = useTranslation();
-
     const { onClick, onLogoutClick } = props;
     return (
         <Button
@@ -34,9 +33,7 @@ export default function FacebookSignIn() {
             onProfileSuccess={(response) => {
                 console.log("Get Profile Success!", response);
             }}
-            render={({ onClick, logout }) => (
-                <FacebookButton onClick={onClick} />
-            )}
+            render={({ onClick }) => <FacebookButton onClick={onClick} />}
         />
     );
 }

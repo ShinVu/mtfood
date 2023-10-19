@@ -5,44 +5,50 @@ import { colors } from "../../public/theme";
 // Import MUI
 import Button from "@mui/material/Button";
 
-function TextButton(props) {
+function TextButton(props: any) {
     return (
-        <Button variant="text" onClick={props.onClick} {...props}>
+        <Button
+            variant="text"
+            onClick={props.onClick}
+            className={props.className}
+            sx={props.sx}
+        >
             {props.children}
         </Button>
     );
 }
 
-function IconButton(props) {
+function IconButton(props: any) {
     return (
         <Button
             variant="text"
             onClick={props.onClick}
             startIcon={props.startIcon}
-            {...props}
+            className={props.className}
+            sx={props.sx}
         >
             {props.children}
         </Button>
     );
 }
 
-function ContainedButton(props) {
+function ContainedButton(props: any) {
     return (
         <Button
             variant="contained"
             onClick={props.onClick}
             startIcon={props.startIcon}
+            className={props.className}
             sx={{
                 "background-color": colors.primary_main,
             }}
-            {...props}
         >
             {props.children}
         </Button>
     );
 }
 
-function OutlinedButton(props) {
+function OutlinedButton(props: any) {
     return (
         <Button
             variant="outlined"

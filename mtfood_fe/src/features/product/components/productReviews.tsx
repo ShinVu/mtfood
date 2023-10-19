@@ -1,10 +1,10 @@
 import Avatar from "@mui/material/Avatar";
 import { Rating } from "@mui/material";
-import { IconButton } from "../../../components/Button";
+import { IconButton } from "../../../components/button";
 import { useTranslation } from "react-i18next";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import { colors } from "../../../../public/theme";
-function stringAvatar(name) {
+function stringAvatar(name: string) {
     return {
         sx: {},
         children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,

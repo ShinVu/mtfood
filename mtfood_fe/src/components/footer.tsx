@@ -4,15 +4,10 @@ import "../index.css";
 // Import translation
 import { useTranslation } from "react-i18next";
 
-// Import library from bootstrap
-import { Button, Tab } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
-
 // Import icons
 import { FaMoneyBills } from "react-icons/fa6";
 import { colors } from "../../public/theme";
 
-import * as React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -29,7 +24,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function Footer() {
     const { t } = useTranslation();
     return (
-        <div className="p-4 flex  flex-1 justify-center items-center bg-background_footer">
+        <div className="p-4 flex  w-full justify-center items-center bg-background_footer">
             <TableContainer>
                 <Table
                     sx={{ minWidth: 650 }}
@@ -175,5 +170,3 @@ export default function Footer() {
         </div>
     );
 }
-
-export { Footer };

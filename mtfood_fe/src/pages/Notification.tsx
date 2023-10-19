@@ -11,7 +11,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { useTranslation } from "react-i18next";
 //Import components
 import Header from "../components/header";
-import Footer from "../components/Footer";
+import Footer from "../components/footer";
 import { ProfileNavigation } from "../features/profile";
 import {
     ContainedButton,

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import Header from "../components/header";
-import Footer from "../components/Footer.js";
+import Footer from "../components/footer";
 import { useParams } from "react-router-dom";
 
 //Import MUI
@@ -247,6 +247,7 @@ export default function ProductDetails() {
                                                 }}
                                             />
                                         }
+                                        className=" bg-primary_main"
                                     >
                                         <span className="text-base font-semibold text-gray-100 my-0">
                                             {t("favorite")}
@@ -373,7 +374,7 @@ export default function ProductDetails() {
                                 >
                                     {t("addToCart")}
                                 </OutlinedButton>
-                                <ContainedButton className="min-w-fit">
+                                <ContainedButton className="min-w-fit  bg-primary_main">
                                     {t("buyNow")}
                                 </ContainedButton>
                             </div>

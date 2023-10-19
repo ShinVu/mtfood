@@ -29,7 +29,7 @@ import Facebook from "/assets/facebook.svg";
 
 //Import components
 import Header from "../components/header";
-import Footer from "../components/Footer.js";
+import Footer from "../components/footer";
 import {
     ContainedButton,
     OutlinedButton,

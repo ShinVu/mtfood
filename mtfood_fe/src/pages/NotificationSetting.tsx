@@ -13,7 +13,7 @@ import { styled as mui_styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 //Import components
 import Header from "../components/header";
-import Footer from "../components/Footer";
+import Footer from "../components/footer";
 import { ProfileNavigation } from "../features/profile";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({

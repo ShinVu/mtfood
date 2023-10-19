@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 //initial state for authentication slice
 const initialState = {
-    user: 1234,
+    user: null,
     // token: localStorage.getItem("ACCESS_TOKEN"),
     token: null,
 };

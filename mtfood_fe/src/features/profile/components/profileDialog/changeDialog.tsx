@@ -1,29 +1,19 @@
-import React, { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+
 import { useTranslation } from "react-i18next";
 //Import element
-import {
-    ContainedButton,
-    OutlinedButton,
-    TextButton,
-} from "../../../../components/button";
-import OtpInputStyled from "../../../../components/OtpInput";
-import { colors } from "../../../../../public/theme";
+
 import PhoneNumberDialog from "./phoneNumberDialog";
 import EmailDialog from "./emailDialog";
 import PasswordDialog from "./passwordDialog";
 import PinDialog from "./pinDialog";
-//Import utils
-import { matchIsNumeric } from "../../../../utils";
 
-export default function ChangeDialog(props) {
-    const { t } = useTranslation();
+export default function ChangeDialog(props: {
+    open: boolean;
+    type: string;
+    handleModalOpen: () => void;
+    handleClose: () => void;
+}) {
     const { open, type, handleModalOpen, handleClose } = props;
     const RenderDialog = () => {
         switch (type) {

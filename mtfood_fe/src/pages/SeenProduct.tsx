@@ -22,7 +22,7 @@ import { styled as mui_styled } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 //Import components
 import Header from "../components/header";
-import Footer from "../components/Footer.js";
+import Footer from "../components/footer";
 import {
     ContainedButton,
     OutlinedButton,

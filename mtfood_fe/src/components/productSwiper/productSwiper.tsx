@@ -1,13 +1,7 @@
 import React, { useState, useRef, useCallback } from "react";
 import { ProductCard } from "../../features/product";
 // import Swiper core and required modules
-import {
-    Navigation,
-    Pagination,
-    Scrollbar,
-    A11y,
-    Virtual,
-} from "swiper/modules";
+import { Navigation, Scrollbar, A11y } from "swiper/modules";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 // Import Swiper styles
@@ -21,11 +15,16 @@ import CardMedia from "@mui/material/CardMedia";
 import Rating from "@mui/material/Rating";
 import { CardActionArea } from "@mui/material";
 
-function ProductSwiperCard(props) {
+//import react router dom
+import { useNavigate } from "react-router-dom";
+function ProductSwiperCard(props: { product: any; className?: string }) {
+    const navigate = useNavigate();
     const { product } = props;
     return (
         <Card className={props.className}>
-            <CardActionArea>
+            <CardActionArea
+                onClick={() => navigate(`/product/details/${product.id}`)}
+            >
                 <CardMedia
                     component="img"
                     image="/assets/image_14.png"
@@ -53,21 +52,24 @@ function ProductSwiperCard(props) {
     );
 }
 
-export default function ProductSwiper(props) {
+export default function ProductSwiper(props: {
+    header?: string;
+    products: any;
+}) {
     const { header, products } = props;
     const [progress, setProgress] = useState(0);
     const swiperRef = useRef();
-    const getProgress = (progress) => {
+    const getProgress = (progress: number) => {
         setProgress(progress);
     };
     const handlePrev = useCallback(() => {
         if (!swiperRef.current) return;
-        swiperRef.current.slidePrev();
+        swiperRef.current?.slidePrev();
     }, []);
 
     const handleNext = useCallback(() => {
         if (!swiperRef.current) return;
-        swiperRef.current.slideNext();
+        swiperRef.current?.slideNext();
     }, []);
 
     return (
@@ -92,8 +94,8 @@ export default function ProductSwiper(props) {
                 className="pb-4"
             >
                 {products &&
-                    products.map((product) => (
-                        <SwiperSlide key={product.id} className="py-1">
+                    products.map((product: any) => (
+                        <SwiperSlide key={product.id} className="py-8">
                             <ProductSwiperCard
                                 product={product}
                                 className="h-fit"

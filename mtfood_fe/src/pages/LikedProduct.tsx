@@ -22,7 +22,7 @@ import { styled as mui_styled } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 //Import components
 import Header from "../components/header";
-import Footer from "../components/Footer.js";
+import Footer from "../components/footer";
 import {
     ContainedButton,
     OutlinedButton,
@@ -216,7 +216,7 @@ export default function UserLikedProduct() {
                         {t("seenProduct")}
                     </p>
 
-                    <div className="flex p-2 flex-1 bg-white">
+                    <div className="flex p-2 flex-1 ">
                         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
                             {productSameCat.map((product) => (
                                 <ProductCard

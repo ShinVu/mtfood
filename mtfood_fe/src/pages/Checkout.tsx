@@ -463,7 +463,7 @@ function CheckoutSumup() {
                             <StyledTableRow>
                                 <TableCell align="left"></TableCell>
                                 <TableCell align="right">
-                                    <ContainedButton>
+                                    <ContainedButton className="bg-primary_main">
                                         <span>{t("orderNow")}</span>
                                     </ContainedButton>
                                 </TableCell>

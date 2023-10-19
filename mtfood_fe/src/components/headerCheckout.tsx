@@ -9,20 +9,16 @@ import "../index.css";
 import { useTranslation } from "react-i18next";
 
 //Import icon
-import { FaAngleDown, FaCartShopping } from "react-icons/fa6";
+import { FaAngleDown } from "react-icons/fa6";
 
 //Import color theme
 import { colors } from "../../public/theme";
 
-//Import MUI
-import { Stack } from "@mui/material";
-import LoopIcon from "@mui/icons-material/Loop";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 //Import Element
-import SearchBar from "./SearchBar";
-import { IconButton, TextButton } from "./button";
+import SearchBar from "./searchBar";
 
+//Import type
+import { lang } from "../models/lang.model";
 export default function HeaderCheckout() {
     const { t, i18n } = useTranslation();
 
@@ -36,11 +32,11 @@ export default function HeaderCheckout() {
         _setDropdown(!isDropdown);
     }
 
-    const changeLanguageHandler = (lang) => {
+    const changeLanguageHandler = (lang: lang) => {
         i18n.changeLanguage(lang);
     };
     return (
-        <div className="flex flex-column bg-primary_main">
+        <div className="flex flex-col bg-primary_main">
             <div className="flex flex-row grow items-center justify-between p-2">
                 <div className="flex flex-col md:flex-row md:items-center  ">
                     <p className="font-medium text-xs text-white capitalize  my-0 mx-2">
@@ -97,7 +93,7 @@ export default function HeaderCheckout() {
                         </label>
                         <div
                             tabIndex={0}
-                            className="dropdown-content z-[1] menu  shadow bg-base-100 rounded-box w-52 bg-white"
+                            className="dropdown-content z-[1] menu  shadow rounded-box w-52 bg-white"
                         >
                             <div
                                 className="flex flex-row items-center py-2 px-2 hover:bg-gray-100"

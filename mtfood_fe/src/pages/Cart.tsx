@@ -33,6 +33,7 @@ import { useTranslation } from "react-i18next";
 
 //lodash
 import { debounce } from "@mui/material/utils";
+import { useNavigate } from "react-router-dom";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
@@ -65,14 +66,22 @@ const products = [
 ];
 
 function ProductCartItemCard(props) {
+    const navigate = useNavigate();
     const { product } = props;
     return (
         <StyledTableRow>
             <TableCell align="left">
                 <div className="flex flex-row items-center space-x-4">
                     <Checkbox checked={true} onChange={() => {}} />
-                    <img src="/assets/image_14.png" className="w-24 h-24" />
-                    <p className="text-base self-start">{product.name}</p>
+                    <div
+                        className="cursor-pointer flex flex-row items-center space-x-4"
+                        onClick={() =>
+                            navigate(`/product/details/${product.id}`)
+                        }
+                    >
+                        <img src="/assets/image_14.png" className="w-24 h-24" />
+                        <p className="text-base self-start">{product.name}</p>
+                    </div>
                 </div>
             </TableCell>
             <TableCell align="center">
@@ -137,6 +146,7 @@ function ProductCartItemCard(props) {
 }
 
 function ProductCartItems(props) {
+    const navigate = useNavigate();
     const { t } = useTranslation();
     const { product } = props;
     return (
@@ -347,6 +357,7 @@ function PopOverOrderPayment() {
 }
 
 function OrderProceedCard() {
+    const navigate = useNavigate();
     const { t } = useTranslation();
 
     return (
@@ -391,7 +402,10 @@ function OrderProceedCard() {
                 <div className="flex w-fit px-4 items-center space-x-48">
                     <PopOverOrderPayment />
                     <div>
-                        <ContainedButton className="h-fit">
+                        <ContainedButton
+                            className="h-fit bg-primary_main"
+                            onClick={() => navigate("/checkout")}
+                        >
                             <span>{t("buy")}</span>
                         </ContainedButton>
                     </div>

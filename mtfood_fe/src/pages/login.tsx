@@ -14,12 +14,12 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
-import Google from "/assets/google.svg";
-import Facebook from "/assets/facebook.svg";
-
-import Header from "../components/Header";
 import Footer from "../components/footer";
+import GoogleSignIn from "../components/googleLogin";
+import FacebookSignIn from "../components/facebookLogin";
+import { useNavigate } from "react-router-dom";
 export default function Login() {
+    const navigate = useNavigate();
     const { t } = useTranslation();
     const [showPassword, setShowPassword] = React.useState(false);
 
@@ -31,22 +31,19 @@ export default function Login() {
         event.preventDefault();
     };
     return (
-        <div className="flex flex-col flex-1 min-h-screen w-full ">
+        <div className="flex flex-col flex-1 min-h-fit h-screen w-full ">
             <div className="flex flex-1 py-5 bg-signUp bg-center bg-cover justify-center items-center">
-                <div className="flex  flex-col p-4 bg-white shadow">
+                <div className="flex  flex-col p-6 bg-white shadow space-y-6 rounded">
                     <h1 className="uppercase text-xl font-bold">
                         {t("login")}
                     </h1>
                     <TextField
                         required
-                        label={t("account")}
+                        placeholder={t("account")}
                         variant="outlined"
                         className="w-96 my-2"
                     />
                     <FormControl className="w-96 my-2" variant="outlined">
-                        <InputLabel htmlFor="outlined-adornment-password">
-                            {t("password")}
-                        </InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-password"
                             type={showPassword ? "text" : "password"}
@@ -66,7 +63,7 @@ export default function Login() {
                                     </IconButton>
                                 </InputAdornment>
                             }
-                            label={t("password")}
+                            placeholder={t("password")}
                         />
                     </FormControl>
                     <div className="self-end">
@@ -75,39 +72,26 @@ export default function Login() {
                         </span>
                     </div>
                     <div className="self-center  mt-5 flex flex-col">
-                        <Button variant="contained" className="w-full">
+                        <Button
+                            variant="contained"
+                            className="w-full bg-primary_main"
+                        >
                             {t("login")}
                         </Button>
                         <Divider className="my-3 w-full">{t("or")}</Divider>
                         <div className="my-3">
-                            <Button
-                                component="label"
-                                variant="contained"
-                                className="w-full"
-                                startIcon={
-                                    <img src={Google} className="w-4 h-4" />
-                                }
-                            >
-                                {t("logInGoogle")}
-                            </Button>
+                            <GoogleSignIn />
                         </div>
                         <div className="my-3">
-                            <Button
-                                component="label"
-                                variant="contained"
-                                className="w-full"
-                                startIcon={
-                                    <img src={Facebook} className="w-4 h-4" />
-                                }
-                            >
-                                {t("logInFacebook")}
-                            </Button>
+                            <FacebookSignIn />
                         </div>
                         <div className="my-3 flex flex-row items-center ">
                             <p className="text-base font-medium my-0">
                                 {t("NoPassword?")}
                             </p>
-                            <Button>{t("signUpNow")}</Button>
+                            <Button onClick={() => navigate("/signup")}>
+                                {t("signUpNow")}
+                            </Button>
                         </div>
                     </div>
                 </div>

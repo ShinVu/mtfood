@@ -1,12 +1,12 @@
 // Import library from react
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 //Import pages of application
-import Login from "../pages/Login";
-import SignUp from "../pages/Signup";
-import SignUpVerify from "../pages/Signup_verify";
-import SignUpNewPassword from "../pages/Signup_password";
-import ProductDetails from "../pages/Product_details";
+import Login from "../pages/login";
+import SignUp from "../pages/signup";
+import SignUpVerify from "../pages/signup_verify";
+import SignUpNewPassword from "../pages/signup_password";
+import ProductDetails from "../pages/product_details";
 import Profile from "../pages/Profile";
 import UserAddress from "../pages/Address";
 import UserSeenProduct from "../pages/SeenProduct";
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/",
-        element: <Home />,
+        element: <Navigate to="/home" replace />,
     },
     {
         path: "/home",
@@ -89,7 +89,10 @@ const router = createBrowserRouter([
         path: "/checkout",
         element: <Checkout />,
     },
-    { path: "/product/:type?", element: <Product /> },
+    { path: "/product/cat/:catId", element: <Product /> },
+    { path: "/product/cat", element: <Navigate to="/product/cat/0" replace /> },
+    { path: "/product/tag/:tagId", element: <Product /> },
+    { path: "/product/tag", element: <Navigate to="/product/tag/0" replace /> },
 ]);
 
 export default router;

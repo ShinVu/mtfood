@@ -4,7 +4,7 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 //Import components
 import Header from "../components/header";
-import Footer from "../components/Footer";
+import Footer from "../components/footer";
 import { ProfileNavigation, OrderSearchBar } from "../features/profile";
 
 //Import MUI
@@ -63,7 +63,6 @@ function useRouteMatch(patterns) {
     for (let i = 0; i < patterns.length; i += 1) {
         const pattern = patterns[i];
         const possibleMatch = matchPath(pattern, pathname);
-        console.log(possibleMatch);
         if (possibleMatch !== null) {
             return possibleMatch;
         }
@@ -87,6 +86,7 @@ function MyTabs() {
                 label={t("all")}
                 value="0"
                 to="/user/order/0"
+                replace
                 component={Link}
             />
             <Tab
@@ -99,30 +99,35 @@ function MyTabs() {
                 label={t("preparing")}
                 value="2"
                 to="/user/order/2"
+                replace
                 component={Link}
             />
             <Tab
                 label={t("waitingDelivery")}
                 value="3"
                 to="/user/order/3"
+                replace
                 component={Link}
             />
             <Tab
                 label={t("delivered")}
                 value="4"
                 to="/user/order/4"
+                replace
                 component={Link}
             />
             <Tab
                 label={t("canceled")}
                 value="5"
                 to="/user/order/5"
+                replace
                 component={Link}
             />
             <Tab
                 label={t("return")}
                 value="6"
                 to="/user/order/6"
+                replace
                 component={Link}
             />
         </Tabs>

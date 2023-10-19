@@ -5,7 +5,7 @@ function matchIsNumeric(text) {
 }
 
 //Get size for dialog
-function getSizeDialog(size) {
+function getSizeDialog(size: string) {
     switch (size) {
         case "sm":
             return "sm";
@@ -19,4 +19,5 @@ function getSizeDialog(size) {
             return "md";
     }
 }
+
 export { matchIsNumeric, getSizeDialog };

@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useTranslation } from "react-i18next";
 //Import element
-import {
-    ContainedButton,
-    OutlinedButton,
-    TextButton,
-} from "../../../../components/button";
+import { TextButton } from "../../../../components/button";
 import OtpInputStyled from "../../../../components/OtpInput";
 import { colors } from "../../../../../public/theme";
 
 //Import utils
 import { matchIsNumeric } from "../../../../utils";
 
-function ChangeEmailDialog({ handleClose, handleSubmitSuccess }) {
+function ChangeEmailDialog({
+    handleClose,
+    handleSubmitSuccess,
+}: {
+    handleClose: () => void;
+    handleSubmitSuccess: () => void;
+}) {
     const { t } = useTranslation();
     return (
         <>
@@ -54,7 +55,7 @@ function ChangeEmailDialog({ handleClose, handleSubmitSuccess }) {
     );
 }
 
-function ChangeEmailVerifyDialog({ handleClose }) {
+function ChangeEmailVerifyDialog({ handleClose }: { handleClose: () => void }) {
     const { t } = useTranslation();
     const [otp, setOtp] = React.useState("");
     const [count, setCount] = useState(2);
@@ -70,12 +71,12 @@ function ChangeEmailVerifyDialog({ handleClose }) {
             stopInterval();
         };
     }, []);
-    const validateChar = (value, index) => {
+    const validateChar = (value: string) => {
         const valueNumber = parseInt(value, 10);
         return matchIsNumeric(valueNumber);
     };
 
-    const handleChange = (newValue) => {
+    const handleChange = (newValue: string) => {
         setOtp(newValue);
     };
     return (
@@ -139,7 +140,13 @@ function ChangeEmailVerifyDialog({ handleClose }) {
         </>
     );
 }
-export default function EmailDialog({ handleModalOpen, handleClose }) {
+export default function EmailDialog({
+    handleModalOpen,
+    handleClose,
+}: {
+    handleClose: () => void;
+    handleModalOpen: () => void;
+}) {
     const [type, setType] = useState("email");
     const handleSubmitSuccess = () => {
         setType("emailVerify");

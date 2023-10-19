@@ -11,11 +11,13 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 //import loading screen
-import LoadingScreen from "../components/Loading.js";
+import LoadingScreen from "../components/loading";
 
 //import font for MUI
 import "typeface-montserrat";
 
+//import Engine MUI
+import { StyledEngineProvider } from "@mui/material/styles";
 //import MUX
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -39,7 +41,7 @@ const theme = createTheme({
     },
     palette: {
         primary: {
-            main: "#47AD97",
+            main: "#333333",
             contrastText: "#fff",
         },
         secondary: {
@@ -77,15 +79,19 @@ function App() {
     return (
         <React.StrictMode>
             <GoogleOAuthProvider clientId="557838967224-01nbpbjlmb6oinhrpohi5bj40sakjneu.apps.googleusercontent.com">
-                <Provider store={store}>
-                    <ThemeProvider theme={theme}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <Suspense fallback={<LoadingScreen />}>
-                                <RouterProvider router={router} />
-                            </Suspense>
-                        </LocalizationProvider>
-                    </ThemeProvider>
-                </Provider>
+                <StyledEngineProvider injectFirst>
+                    <Provider store={store}>
+                        <ThemeProvider theme={theme}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <Suspense
+                                    fallback={<LoadingScreen open={true} />}
+                                >
+                                    <RouterProvider router={router} />
+                                </Suspense>
+                            </LocalizationProvider>
+                        </ThemeProvider>
+                    </Provider>
+                </StyledEngineProvider>
             </GoogleOAuthProvider>
         </React.StrictMode>
     );
