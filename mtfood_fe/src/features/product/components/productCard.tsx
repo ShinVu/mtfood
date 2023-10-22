@@ -4,14 +4,18 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Rating from "@mui/material/Rating";
 import { CardActionArea } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 export default function ProductCard(props: {
     product: any;
     className?: string;
 }) {
     const { product } = props;
+    const navigate = useNavigate();
     return (
         <Card className={props.className}>
-            <CardActionArea>
+            <CardActionArea
+                onClick={() => navigate(`/product/details/${product.id}`)}
+            >
                 <CardMedia
                     component="img"
                     image="/assets/image_14.png"

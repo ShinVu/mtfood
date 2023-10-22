@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from "react";
-import TextField from "@mui/material/TextField";
+
 import { useTranslation } from "react-i18next";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Google from "/assets/google.svg";
-import Facebook from "/assets/facebook.svg";
-import styled from "styled-components";
-import { MuiOtpInput } from "mui-one-time-password-input";
-import Box from "@mui/material/Box";
+
 import IconButton from "@mui/material/IconButton";
-import Input from "@mui/material/Input";
-import FilledInput from "@mui/material/FilledInput";
+
 import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
+
 import InputAdornment from "@mui/material/InputAdornment";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
@@ -30,8 +24,20 @@ import Footer from "../components/footer";
 import axiosClient from "../../axios-client";
 
 //Import utilities
-import { hash, compareHash } from "../utils";
-import { useLocation } from "react-router-dom";
+
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+    signUpPasswordFailResponse,
+    signUpPasswordSuccessResponse,
+} from "../models/user.model";
+
+//Import redux
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
+import {
+    setUser,
+    setToken,
+    clearSignup,
+} from "../features/authentication/authenticationSlice";
 
 const schema = yup
     .object({
@@ -57,6 +63,10 @@ export default function SignUpNewPassword() {
         input1: false,
         input2: false,
     });
+
+    //React router navigate
+    const navigate = useNavigate();
+
     const [open, setOpen] = useState(false); //loading screen state
     const {
         register,
@@ -66,7 +76,11 @@ export default function SignUpNewPassword() {
     } = useForm({
         resolver: yupResolver(schema),
     });
-    const handleClickShowPassword = (input) => {
+    //Use Redux
+    const { user, token } = useAppSelector((state) => state.authentication);
+    const dispatch = useAppDispatch();
+
+    const handleClickShowPassword = (input: number) => {
         if (input === 1) {
             setShowPasswords({
                 ...showPasswords,
@@ -95,21 +109,36 @@ export default function SignUpNewPassword() {
         setOpen(false);
     };
 
-    const onSubmit = (value) => {
+    //Redux
+    const { id, email } = useAppSelector(
+        (state) => state.authentication.signup
+    );
+
+    const onSubmit = (value: { password: string; reEnterPassword: string }) => {
         const payload = {
             password: value.password,
-            id: state.data.id,
+            id: id,
         };
         handleOpen();
+
         axiosClient
             .post("/addPassword", payload)
-            .then((response) => {
+            .then(({ data }: { data: signUpPasswordSuccessResponse }) => {
+                const { user, token } = data.result;
+                //Set user, token
+                dispatch(setUser(user));
+                dispatch(setToken(token));
+                //Clear sign up information
+                dispatch(clearSignup(null));
                 handleClose();
-                console.log(response);
+                navigate("/home");
             })
-            .catch((err) => {
+            .catch(({ response }: { response: signUpPasswordFailResponse }) => {
+                setError("reEnterPassword", {
+                    type: "custom",
+                    message: "serverError",
+                });
                 handleClose();
-                console.log(err);
             });
     };
 

@@ -235,7 +235,7 @@ export default function ProductDetails() {
                                         bgcolor: colors.gray[100],
                                     }}
                                 />
-                                <div className="mx-1">
+                                <div className="mx-4">
                                     <ContainedButton
                                         component="label"
                                         variant="text"
@@ -247,7 +247,7 @@ export default function ProductDetails() {
                                                 }}
                                             />
                                         }
-                                        className=" bg-primary_main"
+                                        className="bg-transparent"
                                     >
                                         <span className="text-base font-semibold text-gray-100 my-0">
                                             {t("favorite")}

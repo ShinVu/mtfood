@@ -14,6 +14,7 @@ import axiosClient from "../../axios-client";
 //React router
 import { useLocation } from "react-router-dom";
 import LoadingScreen from "../components/loading";
+import { useAppSelector } from "../hooks/reduxHook";
 
 //Verify successful response type
 type verifySuccessResponse = {
@@ -72,23 +73,27 @@ export default function SignUpVerify() {
     const handleClose = () => {
         setOpen(false);
     };
+
+    //Redux
+    const { id, email } = useAppSelector(
+        (state) => state.authentication.signup
+    );
+    console.log(id);
     //onSubmit
     const handleSubmit = () => {
         if (otp.length !== 6) {
             setError("verificationCodeInvalid");
         } else {
-            const user = state.user;
             const payload = {
-                id: user.id,
+                id: id,
                 verificationCode: otp,
             };
             handleOpen();
             axiosClient
                 .post("/verifyCode", payload)
                 .then(({ data }: { data: verifySuccessResponse }) => {
-                    const user = data.result.user;
                     handleClose();
-                    navigate("/signup/password", { state: { user } });
+                    navigate("/signup/password");
                 })
                 .catch(({ response }: { response: verifyFailResponse }) => {
                     const responseData = response.data;
@@ -96,6 +101,8 @@ export default function SignUpVerify() {
                         if (responseData.message === "emailAlreadyVerified") {
                             setError(responseData.message);
                         }
+                    } else if (response.status === 500) {
+                        setError("serverError");
                     }
                 });
         }

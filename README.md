@@ -21,8 +21,8 @@ How to run Laravel:
 -   php artisan migrate
 -   php artisan db:seed
 -   php artisan serve
-
-How to run MTFood_FE:
+-   For mail queue job: + php artisan queue:work
+    How to run MTFood_FE:
 
 cd mtfood_fe
 npm install

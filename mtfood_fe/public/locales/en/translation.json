@@ -208,5 +208,9 @@
     "serverError": "Server encounter unexpected errors, please try again later",
     "haveAccount?": "Already have an account?",
     "account": "Email/Phone number",
-    "emailAlreadyVerified": "Email has already been verified"
+    "emailAlreadyVerified": "Email has already been verified",
+    "emailInvalid": "Email is invalid",
+    "passwordIncorrect": "Password is incorrect",
+    "loginWithGoogle": "Please log in with google"
+
 }

@@ -4,16 +4,48 @@ import axios from "axios";
 import Button from "@mui/material/Button";
 import { useTranslation } from "react-i18next";
 import Google from "/assets/google.svg";
+import axiosClient from "../../axios-client";
+import { logInFailResponse, logInSuccessResponse } from "../models/user.model";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+    setToken,
+    setUser,
+} from "../features/authentication/authenticationSlice";
 
 export default function GoogleSignIn() {
     const { t } = useTranslation();
-    const [user, setUser] = useState([]);
-
+    const [user, setUserGoogle] = useState([]);
+    const navigate = useNavigate();
     const login = useGoogleLogin({
-        onSuccess: (codeResponse) => setUser(codeResponse),
+        onSuccess: (codeResponse) => setUserGoogle(codeResponse),
         onError: (error) => console.log("Login Failed:", error),
     });
 
+    //use redux
+    const dispatch = useDispatch();
+
+    const GoogleLogin = (data) => {
+        const payload = {
+            name: data.user.name,
+            email: data.user.email,
+            googleId: data.user.id,
+            verifiedEmail: data.user.verified_email,
+            accessToken: data.token,
+        };
+        axiosClient
+            .post("/googleLogin", payload)
+            .then(({ data }: { data: logInSuccessResponse }) => {
+                const { user, token } = data.result;
+                //Set user, token
+                dispatch(setUser(user));
+                dispatch(setToken(token));
+                navigate("/home");
+            })
+            .catch(({ response }: { response: logInFailResponse }) =>
+                console.log(response)
+            );
+    };
     useEffect(() => {
         if (user) {
             axios
@@ -27,7 +59,11 @@ export default function GoogleSignIn() {
                     }
                 )
                 .then((res) => {
-                    console.log(res.data);
+                    const data = {
+                        user: res.data,
+                        token: user.access_token,
+                    };
+                    GoogleLogin(data);
                 })
                 .catch((err) => console.log(err));
         }

@@ -25,23 +25,46 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 //Import Element
 import SearchBar from "./searchBar";
 import { IconButton, TextButton } from "./button";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
+import { signOut } from "../features/authentication/authenticationSlice";
+import {
+    logOutFailResponse,
+    logOutSuccessResponse,
+} from "../models/user.model";
 
+//Axios client
+import axiosClient from "../../axios-client";
 export default function Header() {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
-    //Get uset information from redux
-    const { user, token } = useSelector((state) => state.authentication);
 
     //State to save translation dropdown
     const [isDropdown, _setDropdown] = useState(false);
-    console.log(location.pathname);
     function setDropdown() {
         _setDropdown(!isDropdown);
     }
 
     const changeLanguageHandler = (lang: "en" | "vn") => {
         i18n.changeLanguage(lang);
+    };
+
+    //Redux
+    const { user, token } = useAppSelector((state) => state.authentication);
+    const dispatch = useAppDispatch();
+    const logOut = () => {
+        const payload = {
+            id: user.id,
+        };
+        axiosClient
+            .post("/logout", payload)
+            .then(({ data }: { data: logOutSuccessResponse }) => {
+                dispatch(signOut(null));
+                navigate("/home");
+            })
+            .catch(({ response }: { response: logOutFailResponse }) => {
+                console.log(response.data.message);
+            });
     };
     return (
         <div className="flex flex-col bg-primary_main ">
@@ -61,13 +84,23 @@ export default function Header() {
                 </div>
                 <div className="flex flex-row items-center">
                     {user ? (
-                        <p className=" font-medium text-xs text-white capitalize my-0 mx-1">
+                        <p className=" font-medium text-xs text-white capitalize my-0 mx-1 space-x-4">
                             {t("hello")},{" "}
                             <span
                                 className="font-bold cursor-pointer"
                                 onClick={() => navigate("/user/account")}
                             >
-                                {user}
+                                {user.name
+                                    ? user.name
+                                    : user.email
+                                    ? user.email
+                                    : user.phoneNumber}
+                            </span>
+                            <span
+                                className="cursor-pointer uppercase"
+                                onClick={() => logOut()}
+                            >
+                                {t("logout")}
                             </span>
                         </p>
                     ) : (

@@ -209,5 +209,8 @@
     "phoneNumberOrEmail": "Xin nhập số điện thoại hoặc email hợp lệ",
     "serverError": "Máy chủ hiện đang gặp sự cố, xin vui lòng thử lại sau",
     "haveAccount?": "Đã có tài khoản?",
-    "emailAlreadyVerified": "Email đã được xác thực"
+    "emailAlreadyVerified": "Email đã được xác thực",
+    "emailInvalid": "Email chưa được đăng ký",
+    "passwordIncorrect": "Mật khẩu không chính xác",
+    "loginWithGoogle": "Vui lòng đăng nhập qua Google"
 }

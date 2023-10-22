@@ -9,6 +9,7 @@ import {
     OutlinedButton,
     TextButton,
 } from "../../../components/button";
+import { useNavigate } from "react-router-dom";
 function OrderProductItem(props) {
     const { product } = props;
     return (
@@ -34,6 +35,7 @@ function OrderProductItem(props) {
     );
 }
 export default function OrderItem(props) {
+    const navigate = useNavigate();
     const { t } = useTranslation();
     const { order } = props;
     return (
@@ -61,7 +63,11 @@ export default function OrderItem(props) {
                     Thanh toan bang .....
                 </p>
                 <div className="flex flex-col lg:flex-row space-y-4 space-x-0 lg:space-y-0  lg:space-x-4">
-                    <OutlinedButton>{t("seeOrderDetail")}</OutlinedButton>
+                    <OutlinedButton
+                        onClick={() => navigate("/user/order/details/0")}
+                    >
+                        {t("seeOrderDetail")}
+                    </OutlinedButton>
                     <OutlinedButton endIcon={<KeyboardArrowDownIcon />}>
                         {t("seeMore")}
                     </OutlinedButton>

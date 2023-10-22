@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class Customer extends Model
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
     /**
      * The table associated with the model.
      *
@@ -27,12 +30,11 @@ class Customer extends Model
      *
      * @var array<string,dateTime,dateTime,int,int,int>
      */
-    protected $fillable = [
-        'participant_type',
-        'join_at',
-        'last_message_at',
-        'chat_session_id',
-        'employee_id',
-        'customer_id',
+    protected $guarded = [''];
+    protected $casts = [
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp',
+        'email_verified_at' => 'timestamp',
+        'phone_number_verified_at' => 'timestamp'
     ];
 }
