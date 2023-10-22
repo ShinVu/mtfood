@@ -43,9 +43,14 @@ import {
     signUpFailResponse,
     mailVerificationSuccessResponse,
     mailVerificationFailResponse,
+    mailResetPasswordSuccessResponse,
+    mailResetPasswordFailResponse,
 } from "../models/user.model";
 import { useAppDispatch } from "../hooks/reduxHook";
-import { setSignup } from "../features/authentication/authenticationSlice";
+import {
+    setResetPassword,
+    setSignup,
+} from "../features/authentication/authenticationSlice";
 
 function phoneNumberValidation(value: string) {
     //Check if value is a valid phone number in VN
@@ -90,7 +95,7 @@ const schema = yup
     })
     .required();
 
-export default function SignUp() {
+export default function ForgetPassword() {
     //use react router navigation hook
     const navigate = useNavigate();
     //i18-localization hook
@@ -125,104 +130,39 @@ export default function SignUp() {
         if (accountValidated.isValid) {
             const payload = {
                 // payload contains account value and type (type: "phoneNumber" or "email")
-                account: accountValidated.account,
+                email: accountValidated.account,
                 type: accountValidated.type,
             };
             handleOpen(); // Set loading screen;
             axiosClient
-                .post("/signup", payload)
-                .then(({ data }: { data: signUpSuccessResponse }) => {
-                    const user = data.result.user;
-                    const payload = {
-                        id: user.id,
-                    };
-                    axiosClient
-                        .post("/mailVerification", payload)
-                        .then(
-                            ({
-                                data,
-                            }: {
-                                data: mailVerificationSuccessResponse;
-                            }) => {
-                                const { id, email } = data.result.user;
-                                handleClose(); // set loading screen;
-                                dispatch(setSignup({ id, email }));
-                                navigate("/signup/verify"); //navigate to verify
-                            }
-                        )
-                        .catch(
-                            ({
-                                response,
-                            }: {
-                                response: mailVerificationFailResponse;
-                            }) => {
-                                const responseData = response.data;
-                                if (response.status === 409) {
-                                    if (
-                                        responseData.message ===
-                                        "emailAlreadyVerified"
-                                    ) {
-                                        setError(
-                                            "account",
-                                            {
-                                                type: "custom",
-                                                message: "emailAlreadyVerified",
-                                            },
-                                            { shouldFocus: true }
-                                        );
-                                    }
-                                }
-                                handleClose(); // set loading screen;
-                            }
-                        );
-                })
-                .catch(({ response }: { response: signUpFailResponse }) => {
-                    const responseData = response.data;
-                    if (response.status === 409) {
-                        if (responseData.message === "emailAlreadyExist") {
-                            setError(
-                                "account",
-                                {
-                                    type: "custom",
-                                    message: "emailAlreadyExist",
-                                },
-                                { shouldFocus: true }
-                            );
-                        } else if (
-                            responseData.message === "phoneNumberAlreadyExist"
-                        ) {
-                            setError(
-                                "account",
-                                {
-                                    type: "custom",
-                                    message: "phoneNumberAlreadyExist",
-                                },
-                                { shouldFocus: true }
-                            );
-                        }
-                    } else if (response.status === 422) {
-                        if (responseData.message === "typeInvalid") {
-                            setError(
-                                "account",
-                                {
-                                    type: "custom",
-                                    message: "phoneNumberOrEmail",
-                                },
-                                { shouldFocus: true }
-                            );
-                        }
-                    } else if (response.status === 500) {
-                        setError(
-                            "account",
-                            {
-                                type: "custom",
-                                message: "serverError",
-                            },
-                            { shouldFocus: true }
-                        );
+                .post("/mailResetPassword", payload)
+                .then(
+                    ({ data }: { data: mailResetPasswordSuccessResponse }) => {
+                        const user = data.result.user;
+                        dispatch(setResetPassword(user));
+                        handleClose();
+                        navigate("/forgetPassword/verify");
                     }
-                    handleClose();
-                });
+                )
+                .catch(
+                    ({
+                        response,
+                    }: {
+                        response: mailResetPasswordFailResponse;
+                    }) => {
+                        const responseData = response.data;
+                        if (response.status === 422) {
+                            if (responseData.message === "emailInvalid") {
+                                setError(
+                                    "account",
+                                    { type: "custom", message: "emailInvalid" },
+                                    { shouldFocus: true }
+                                );
+                            }
+                        }
+                        handleClose();
+                    }
+                );
         }
 
         //If account input is neither a valid phone number nor email
@@ -238,20 +178,25 @@ export default function SignUp() {
         <div className="flex flex-col flex-1   min-h-fit h-screen w-full ">
             <div className="flex flex-1 py-5 h-full bg-signUp bg-center bg-cover justify-center items-center">
                 <div className="flex  flex-col p-6 bg-white shadow space-y-6 rounded">
-                    <h1 className="uppercase text-xl font-bold">
-                        {t("signUp")}
+                    <h1 className="uppercase text-xl font-bold text-black">
+                        {t("findAccount")}
                     </h1>
-                    <form>
+                    <p className="text-base font-medium my-0 text-wrap text-gray-100">
+                        {t("enterAccount")}
+                    </p>
+
+                    <form className="flex w-full items-center justify-center">
                         <FormControl
                             error={errors.account ? true : false}
                             variant="standard"
                             required
+                            className="w-full"
                         >
                             <OutlinedInput
                                 id="account"
                                 placeholder={t("account")}
                                 aria-describedby="account-error-text"
-                                className="w-96 mt-4"
+                                className="w-full mt-4"
                                 {...register("account")}
                             />
                             {errors.account && (
@@ -267,27 +212,21 @@ export default function SignUp() {
                             )}
                         </FormControl>
                     </form>
-                    <div className="self-center mt-7  flex flex-col">
+                    <div className="mt-11 self-center flex flex-col">
                         <Button
                             variant="contained"
-                            className="w-full  bg-primary_main"
+                            className="w-full  bg-primary_main mt-4"
                             onClick={handleSubmit((value) => onSubmit(value))}
                         >
                             {t("continue")}
                         </Button>
-                        <Divider className="my-3 w-full">{t("or")}</Divider>
-                        <div className="my-3">
-                            <GoogleSignIn />
-                        </div>
-                        <div className="my-3">
-                            <FacebookSignIn />
-                        </div>
-                        <div className="my-3 flex flex-row items-center mx-2 ">
-                            <p className="text-base font-medium my-0 ">
-                                {t("haveAccount?")}
+
+                        <div className="my-3 flex flex-row items-center ">
+                            <p className="text-base font-medium my-0">
+                                {t("NoPassword?")}
                             </p>
-                            <Button onClick={() => navigate("/login")}>
-                                {t("login")}
+                            <Button onClick={() => navigate("/signup")}>
+                                {t("signUpNow")}
                             </Button>
                         </div>
                     </div>

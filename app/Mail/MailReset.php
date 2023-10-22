@@ -5,22 +5,20 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class MailNotify extends Mailable
+class MailReset extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public $data = [];
-    public function __construct($data)
+    public function __construct()
     {
-        $this->data = $data;
+        //
     }
 
     /**
@@ -29,8 +27,7 @@ class MailNotify extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            // from: new Address('datminh.vunguyen@gmail.com', 'MTFood'),
-            subject: 'Mã xác minh MTFood',
+            subject: 'Mail Reset',
         );
     }
 
@@ -40,8 +37,7 @@ class MailNotify extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mails.resetCode',
-            with: ['data' => $this->data]
+            view: 'view.name',
         );
     }
 

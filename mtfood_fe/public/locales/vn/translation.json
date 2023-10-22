@@ -212,5 +212,7 @@
     "emailAlreadyVerified": "Email đã được xác thực",
     "emailInvalid": "Email chưa được đăng ký",
     "passwordIncorrect": "Mật khẩu không chính xác",
-    "loginWithGoogle": "Vui lòng đăng nhập qua Google"
+    "loginWithGoogle": "Vui lòng đăng nhập qua Google",
+    "findAccount": "Tìm tài khoản của bạn",
+    "enterAccount": "Vui lòng nhập email hoặc số di động để tìm kiếm tài khoản của bạn."
 }

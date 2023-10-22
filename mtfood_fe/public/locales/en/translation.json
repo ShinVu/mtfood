@@ -211,6 +211,8 @@
     "emailAlreadyVerified": "Email has already been verified",
     "emailInvalid": "Email is invalid",
     "passwordIncorrect": "Password is incorrect",
-    "loginWithGoogle": "Please log in with google"
+    "loginWithGoogle": "Please log in with google",
+    "findAccount": "Find your account",
+    "enterAccount": "Please enter your email address or mobile number to search for your account."
 
 }

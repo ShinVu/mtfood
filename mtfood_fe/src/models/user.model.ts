@@ -127,3 +127,25 @@ export type logInFailResponse = {
         result: {};
     };
 };
+
+//Password reset mail API success response type
+// pages:/forgetPassword
+export type mailResetPasswordSuccessResponse = {
+    message: "mailSuccessfullySent";
+    result: {
+        user: {
+            id: string;
+            email: string;
+        };
+    };
+};
+
+//Mail Verification API success response type
+// pages:/forgetPassword
+export type mailResetPasswordFailResponse = {
+    status: number;
+    data: {
+        message: "emailInvalid";
+        result: {};
+    };
+};

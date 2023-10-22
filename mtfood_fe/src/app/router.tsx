@@ -19,6 +19,9 @@ import Home from "../pages/Home";
 import Cart from "../pages/Cart";
 import Checkout from "../pages/Checkout";
 import Product from "../pages/Product";
+import ForgetPassword from "../pages/forgetPassword";
+import ForgetVerify from "../pages/forget_verify";
+import ForgetNewPassword from "../pages/forget_password";
 
 const router = createBrowserRouter([
     {
@@ -36,6 +39,18 @@ const router = createBrowserRouter([
     {
         path: "/signup/password",
         element: <SignUpNewPassword />,
+    },
+    {
+        path: "/forgetPassword",
+        element: <ForgetPassword />,
+    },
+    {
+        path: "/forgetPassword/verify",
+        element: <ForgetVerify />,
+    },
+    {
+        path: "/forgetPassword/newPassword",
+        element: <ForgetNewPassword />,
     },
     {
         path: "/product/details/:id",

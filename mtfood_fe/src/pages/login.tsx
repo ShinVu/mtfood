@@ -241,7 +241,10 @@ export default function Login() {
                             </FormHelperText>
                         )}
                     </FormControl>
-                    <div className="self-end">
+                    <div
+                        className="self-end cursor-pointer"
+                        onClick={() => navigate("/forgetPassword")}
+                    >
                         <span className="text-base font-medium">
                             {t("forgotPassword")}
                         </span>

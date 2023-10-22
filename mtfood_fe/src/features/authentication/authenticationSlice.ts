@@ -13,6 +13,7 @@ const initialState = {
     user: getLocalStorage("USER"),
     token: getLocalStorage("ACCESS_TOKEN"),
     signup: getLocalStorage("SIGNUP"),
+    resetPassword: getLocalStorage("RESET_PASSWORD"),
 };
 export const authenticationSlice = createSlice({
     name: "authentication",
@@ -42,6 +43,19 @@ export const authenticationSlice = createSlice({
             state.signup = signup;
             localStorage.removeItem("SIGNUP");
         },
+        setResetPassword(state, action) {
+            const resetPassword = action.payload;
+            state.resetPassword = resetPassword;
+            localStorage.setItem(
+                "RESET_PASSWORD",
+                JSON.stringify(resetPassword)
+            );
+        },
+        clearResetPassword(state, action) {
+            const resetPassword = { id: null, email: null };
+            state.resetPassword = resetPassword;
+            localStorage.removeItem("RESET_PASSWORD");
+        },
         signOut(state, action) {
             state.user = null;
             state.token = null;
@@ -53,8 +67,15 @@ export const authenticationSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser, setToken, setSignup, clearSignup, signOut } =
-    authenticationSlice.actions;
+export const {
+    setUser,
+    setToken,
+    setSignup,
+    clearSignup,
+    setResetPassword,
+    clearResetPassword,
+    signOut,
+} = authenticationSlice.actions;
 
 // Export reducer to create store in app/store.tsx
 export default authenticationSlice.reducer;

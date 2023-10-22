@@ -38,6 +38,8 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::controller(SendEmailController::class)->group(function () {
     Route::post('/mailVerification', 'mailVerification');
+
+    Route::post('/mailResetPassword', 'mailResetPassword');
 });
 
 Route::controller(ProductController::class)->group(function () {

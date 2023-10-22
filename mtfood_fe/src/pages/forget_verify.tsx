@@ -35,14 +35,12 @@ type verifyFailResponse = {
     };
 };
 
-export default function SignUpVerify() {
+export default function ForgetVerify() {
     const { t } = useTranslation();
     const [otp, setOtp] = useState("");
     const [error, setError] = useState("");
     const [count, setCount] = useState(60);
     const [open, setOpen] = useState(false); //loading screen state
-    //Read value from router navigation
-    const { state } = useLocation();
     const navigate = useNavigate();
     useEffect(() => {
         const id = setInterval(() => {
@@ -76,9 +74,8 @@ export default function SignUpVerify() {
 
     //Redux
     const { id, email } = useAppSelector(
-        (state) => state.authentication.signup
+        (state) => state.authentication.resetPassword
     );
-    console.log(id);
     //onSubmit
     const handleSubmit = () => {
         if (otp.length !== 6) {
@@ -93,7 +90,7 @@ export default function SignUpVerify() {
                 .post("/verifyCode", payload)
                 .then(({ data }: { data: verifySuccessResponse }) => {
                     handleClose();
-                    navigate("/signup/password");
+                    navigate("/forgetPassword/newPassword");
                 })
                 .catch(({ response }: { response: verifyFailResponse }) => {
                     const responseData = response.data;
@@ -109,6 +106,7 @@ export default function SignUpVerify() {
                     } else if (response.status === 500) {
                         setError("serverError");
                     }
+                    handleClose();
                 });
         }
     };
