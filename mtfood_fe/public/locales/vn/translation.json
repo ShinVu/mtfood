@@ -214,5 +214,14 @@
     "passwordIncorrect": "Mật khẩu không chính xác",
     "loginWithGoogle": "Vui lòng đăng nhập qua Google",
     "findAccount": "Tìm tài khoản của bạn",
-    "enterAccount": "Vui lòng nhập email hoặc số di động để tìm kiếm tài khoản của bạn."
+    "enterAccount": "Vui lòng nhập email hoặc số di động để tìm kiếm tài khoản của bạn.",
+    "notRegistered": "Chưa đăng ký",
+    "nameRequired": "Vui lòng nhập họ tên",
+    "genderRequired": "Vui lòng chọn giới tính",
+    "dateOfBirthRequired": "Vui lòng chọn ngày sinh",
+    "identificationNumberRequired": "Vui lòng nhập số CCCD",
+    "updateProfileSuccessful": "Cập nhật thông tin cá nhân thành công",
+    "notLongEnough": "Xin vui lòng nhập đủ 6 kí tự",
+    "updateEmailSuccess": "Cập nhật địa chỉ email thành công",
+    "invalidAccess": "Xác thực không thành công, xin vui lòng đăng nhập lại!"
 }

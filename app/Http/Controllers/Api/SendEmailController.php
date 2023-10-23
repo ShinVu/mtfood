@@ -24,9 +24,9 @@ class SendEmailController extends Controller
 
             $user = Customer::find($data['id']);
             //Check whether user email is already verified
-            if ($user['email_verified_at'] !== null) {
-                return response(['message' => 'emailAlreadyVerified', 'result' => []], 409);
-            }
+            // if ($user['email_verified_at'] !== null) {
+            //     return response(['message' => 'emailAlreadyVerified', 'result' => []], 409);
+            // }
 
             //Send Email with Mailtrap
 

@@ -213,6 +213,15 @@
     "passwordIncorrect": "Password is incorrect",
     "loginWithGoogle": "Please log in with google",
     "findAccount": "Find your account",
-    "enterAccount": "Please enter your email address or mobile number to search for your account."
+    "enterAccount": "Please enter your email address or mobile number to search for your account.",
+    "notRegistered": "Not registered",
+    "nameRequired": "Please enter your name",
+    "genderRequired": "Please choose your gender",
+    "dateOfBirthRequired": "Please enter your date of birth",
+    "identificationNumberRequired": "Please enter your identification number",
+    "updateProfileSuccessful": "Update profile successful",
+    "notLongEnough": "Please enter 6 digit",
+    "updateEmailSuccess": "Update email success",
+    "invalidAccess": "Unauthorized access, please log in again!"
 
 }

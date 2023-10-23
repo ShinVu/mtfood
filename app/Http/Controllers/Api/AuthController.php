@@ -189,9 +189,9 @@ class AuthController extends Controller
             $customer = Customer::find($data['id']);
 
             //Check whether user email is already verified
-            if ($customer['email_verified_at'] !== null) {
-                return response(['message' => 'emailAlreadyVerified', 'result' => []], 409);
-            }
+            // if ($customer['email_verified_at'] !== null) {
+            //     return response(['message' => 'emailAlreadyVerified', 'result' => []], 409);
+            // }
 
             //Check if verification code match
             if ($userCode === $customer['verification_code']) {

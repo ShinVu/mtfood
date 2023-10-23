@@ -35,6 +35,7 @@ class Customer extends Model
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',
         'email_verified_at' => 'timestamp',
-        'phone_number_verified_at' => 'timestamp'
+        'phone_number_verified_at' => 'timestamp',
+        'date_of_birth' => 'timestamp'
     ];
 }

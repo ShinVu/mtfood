@@ -13,8 +13,10 @@ export default function ChangeDialog(props: {
     type: string;
     handleModalOpen: () => void;
     handleClose: () => void;
+    handleSnackbarOpen: (message: string) => void;
 }) {
-    const { open, type, handleModalOpen, handleClose } = props;
+    const { open, type, handleModalOpen, handleClose, handleSnackbarOpen } =
+        props;
     const RenderDialog = () => {
         switch (type) {
             case "phoneNumber":
@@ -29,6 +31,7 @@ export default function ChangeDialog(props: {
                     <EmailDialog
                         handleModalOpen={handleModalOpen}
                         handleClose={handleClose}
+                        handleSnackbarOpen={handleSnackbarOpen}
                     />
                 );
             case "changePassword":

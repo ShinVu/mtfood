@@ -149,3 +149,31 @@ export type mailResetPasswordFailResponse = {
         result: {};
     };
 };
+
+//Update profile success response type
+//page: /user/account
+export type updateProfileSuccessResponse = {
+    message: "updateProfileSuccessful";
+    result: {
+        user: {
+            id: number;
+            name: string;
+            phoneNumber: string;
+            email: string;
+            identificationNumber: string;
+            gender: string;
+            dateOfBirth: string;
+            googleId: string;
+        };
+    };
+};
+
+//Logout fail response type
+//page: /header, login
+export type updateProfileFailResponse = {
+    status: number;
+    data: {
+        message: string;
+        result: {};
+    };
+};

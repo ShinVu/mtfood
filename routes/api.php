@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SendEmailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -46,4 +47,9 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/product', 'product');
     Route::get('/category', 'category');
     Route::get('/tag', 'tag');
+});
+
+Route::controller(ProfileController::class)->group(function () {
+    Route::post('/updateProfile', 'updateProfile');
+    Route::post('/changePassword', 'changePassword');
 });

@@ -11,17 +11,115 @@ import { TextButton } from "../../../../components/button";
 import OtpInputStyled from "../../../../components/OtpInput";
 import { colors } from "../../../../../public/theme";
 
+//Import useForm
+import { useForm } from "react-hook-form";
+
+//Import yup
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+//Email validation library
+import * as EmailValidator from "email-validator";
+
 //Import utils
 import { matchIsNumeric } from "../../../../utils";
+import { useAppSelector } from "../../../../hooks/reduxHook";
+import {
+    mailVerificationFailResponse,
+    mailVerificationSuccessResponse,
+} from "../../../../models/user.model";
+import axiosClient from "../../../../../axios-client";
+
+function emailValidation(value: string) {
+    //Check if value is a valid email
+    return EmailValidator.validate(value);
+}
+
+function accountValidation(value: string) {
+    const checkEmail = emailValidation(value);
+
+    // if value is a valid email
+    if (checkEmail) {
+        return { isValid: true, type: "email", account: value };
+    }
+    // if value not valid
+    else {
+        return { isValid: false };
+    }
+}
+
+//Form validation schema
+const schema = yup
+    .object({
+        account: yup.string().trim().required("accountRequired"), //account input is required
+        verification_code: yup.string().trim(),
+    })
+    .required();
 
 function ChangeEmailDialog({
     handleClose,
     handleSubmitSuccess,
+    register,
+    setError,
+    handleSubmit,
+    errors,
 }: {
     handleClose: () => void;
     handleSubmitSuccess: () => void;
+    register: any;
+    setError: any;
+    handleSubmit: any;
+    errors: any;
 }) {
     const { t } = useTranslation();
+    const { user } = useAppSelector((state) => state.authentication);
+
+    const emailSubmit = (value: { account: string }) => {
+        if (accountValidation(value.account).isValid) {
+            const payload = {
+                id: user.id,
+            };
+            axiosClient
+                .post("/mailVerification", payload)
+                .then(({ data }: { data: mailVerificationSuccessResponse }) => {
+                    handleSubmitSuccess();
+                })
+                .catch(
+                    ({
+                        response,
+                    }: {
+                        response: mailVerificationFailResponse;
+                    }) => {
+                        const responseData = response.data;
+                        if (response.status === 409) {
+                            if (
+                                responseData.message === "emailAlreadyVerified"
+                            ) {
+                                setError(
+                                    "account",
+                                    {
+                                        type: "custom",
+                                        message: "emailAlreadyVerified",
+                                    },
+                                    { shouldFocus: true }
+                                );
+                            }
+                        }
+                        handleClose(); // set loading screen;
+                    }
+                );
+            handleSubmitSuccess();
+        } else {
+            setError(
+                "account",
+                {
+                    type: "custom",
+                    message: "invalidAccount",
+                },
+                { shouldFocus: true }
+            );
+        }
+    };
     return (
         <>
             <DialogTitle>
@@ -36,8 +134,17 @@ function ChangeEmailDialog({
                     fullWidth
                     size="small"
                     placeholder={t("email")}
+                    {...register("account")}
                 />
-
+                {errors.account && (
+                    <span className="text-red_main text-sm text-medium">
+                        {t(
+                            errors?.account?.message
+                                ? errors.account.message
+                                : "defaultErrorMessage"
+                        )}
+                    </span>
+                )}
                 <DialogContentText className="mt-4">
                     <span>{t("emailChangeMessage")}</span>
                 </DialogContentText>
@@ -49,16 +156,31 @@ function ChangeEmailDialog({
                 >
                     {t("cancel")}
                 </TextButton>
-                <Button onClick={handleSubmitSuccess}>{t("continue")}</Button>
+                <Button onClick={handleSubmit((value) => emailSubmit(value))}>
+                    {t("continue")}
+                </Button>
             </DialogActions>
         </>
     );
 }
 
-function ChangeEmailVerifyDialog({ handleClose }: { handleClose: () => void }) {
+function ChangeEmailVerifyDialog({
+    handleClose,
+    handleSubmit,
+    getValues,
+    handleSnackbarOpen,
+}: {
+    handleClose: () => void;
+    getValues: any;
+    handleSubmit: any;
+    handleSnackbarOpen: (message: string) => void;
+}) {
     const { t } = useTranslation();
     const [otp, setOtp] = React.useState("");
-    const [count, setCount] = useState(2);
+    const [error, setError] = React.useState("");
+    const [count, setCount] = useState(60);
+    const { user } = useAppSelector((state) => state.authentication);
+
     useEffect(() => {
         const id = setInterval(() => {
             setCount((oldCount) => oldCount - 1);
@@ -79,6 +201,39 @@ function ChangeEmailVerifyDialog({ handleClose }: { handleClose: () => void }) {
     const handleChange = (newValue: string) => {
         setOtp(newValue);
     };
+
+    const onSubmit = (value) => {
+        if (otp.length !== 6) {
+            setError("notLongEnough");
+        } else {
+            const payload = {
+                id: user.id,
+                verificationCode: otp,
+            };
+            axiosClient
+                .post("/verifyCode", payload)
+                .then(({ data }: { data: any }) => {
+                    handleClose();
+                    handleSnackbarOpen("updateEmailSuccess");
+                })
+                .catch(({ response }: { response: any }) => {
+                    const responseData = response.data;
+                    if (response.status === 409) {
+                        if (responseData.message === "emailAlreadyVerified") {
+                            setError(responseData.message);
+                        }
+                        if (
+                            responseData.message === "verificationCodeIncorrect"
+                        ) {
+                            setError(responseData.message);
+                        }
+                    } else if (response.status === 500) {
+                        setError("serverError");
+                    }
+                });
+            // handleClose();
+        }
+    };
     return (
         <>
             <DialogTitle>
@@ -90,7 +245,7 @@ function ChangeEmailVerifyDialog({ handleClose }: { handleClose: () => void }) {
                 </DialogContentText>
                 <DialogContentText className="mb-4">
                     <span className="text-black font-semibold">
-                        dat.vumaple@hcmut.edu.vn
+                        {getValues("account")}
                     </span>
                 </DialogContentText>
                 <OtpInputStyled
@@ -98,6 +253,13 @@ function ChangeEmailVerifyDialog({ handleClose }: { handleClose: () => void }) {
                     handleChange={handleChange}
                     validateChar={validateChar}
                 />
+                <div className="mt-3">
+                    {error !== "" && (
+                        <span className="text-red_main text-sm text-medium">
+                            {t(error)}
+                        </span>
+                    )}
+                </div>
                 <div className="mt-4">
                     {count !== 0 ? (
                         <>
@@ -135,7 +297,9 @@ function ChangeEmailVerifyDialog({ handleClose }: { handleClose: () => void }) {
                 >
                     {t("cancel")}
                 </TextButton>
-                <Button onClick={handleClose}>{t("verify")}</Button>
+                <Button onClick={handleSubmit((value) => onSubmit(value))}>
+                    {t("verify")}
+                </Button>
             </DialogActions>
         </>
     );
@@ -143,11 +307,24 @@ function ChangeEmailVerifyDialog({ handleClose }: { handleClose: () => void }) {
 export default function EmailDialog({
     handleModalOpen,
     handleClose,
+    handleSnackbarOpen,
 }: {
     handleClose: () => void;
     handleModalOpen: () => void;
+    handleSnackbarOpen: (message: string) => void;
 }) {
     const [type, setType] = useState("email");
+    //use react-hook-form hook
+    const {
+        register,
+        handleSubmit,
+        setError,
+        getValues,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(schema),
+    });
+
     const handleSubmitSuccess = () => {
         setType("emailVerify");
     };
@@ -158,9 +335,23 @@ export default function EmailDialog({
                 <ChangeEmailDialog
                     handleClose={handleClose}
                     handleSubmitSuccess={handleSubmitSuccess}
+                    register={register}
+                    setError={setError}
+                    handleSubmit={handleSubmit}
+                    errors={errors}
                 />
             );
         case "emailVerify":
-            return <ChangeEmailVerifyDialog handleClose={handleClose} />;
+            return (
+                <ChangeEmailVerifyDialog
+                    handleClose={handleClose}
+                    register={register}
+                    setError={setError}
+                    handleSubmit={handleSubmit}
+                    errors={errors}
+                    getValues={getValues}
+                    handleSnackbarOpen={handleSnackbarOpen}
+                />
+            );
     }
 }

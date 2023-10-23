@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+//Date time format
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
+
 const getLocalStorage = (key: string) => {
     const value = localStorage.getItem(key);
     if (!value) {
