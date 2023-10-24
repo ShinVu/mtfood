@@ -13,7 +13,7 @@ export default function ChangeDialog(props: {
     type: string;
     handleModalOpen: () => void;
     handleClose: () => void;
-    handleSnackbarOpen: (message: string) => void;
+    handleSnackbarOpen: (message: string, severity: string) => void;
 }) {
     const { open, type, handleModalOpen, handleClose, handleSnackbarOpen } =
         props;
@@ -39,6 +39,7 @@ export default function ChangeDialog(props: {
                     <PasswordDialog
                         handleModalOpen={handleModalOpen}
                         handleClose={handleClose}
+                        handleSnackbarOpen={handleSnackbarOpen}
                     />
                 );
             case "changePin":

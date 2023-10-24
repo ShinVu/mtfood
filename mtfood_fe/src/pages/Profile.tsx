@@ -131,7 +131,6 @@ export default function Profile() {
 
     //redux
     const { user, token } = useAppSelector((state) => state.authentication);
-    console.log(token);
     const dispatch = useAppDispatch();
     //use react-hook-form hook
     const {

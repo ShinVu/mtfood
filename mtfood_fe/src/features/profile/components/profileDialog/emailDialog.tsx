@@ -214,7 +214,7 @@ function ChangeEmailVerifyDialog({
                 .post("/verifyCode", payload)
                 .then(({ data }: { data: any }) => {
                     handleClose();
-                    handleSnackbarOpen("updateEmailSuccess");
+                    handleSnackbarOpen("updateEmailSuccess", "success");
                 })
                 .catch(({ response }: { response: any }) => {
                     const responseData = response.data;

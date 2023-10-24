@@ -222,6 +222,7 @@
     "updateProfileSuccessful": "Update profile successful",
     "notLongEnough": "Please enter 6 digit",
     "updateEmailSuccess": "Update email success",
-    "invalidAccess": "Unauthorized access, please log in again!"
+    "invalidAccess": "Unauthorized access, please log in again!",
+    "passwordUpdated": "Password updated successfully"
 
 }

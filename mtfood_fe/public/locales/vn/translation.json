@@ -223,5 +223,6 @@
     "updateProfileSuccessful": "Cập nhật thông tin cá nhân thành công",
     "notLongEnough": "Xin vui lòng nhập đủ 6 kí tự",
     "updateEmailSuccess": "Cập nhật địa chỉ email thành công",
-    "invalidAccess": "Xác thực không thành công, xin vui lòng đăng nhập lại!"
+    "invalidAccess": "Xác thực không thành công, xin vui lòng đăng nhập lại!",
+    "passwordUpdated": "Thay đổi mật khẩu thành công"
 }

@@ -21,6 +21,7 @@ class ProfileController extends Controller
             /** @var \App\Models\Customer $customer */
             $customer = Customer::where('id', $data['id']);
             //Check request authorization
+
             if ($token != $customer->first()['remember_token']) {
                 return response(['message' => 'invalidAccess', 'result' => []], 401);
             }

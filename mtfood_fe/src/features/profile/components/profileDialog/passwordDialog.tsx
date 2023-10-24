@@ -18,11 +18,37 @@ import { TextButton } from "../../../../components/button";
 
 //Import color
 import { colors } from "../../../../../public/theme";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHook";
+import { useForm } from "react-hook-form";
 
+//Import yup
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { FormHelperText } from "@mui/material";
+import axiosClient from "../../../../../axios-client";
+
+const schema = yup
+    .object({
+        password: yup.string().trim().required("passwordRequired"),
+        reEnterPassword: yup
+            .string()
+            .trim()
+            .required("reEnterPasswordRequired")
+            .test({
+                name: "fieldMatch",
+                exclusive: false,
+                params: {},
+                message: "passwordNotMatch",
+                test: (value, context) => value === context.parent.password,
+            }),
+    })
+    .required();
 export default function PasswordDialog({
     handleClose,
+    handleSnackbarOpen,
 }: {
     handleClose: () => void;
+    handleSnackbarOpen: (message: string, severity: string) => void;
 }) {
     const { t } = useTranslation();
     const [showPasswords, setShowPasswords] = React.useState({
@@ -49,6 +75,40 @@ export default function PasswordDialog({
     ) => {
         event.preventDefault();
     };
+
+    //redux
+    const { user } = useAppSelector((state) => state.authentication);
+    const dispatch = useAppDispatch();
+    //use react-hook-form hook
+    const {
+        register,
+        handleSubmit,
+        setError,
+        control,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(schema),
+    });
+
+    const onSubmit = (value: { password: string; reEnterPassword: string }) => {
+        const payload = {
+            password: value.password,
+            id: user.id,
+        };
+
+        axiosClient
+            .post("/changePassword", payload)
+            .then(({ data }: { data: any }) => {
+                handleClose();
+                handleSnackbarOpen("passwordUpdated", "success");
+            })
+            .catch(({ response }: { response: any }) => {
+                setError("reEnterPassword", {
+                    type: "custom",
+                    message: "serverError",
+                });
+            });
+    };
     return (
         <>
             <DialogTitle>
@@ -58,6 +118,7 @@ export default function PasswordDialog({
                 <div className="flex flex-1 flex-col">
                     <FormControl className="w-96 my-2" variant="outlined">
                         <OutlinedInput
+                            aria-describedby="password-error-text"
                             placeholder={t("password")}
                             id="outlined-adornment-password"
                             type={showPasswords.input1 ? "text" : "password"}
@@ -79,10 +140,20 @@ export default function PasswordDialog({
                                     </IconButton>
                                 </InputAdornment>
                             }
+                            {...register("password")}
                         />
+
+                        {errors.password && (
+                            <FormHelperText id="password-error-text">
+                                <span className="text-red_main text-sm text-medium">
+                                    {t(errors?.password?.message)}
+                                </span>
+                            </FormHelperText>
+                        )}
                     </FormControl>
                     <FormControl className="w-96 my-2" variant="outlined">
                         <OutlinedInput
+                            aria-describedby="re-enter-password-error-text"
                             placeholder={t("reEnterPassword")}
                             id="outlined-adornment-password"
                             type={showPasswords.input2 ? "text" : "password"}
@@ -104,7 +175,15 @@ export default function PasswordDialog({
                                     </IconButton>
                                 </InputAdornment>
                             }
+                            {...register("reEnterPassword")}
                         />
+                        {errors.reEnterPassword && (
+                            <FormHelperText id="re-enter-password-error-text">
+                                <span className="text-red_main text-sm text-medium">
+                                    {t(errors?.reEnterPassword?.message)}
+                                </span>
+                            </FormHelperText>
+                        )}
                     </FormControl>
                 </div>
             </DialogContent>
@@ -115,7 +194,9 @@ export default function PasswordDialog({
                 >
                     {t("cancel")}
                 </TextButton>
-                <Button onClick={handleClose}>{t("verify")}</Button>
+                <Button onClick={handleSubmit((value) => onSubmit(value))}>
+                    {t("verify")}
+                </Button>
             </DialogActions>
         </>
     );
