@@ -23,6 +23,7 @@ class ProductFactory extends Factory
             'status' => fake()->boolean(),
             'price' => fake()->randomFloat($nbMaxDecimals = 0, $min = 0, $max = NULL),
             'unit' => 'VND',
+            'rating' => fake()->randomFloat($nbMaxDecimals = 1, $min = 0, $max = 5),
             'quantity_available' => fake()->numberBetween($min = 0, $max = 1000),
             'nums_of_reviews' => fake()->numberBetween($min = 0, $max = 1000),
             'nums_of_like' => fake()->numberBetween($min = 0, $max = 1000),

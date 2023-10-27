@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            // SqlFileSeeder::class,  //Seeder to import locations file, only work if config {1. Go to PhpMyadmin, 2. Query: SET GLOBAL max_allowed_packet=1073741824;}
+            SqlFileSeeder::class,  //Seeder to import locations file, only work if config {1. Go to PhpMyadmin, 2. Query: SET GLOBAL max_allowed_packet=1073741824;}
             EmployeeSeeder::class,
             ShiftSeeder::class,
             ParticipationSeeder::class,
@@ -44,6 +44,7 @@ class DatabaseSeeder extends Seeder
             OrderDiscountSeeder::class,
             OrderSeeder::class,
             OrderDetailSeeder::class,
+            ReviewSeeder::class
         ]);
     }
 }
