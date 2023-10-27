@@ -20,4 +20,21 @@ function getSizeDialog(size: string) {
     }
 }
 
-export { matchIsNumeric, getSizeDialog };
+//Return price in VND format
+function changePriceFormat(value: string | null) {
+    if (!value) {
+        return "";
+    }
+    const money = Number(value);
+    const config = {
+        style: "currency",
+        currency: "VND",
+        maximumFractionDigits: 3,
+    };
+    const formated = new Intl.NumberFormat("vi-VN", config)
+        .format(money)
+        .split(" ")[0];
+    return formated;
+}
+
+export { matchIsNumeric, getSizeDialog, changePriceFormat };

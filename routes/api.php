@@ -47,9 +47,17 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/product', 'product');
     Route::get('/category', 'category');
     Route::get('/tag', 'tag');
+    Route::get('/productNew', 'productNew');
+    Route::get('/productMostLiked', 'productMostLiked');
+    Route::get('/productDiscount', 'productDiscount');
+    Route::get('/productDetail', 'productDetail');
 });
 
 Route::controller(ProfileController::class)->group(function () {
     Route::post('/updateProfile', 'updateProfile');
     Route::post('/changePassword', 'changePassword');
+    Route::post('/addAddress', 'addAddress');
+    Route::get('/getProvince', 'getProvince');
+    Route::get('/getDistrict', 'getDistrict');
+    Route::get('/getWard', 'getWard');
 });

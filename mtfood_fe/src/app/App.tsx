@@ -77,23 +77,21 @@ i18n.use(Backend)
 
 function App() {
     return (
-        <React.StrictMode>
-            <GoogleOAuthProvider clientId="557838967224-01nbpbjlmb6oinhrpohi5bj40sakjneu.apps.googleusercontent.com">
-                <StyledEngineProvider injectFirst>
-                    <Provider store={store}>
-                        <ThemeProvider theme={theme}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <Suspense
-                                    fallback={<LoadingScreen open={true} />}
-                                >
-                                    <RouterProvider router={router} />
-                                </Suspense>
-                            </LocalizationProvider>
-                        </ThemeProvider>
-                    </Provider>
-                </StyledEngineProvider>
-            </GoogleOAuthProvider>
-        </React.StrictMode>
+        // <React.StrictMode>
+        <GoogleOAuthProvider clientId="557838967224-01nbpbjlmb6oinhrpohi5bj40sakjneu.apps.googleusercontent.com">
+            <StyledEngineProvider injectFirst>
+                <Provider store={store}>
+                    <ThemeProvider theme={theme}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <Suspense fallback={<LoadingScreen open={true} />}>
+                                <RouterProvider router={router} />
+                            </Suspense>
+                        </LocalizationProvider>
+                    </ThemeProvider>
+                </Provider>
+            </StyledEngineProvider>
+        </GoogleOAuthProvider>
+        // </React.StrictMode>
     );
 }
 

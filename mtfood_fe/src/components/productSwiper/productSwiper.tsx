@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { ProductCard } from "../../features/product";
 // import Swiper core and required modules
 import { Navigation, Scrollbar, A11y } from "swiper/modules";
@@ -14,9 +14,15 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Rating from "@mui/material/Rating";
 import { CardActionArea } from "@mui/material";
-
+import Skeleton from "@mui/material/Skeleton";
 //import react router dom
 import { useNavigate } from "react-router-dom";
+import useWindowSizeDimensions from "../../hooks/useWindowResponsiveDimensions";
+import { changePriceFormat } from "../../utils";
+
+function ProductSwiperSkeleton() {
+    return <Skeleton variant="rectangular" className="h-[281px] w-full" />;
+}
 function ProductSwiperCard(props: { product: any; className?: string }) {
     const navigate = useNavigate();
     const { product } = props;
@@ -27,9 +33,10 @@ function ProductSwiperCard(props: { product: any; className?: string }) {
             >
                 <CardMedia
                     component="img"
-                    image="/assets/image_14.png"
+                    image={product.image_url}
                     alt="green iguana"
                     className="w-full h-36 object-cover object-center"
+                    loading="lazy"
                 />
                 <CardContent className="p-3 w-full">
                     <p className="text-xs font-medium  my-0 line-clamp-2 h-8 leading-4">
@@ -43,9 +50,21 @@ function ProductSwiperCard(props: { product: any; className?: string }) {
                         precision={0.5}
                         readOnly
                     />
-                    <p className="text-base font-medium text-red_main my-0">
-                        đ{product.price}
-                    </p>
+                    <div className="flex flex-col mt-2">
+                        {product.max_discount_amount ? (
+                            <p className="text-sm font-normal text-gray-100 my-0 line-through">
+                                đ
+                                {changePriceFormat(product.max_discount_amount)}
+                            </p>
+                        ) : (
+                            <p className="text-sm font-normal text-gray-100 my-0">
+                                <br />
+                            </p>
+                        )}
+                        <p className="text-lg font-medium text-red_main my-0">
+                            đ{changePriceFormat(product.price)}
+                        </p>
+                    </div>
                 </CardContent>
             </CardActionArea>
         </Card>
@@ -56,7 +75,12 @@ export default function ProductSwiper(props: {
     header?: string;
     products: any;
 }) {
-    const { header, products } = props;
+    const { header } = props;
+    const [products, setProducts] = useState([]);
+    useEffect(() => {
+        setProducts(props.products);
+    }, [props.products]);
+
     const [progress, setProgress] = useState(0);
     const swiperRef = useRef();
     const getProgress = (progress: number) => {
@@ -72,6 +96,33 @@ export default function ProductSwiper(props: {
         swiperRef.current?.slideNext();
     }, []);
 
+    const size = useWindowSizeDimensions();
+    const getDummy = () => {
+        if (size === "2xl") {
+            return Array.apply(null, Array(8)).map(function (x, i) {
+                return i;
+            });
+        } else if (size === "xl") {
+            return Array.apply(
+                null,
+                Array(7).map(function (x, i) {
+                    return i;
+                })
+            );
+        } else if (size === "lg") {
+            return Array.apply(null, Array(5)).map(function (x, i) {
+                return i;
+            });
+        } else if (size === "md") {
+            return Array.apply(null, Array(3)).map(function (x, i) {
+                return i;
+            });
+        } else {
+            return Array.apply(null, Array(2)).map(function (x, i) {
+                return i;
+            });
+        }
+    };
     return (
         <div className="w-full h-fit  relative px-4">
             <Swiper
@@ -82,6 +133,7 @@ export default function ProductSwiper(props: {
                     768: { slidesPerView: 3 },
                     1024: { slidesPerView: 5 },
                     1280: { slidesPerView: 7 },
+                    1586: { slidesPerView: 8 },
                 }}
                 spaceBetween={15}
                 scrollbar={{
@@ -93,15 +145,21 @@ export default function ProductSwiper(props: {
                 cssMode={true}
                 className="pb-4"
             >
-                {products &&
-                    products.map((product: any) => (
-                        <SwiperSlide key={product.id} className="py-8">
-                            <ProductSwiperCard
-                                product={product}
-                                className="h-fit"
-                            />
-                        </SwiperSlide>
-                    ))}
+                {products.length > 0
+                    ? products.map((product: any) => (
+                          <SwiperSlide key={product.id} className="py-8">
+                              <ProductSwiperCard
+                                  product={product}
+                                  className="h-fit"
+                                  key={product.id}
+                              />
+                          </SwiperSlide>
+                      ))
+                    : getDummy().map((value) => (
+                          <SwiperSlide key={value} className="py-8">
+                              <ProductSwiperSkeleton />
+                          </SwiperSlide>
+                      ))}
             </Swiper>
 
             <div

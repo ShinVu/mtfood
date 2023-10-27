@@ -56,11 +56,11 @@
     "category": "Danh mục",
     "origin": "Xuất xứ",
     "expDate": "Hạn sử dụng",
-    "preserveInstruction": "Hướng dẫn bảo quản",
-    "useInstruction": "Hướng dẫn sử dụng",
-    "weightProduct": "Trọng lượng sản phẩm",
-    "packProtocol": "Quy cách đóng gói",
-    "ingredients": "Thành phần",
+    "directionForPreservation": "Hướng dẫn bảo quản",
+    "directionForUse": "Hướng dẫn sử dụng",
+    "weight": "Trọng lượng sản phẩm",
+    "pack": "Quy cách đóng gói",
+    "ingredient": "Thành phần",
     "productDescriptions": "Mô tả sản phẩm",
     "reviewsProduct": "Đánh giá & Nhận xét từ khách hàng",
     "allImages": "Tất cả hình ảnh",
@@ -224,5 +224,8 @@
     "notLongEnough": "Xin vui lòng nhập đủ 6 kí tự",
     "updateEmailSuccess": "Cập nhật địa chỉ email thành công",
     "invalidAccess": "Xác thực không thành công, xin vui lòng đăng nhập lại!",
-    "passwordUpdated": "Thay đổi mật khẩu thành công"
+    "passwordUpdated": "Thay đổi mật khẩu thành công",
+    "newDish": "Món ăn mới",
+    "mostLikedDish": "Món ăn yêu thích",
+    "discountDish": "Món khuyến mãi"
 }

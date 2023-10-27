@@ -76,7 +76,10 @@ export default function ProfileNavigation(props) {
                     >
                         {t("accountAddress")}
                     </p>
-                    <p className="text-sm font-medium  my-1 text-gray-100  hover:text-primary_main  cursor-pointer">
+                    <p
+                        className="text-sm font-medium  my-1 text-gray-100  hover:text-primary_main  cursor-pointer"
+                        onClick={() => navigate("/user/notification/settings")}
+                    >
                         {t("notificationSetting")}
                     </p>
                 </div>

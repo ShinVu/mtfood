@@ -16,9 +16,10 @@ class MailReset extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public $data = [];
+    public function __construct($data)
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -27,7 +28,7 @@ class MailReset extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Mail Reset',
+            subject: 'Mã xác minh MTFood',
         );
     }
 
@@ -37,7 +38,8 @@ class MailReset extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'mails.verificationCode',
+            with: ['data' => $this->data]
         );
     }
 

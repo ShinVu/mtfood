@@ -31,6 +31,8 @@ class CustomerFactory extends Factory
             'phone_number_verified_at' => now(),
             'ward_code' => \App\Models\Ward::all()->random()->code,
             'remember_token' => Str::random(10),
+            'facebook_flag' => 0,
+            'google_flag' => 0
 
         ];
     }

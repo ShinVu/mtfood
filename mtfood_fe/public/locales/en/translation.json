@@ -54,11 +54,11 @@
     "category": "Category",
     "origin": "Origin",
     "expDate": "Expiration Date",
-    "preserveInstruction": "Direction for preservation",
-    "useInstruction": "Direction for use",
-    "weightProduct": "Weight",
-    "packProtocol": "Packing Specification",
-    "ingredients": "Ingredient",
+    "directionForPreservation": "Direction for preservation",
+    "directionForUse": "Direction for use",
+    "weight": "Weight",
+    "pack": "Packing Specification",
+    "ingredient": "Ingredient",
     "productDescriptions": "Description",
     "reviewsProduct": "Reviews & Rating",
     "allImages": "All images",
@@ -223,6 +223,9 @@
     "notLongEnough": "Please enter 6 digit",
     "updateEmailSuccess": "Update email success",
     "invalidAccess": "Unauthorized access, please log in again!",
-    "passwordUpdated": "Password updated successfully"
+    "passwordUpdated": "Password updated successfully",
+    "newDish": "New Dish",
+    "mostLikedDish": "Most liked Dish",
+    "discountDish": "On Discount Dish"
 
 }

@@ -25,12 +25,14 @@ export default function useWindowSizeDimensions() {
 
     const { width } = windowDimensions;
     if (width >= 1536) {
+        return "2xl";
+    } else if (width >= 1280) {
         return "xl";
-    } else if (width >= 1200) {
+    } else if (width >= 1024) {
         return "lg";
-    } else if (width >= 900) {
+    } else if (width >= 768) {
         return "md";
-    } else if (width >= 600) {
+    } else if (width >= 640) {
         return "sm";
     } else {
         return "xs";

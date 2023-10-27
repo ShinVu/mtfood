@@ -1,0 +1,24 @@
+export type product = {
+    id: number;
+    name: string;
+    image_url: string;
+    description: string;
+    status: number;
+    price: string;
+    unit: string;
+    quantity_available: number;
+    nums_of_reviews: number;
+    nums_of_like: number;
+    origin: string;
+    exp_date: string;
+    directionForPreservation: string;
+    directionForUse: string;
+    weight: string;
+    pack: string;
+    ingredient: string;
+    category_id: number;
+    created_at: string;
+    updated_at: string;
+    product_id: number;
+    max_discount_amount: string | null;
+};
