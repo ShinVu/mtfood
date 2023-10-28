@@ -81,8 +81,8 @@ class BeProductController extends Controller
 //                $this->syncAlbumImageAndProduct($request->file, $product->id);
 //            }
 //
-//            if ($request->wholesale)
-//                $this->processWholesalePrice($request->wholesale, $product->id);
+            if ($request->wholesale)
+                $this->processWholesalePrice($request->wholesale, $product->id);
 //
 //            $this->processProductOptionValue($request->options, $product->id);
 
@@ -116,7 +116,7 @@ class BeProductController extends Controller
 //        $productValues = ProductValue::where('product_id', $id)->get();
 
 //        $images = ProductImage::where('product_id', $id)->orderByDesc('id')->get();
-//        $productsWholesale = ProductWholesalePrice::where('product_id', $id)->get();
+        $productsWholesale = ProductWholesalePrice::where('product_id', $id)->get();
 
         $viewData = [
             'product'           => $product,
@@ -147,7 +147,7 @@ class BeProductController extends Controller
             }
 
             Product::find($id)->update($data);
-//            $this->processWholesalePrice($request->wholesale, $id);
+            $this->processWholesalePrice($request->wholesale, $id);
 //            if ($request->file) {
 //                $this->syncAlbumImageAndProduct($request->file, $id);
 //            }
@@ -165,7 +165,6 @@ class BeProductController extends Controller
 
     public function processWholesalePrice($wholesales, $productID)
     {
-        $flag = false;
         $prices = $wholesales['price'];
         if (!empty($prices)) {
             ProductWholesalePrice::where('product_id', $productID)->delete();
@@ -175,22 +174,27 @@ class BeProductController extends Controller
                     $items[] = [
                         'form'       => $wholesales['form'][$key],
                         'to'         => $wholesales['to'][$key],
+                        'valid_from' => Carbon::now(),
+                        'valid_to' => Carbon::now(),
                         'unit_price' => 'price',
+                        'is_active' => 1,
                         'price'      => $price,
                         'product_id' => $productID,
+                        'maximum_discount_amount' => 0,
+                        'quantity_apply' => 1000,
                         'created_at' => Carbon::now()
                     ];
                     $flag = true;
                 }
             }
-
+            Log::info(" insert");
             ProductWholesalePrice::insert($items);
         }
 
-        Product::where('id', $productID)->update([
-            'is_wholesale' => $flag,
-            'updated_at'   => Carbon::now()
-        ]);
+//        Product::where('id', $productID)->update([
+//            'is_wholesale' => $flag,
+//            'updated_at'   => Carbon::now()
+//        ]);
     }
 
     public function processProductOptionValue($options, $productID)

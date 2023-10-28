@@ -26,7 +26,7 @@
                     <th>Avatar</th>
                     <th style="width: 30%">Tên sản phẩm</th>
                     <th>Danh mục</th>
-                    <th>Author</th>
+{{--                    <th>Author</th>--}}
                     <th>Giá</th>
                     <th>Trạng thái</th>
                     <th>Ngày tạo</th>
@@ -48,7 +48,7 @@
 {{--                            <span>{{ $item->province->name ?? "..." }} - {{ $item->district->name ?? "..." }} - {{ $item->ward->name ?? "..." }}</span>--}}
                         </td>
                         <td>{{ $item->category->name ?? "[N\A]" }}</td>
-                        <td>{{ $item->user->name ?? "[N\A]" }}</td>
+{{--                        <td>{{ $item->user->name ?? "[N\A]" }}</td>--}}
                         <td>{{ number_format($item->price,0,',','.') }}đ</td>
                         <td>
                             <span class="{{ $item->getStatus($item->status)['class'] ?? "badge badge-light" }}">{{ $item->getStatus($item->status)['name'] ?? "Tạm dừng" }}</span>
