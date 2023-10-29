@@ -205,7 +205,7 @@
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Hạn sử dụng</label>
-                <input type="date" name="exp_date" placeholder="0" class="form-control" required value="{{ old('exp_date', $product->exp_date->format("Y-m-d") ?? "") }}">
+                <input type="date" name="exp_date" placeholder="0" class="form-control" required value="{{ old('exp_date', $product->exp_date ?? "") }}">
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">Hình ảnh</label>

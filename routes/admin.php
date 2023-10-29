@@ -11,8 +11,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Be;
 
+Route::group(['namespace' => 'Backend','prefix' => 'auth'], function () {
+    Route::get('login', [\App\Http\Controllers\Auth\BeAuthController::class, 'login'])->name('get_admin.login');
+    Route::post('login', [\App\Http\Controllers\Auth\BeAuthController::class, 'postLogin']);
+    Route::get('logout',[\App\Http\Controllers\Auth\BeAuthController::class,'logout'])->name('get_admin.logout');
+});
 
-Route::group(['namespace' => 'Be','prefix' => 'admin'], function (){
+Route::group(['namespace' => 'Be','prefix' => 'admin','middleware' => 'check.login.admin'], function (){
     Route::get('',[Be\BeHomeController::class,'index'])->name('get_admin.home');
 
     Route::group(['prefix' => 'order'], function (){
