@@ -20,6 +20,7 @@
                     <th>Avatar</th>
                     <th>Tên</th>
                     <th>Email</th>
+                    <th>Type</th>
                     <th>Active</th>
                     <th>Ngày tạo</th>
                     <th>Thao tác</th>
@@ -34,6 +35,13 @@
                         </td>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->email }}</td>
+                        <td>
+                            @if ($item->user_type == 'ADMIN')
+                                <span class="badge badge-danger">ADMIN</span>
+                            @else
+                                <span class="badge badge-primary">USER</span>
+                            @endif
+                        </td>
                         <td>
                             <span class="{{ $item->getStatus($item->status)['class'] ?? "badge badge-light" }}">{{ $item->getStatus($item->status)['name'] ?? "Tạm dừng" }}</span>
                         </td>

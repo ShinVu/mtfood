@@ -24,6 +24,12 @@ class CheckLoginAdmin
             $checkRole = User::where('id', $userLogin->id)->where('user_type','ADMIN')->first();
 
             if (empty($checkRole)) return redirect()->route('get_admin.login');
+
+            if($checkRole->status == 1) {
+                toastr()->error('Tài khoản chưa kích hoạt!', 'Thông báo');
+                return redirect()->route('get_admin.login');
+            }
+
             return $next($request);
         }
 

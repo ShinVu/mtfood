@@ -43,13 +43,13 @@ return [
         'prefix' => ['product'],
         'group' => 'product'
     ],
-    [
-        'icon'   => 'user',
-        'name'   => 'User',
-        'route'  => 'get_admin.user.index',
-        'prefix' => ['user'],
-        'group' => 'user'
-    ],
+//    [
+//        'icon'   => 'user',
+//        'name'   => 'User',
+//        'route'  => 'get_admin.user.index',
+//        'prefix' => ['user'],
+//        'group' => 'user'
+//    ],
     [
         'icon'   => 'user',
         'name'   => 'QL Nhân viên',

@@ -47,7 +47,7 @@ class BeUserController extends Controller
             $data                      = $request->except('_token', 'avatar', 'user_type', 'roles');
             $data['created_at']        = Carbon::now();
             $data['email_verified_at'] = Carbon::now();
-            $data['password']          = bcrypt(Carbon::now());
+            $data['password']          = bcrypt($request->password);
             $data['status']            = $request->status ?? 1;
 
 
@@ -105,8 +105,12 @@ class BeUserController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            $user = User::find($id);
             $data               = $request->except('_token', 'avatar', 'user_type', 'roles');
             $data['updated_at'] = Carbon::now();
+            $data["password"] = $user->password;
+            if ($request->password)
+                $data['password'] = bcrypt($request->password);
 
             if ($request->avatar) {
                 $file = upload_image('avatar');
