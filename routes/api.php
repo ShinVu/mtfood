@@ -51,6 +51,10 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/productMostLiked', 'productMostLiked');
     Route::get('/productDiscount', 'productDiscount');
     Route::get('/productDetail', 'productDetail');
+    Route::get('/imageReviews', 'getProductImageReview');
+    Route::get('/productReviews', 'getProductReview');
+    Route::get('/productByCategory', 'getProductByCategory');
+    Route::get('/productByFilter', 'getProductByFilter');
 });
 
 Route::controller(ProfileController::class)->group(function () {

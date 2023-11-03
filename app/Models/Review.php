@@ -34,6 +34,7 @@ class Review extends Model
         'image_url',
         'nums_of_rate_useful',
         'product_id',
-        'customer_id'
+        'customer_id',
+        'order_details_id'
     ];
 }

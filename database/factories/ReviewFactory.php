@@ -18,11 +18,12 @@ class ReviewFactory extends Factory
     {
         return [
             'content' => fake()->text($maxNbChars = 20),
-            'rating' => fake()->randomFloat($nbMaxDecimals = 1, $min = 0, $max = 5),
+            'rating' => fake()->numberBetween($min = 0, $max = 5),
             'image_url' => 'https://source.unsplash.com/random',
             'nums_of_rate_useful' => fake()->numberBetween($min = 0, $max = 1000),
             'product_id' => \App\Models\Product::all()->random()->id,
             'customer_id' => \App\Models\Customer::all()->random()->id,
+            'order_details_id' => \App\Models\OrderDetail::all()->random()->id
         ];
     }
 }

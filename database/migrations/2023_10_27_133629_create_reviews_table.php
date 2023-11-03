@@ -21,9 +21,11 @@ return new class extends Migration
             // $table->unsignedTinyInteger('notification_type_id'); //FK to notification type id
             $table->unsignedBigInteger('product_id'); //FK to product id
             $table->unsignedBigInteger('customer_id'); //FK to id on customers
+            $table->unsignedBigInteger('order_details_id'); //FK to id on order details
             //CONSTRAINT
             $table->foreign('product_id')->references('id')->on('products')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreign('customer_id')->references('id')->on('customers')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreign('order_details_id')->references('id')->on('order_details')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 

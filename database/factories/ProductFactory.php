@@ -34,6 +34,7 @@ class ProductFactory extends Factory
             'weight' => '1kg',
             'pack' => 'Bao bì',
             'ingredient' => 'Như mô tả',
+            'is_wholesale' => fake()->boolean(),
             'category_id' => \App\Models\ProductCategory::all()->random()->id
         ];
     }

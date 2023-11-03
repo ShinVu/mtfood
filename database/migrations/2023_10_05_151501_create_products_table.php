@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('weight'); //product weight
             $table->string('pack'); //product pack
             $table->string('ingredient'); //product ingredients
+            $table->boolean('is_wholesale')->default(false); //whether product is whoesale
             $table->unsignedBigInteger('category_id')->nullable(); //FK to id on table categories
             $table->timestamps(); //created at, update at
             //CONSTRAINT
