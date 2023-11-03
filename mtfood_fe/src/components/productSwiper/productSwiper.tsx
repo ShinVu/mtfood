@@ -53,8 +53,7 @@ function ProductSwiperCard(props: { product: any; className?: string }) {
                     <div className="flex flex-col mt-2">
                         {product.max_discount_amount ? (
                             <p className="text-sm font-normal text-gray-100 my-0 line-through">
-                                đ
-                                {changePriceFormat(product.max_discount_amount)}
+                                đ{changePriceFormat(product.price)}
                             </p>
                         ) : (
                             <p className="text-sm font-normal text-gray-100 my-0">
@@ -62,7 +61,7 @@ function ProductSwiperCard(props: { product: any; className?: string }) {
                             </p>
                         )}
                         <p className="text-lg font-medium text-red_main my-0">
-                            đ{changePriceFormat(product.price)}
+                            đ{changePriceFormat(product.priceDiscount)}
                         </p>
                     </div>
                 </CardContent>

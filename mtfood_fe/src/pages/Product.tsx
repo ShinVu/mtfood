@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 //Import MUI
 import FilterListIcon from "@mui/icons-material/FilterList";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
-import { TextField } from "@mui/material";
+import { Skeleton, TextField, Tooltip } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
@@ -17,13 +17,14 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import Zoom from "@mui/material/Zoom";
 //Import components
 import {
     ContainedButton,
     OutlinedButton,
     TextButton,
 } from "../components/button.jsx";
-import PaginatedProducts from "../components/paginateProduct.js";
+import PaginationProducts from "../components/paginateProduct.js";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import ImageSwiper from "../components/imageSwiper.js";
@@ -37,8 +38,19 @@ import {
     Link,
     matchPath,
     useLocation,
+    useParams,
 } from "react-router-dom";
 import { StaticRouter } from "react-router-dom/server";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
+import axiosClient from "../../axios-client.js";
+import {
+    setProductCategory,
+    setProductTag,
+} from "../features/product/productSlice.js";
+import useWindowDimensions from "../hooks/useWindowDimensions.js";
+import useWindowSizeDimensions from "../hooks/useWindowResponsiveDimensions.js";
+import { filter, product } from "../models/product.model.js";
+import { getItemsPerPage } from "../utils/index.js";
 
 const categories = [
     { name: "Kho bo" },
@@ -63,47 +75,167 @@ const tags = [
     },
 ];
 
-function CategoryBar() {
+function CategoryBar({
+    filter,
+    setFilter,
+}: {
+    filter: filter;
+    setFilter: any;
+}) {
     const { t } = useTranslation();
+    const { productCategory } = useAppSelector((state) => state.product);
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        const fetchCategory = async () => {
+            const response = await axiosClient.get("/category");
+
+            if (response.status === 200) {
+                const category = response.data.result.category;
+                dispatch(setProductCategory(category));
+            }
+        };
+        if (!productCategory) {
+            fetchCategory();
+        }
+    }, [productCategory]);
+
+    const size = useWindowSizeDimensions();
+    const getDummy = () => {
+        if (size === "2xl") {
+            return Array.apply(null, Array(8)).map(function (x, i) {
+                return i;
+            });
+        } else if (size === "xl") {
+            return Array.apply(
+                null,
+                Array(7).map(function (x, i) {
+                    return i;
+                })
+            );
+        } else if (size === "lg") {
+            return Array.apply(null, Array(5)).map(function (x, i) {
+                return i;
+            });
+        } else if (size === "md") {
+            return Array.apply(null, Array(3)).map(function (x, i) {
+                return i;
+            });
+        } else {
+            return Array.apply(null, Array(2)).map(function (x, i) {
+                return i;
+            });
+        }
+    };
     return (
         <div className="flex flex-col bg-white p-4">
             <p className="font-bold text-base my-0 text-black">
                 {t("category")}
             </p>
             <div className="mt-2">
-                {categories.map((category) => (
-                    <p
-                        className="text-sm font-medium my-0 mt-2 text-black"
-                        key={category.name}
-                    >
-                        {category.name}
-                    </p>
-                ))}
+                {productCategory
+                    ? productCategory.map((category) => (
+                          <Tooltip
+                              title={category.name}
+                              TransitionComponent={Zoom}
+                              placement="top-start"
+                          >
+                              <p
+                                  className="text-base font-medium my-0 mt-3 text-black max-w-xs w-fit line-clamp-1"
+                                  key={category.id}
+                              >
+                                  {category.name}
+                              </p>
+                          </Tooltip>
+                      ))
+                    : getDummy().map((key) => (
+                          <Skeleton
+                              variant="text"
+                              className="w-full text-base mt-3"
+                              key={key}
+                          />
+                      ))}
             </div>
         </div>
     );
 }
 
-function TagBar() {
+function TagBar({ filter, setFilter }: { filter: filter; setFilter: any }) {
     const { t } = useTranslation();
+    const { productTag } = useAppSelector((state) => state.product);
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        const fetchTag = async () => {
+            const response = await axiosClient.get("/tag");
+            if (response.status === 200) {
+                const tag = response.data.result.tag;
+                dispatch(setProductTag(tag));
+            }
+        };
+        if (!productTag) {
+            fetchTag();
+        }
+    }, [productTag]);
+    const size = useWindowSizeDimensions();
+    const getDummy = () => {
+        if (size === "2xl") {
+            return Array.apply(null, Array(8)).map(function (x, i) {
+                return i;
+            });
+        } else if (size === "xl") {
+            return Array.apply(
+                null,
+                Array(7).map(function (x, i) {
+                    return i;
+                })
+            );
+        } else if (size === "lg") {
+            return Array.apply(null, Array(5)).map(function (x, i) {
+                return i;
+            });
+        } else if (size === "md") {
+            return Array.apply(null, Array(3)).map(function (x, i) {
+                return i;
+            });
+        } else {
+            return Array.apply(null, Array(2)).map(function (x, i) {
+                return i;
+            });
+        }
+    };
     return (
         <div className="flex flex-col bg-white p-4">
             <p className="font-bold text-base my-0 text-black">{t("tag")}</p>
             <div className="mt-2">
-                {tags.map((tag) => (
-                    <p
-                        className="text-sm font-medium my-0 mt-2 text-black"
-                        key={tag.name}
-                    >
-                        {tag.name}
-                    </p>
-                ))}
+                {productTag
+                    ? productTag.map((tag) => (
+                          <Tooltip
+                              title={tag.name}
+                              TransitionComponent={Zoom}
+                              placement="top-start"
+                          >
+                              <p
+                                  className="text-base font-medium my-0 mt-3 text-black max-w-xs w-fit line-clamp-1"
+                                  key={tag.id}
+                              >
+                                  {tag.name}
+                              </p>
+                          </Tooltip>
+                      ))
+                    : getDummy().map((key) => (
+                          <Skeleton
+                              variant="text"
+                              className="w-full text-base mt-2"
+                              key={key}
+                          />
+                      ))}
             </div>
         </div>
     );
 }
 
-function Filter() {
+function Filter({ filter, setFilter }: { filter: filter; setFilter: any }) {
     const { t } = useTranslation();
     return (
         <div className="flex flex-row items-center">
@@ -115,8 +247,15 @@ function Filter() {
     );
 }
 
-function PriceFilter() {
+function PriceFilter({
+    filter,
+    setFilter,
+}: {
+    filter: filter;
+    setFilter: any;
+}) {
     const { t } = useTranslation();
+
     return (
         <div className="flex flex-col bg-white p-4">
             <p className="font-bold text-base my-0 text-black">
@@ -152,7 +291,13 @@ function PriceFilter() {
     );
 }
 
-function ServiceFilter() {
+function ServiceFilter({
+    filter,
+    setFilter,
+}: {
+    filter: filter;
+    setFilter: any;
+}) {
     const { t } = useTranslation();
     const [state, setState] = React.useState({
         discount: false,
@@ -243,7 +388,13 @@ function ServiceFilter() {
     );
 }
 
-function RatingFilter() {
+function RatingFilter({
+    filter,
+    setFilter,
+}: {
+    filter: filter;
+    setFilter: any;
+}) {
     const { t } = useTranslation();
     return (
         <div className="flex flex-col w-full bg-white p-4">
@@ -260,15 +411,21 @@ function RatingFilter() {
         </div>
     );
 }
-function OptionSideBar() {
+function OptionSideBar({
+    filter,
+    setFilter,
+}: {
+    filter: filter;
+    setFilter: any;
+}) {
     return (
         <div className="flex max-w-2/5 min-w-2/5 w-fit flex-col space-y-4">
-            <CategoryBar />
-            <TagBar />
-            <Filter />
-            <PriceFilter />
-            <ServiceFilter />
-            <RatingFilter />
+            <CategoryBar filter={filter} setFilter={setFilter} />
+            <TagBar filter={filter} setFilter={setFilter} />
+            <Filter filter={filter} setFilter={setFilter} />
+            <PriceFilter filter={filter} setFilter={setFilter} />
+            <ServiceFilter filter={filter} setFilter={setFilter} />
+            <RatingFilter filter={filter} setFilter={setFilter} />
         </div>
     );
 }
@@ -335,13 +492,68 @@ function PaginateTab() {
         </div>
     );
 }
+
+const initialFilter: filter = {
+    category: null,
+    tag: null,
+    price: {
+        from: null,
+        to: null,
+    },
+    service: {
+        discount: false,
+        voucher: false,
+        onStock: false,
+        wholesaleProduct: false,
+    },
+    rating: 0,
+    sort: "common",
+};
+
 export default function Product() {
     const { t } = useTranslation();
+    const params = useParams();
+    const pageNumber = params.pageNumber ? parseInt(params.pageNumber, 10) : 1;
+    const [filter, setFilter] = useState<filter>(initialFilter);
+    const [products, setProduct] = useState<Array<product> | null>(null);
+    const [totalPage, setTotalPage] = useState<number>(1);
+    const itemsPerPage = getItemsPerPage();
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const payload = {
+                category: JSON.stringify(filter.category),
+                tag: JSON.stringify(filter.tag),
+                price: JSON.stringify(filter.price),
+                service: JSON.stringify(filter.service),
+                rating: JSON.stringify(filter.rating),
+                sort: filter.sort,
+                offset: JSON.stringify(filter.offset),
+                limit: JSON.stringify(filter.limit),
+            };
+            const offset = JSON.stringify(0 + itemsPerPage * pageNumber);
+            const limit = JSON.stringify(itemsPerPage);
+            const response = await axiosClient.get("/productByFilter", {
+                params: {
+                    ...payload,
+                    offset: offset,
+                    limit: limit,
+                },
+            });
+
+            const products = response.data.result.product;
+
+            const totalPage = response.data.result.totalPage;
+            setProduct(products);
+            setTotalPage(totalPage);
+        };
+
+        fetchProducts();
+    }, [filter, pageNumber]);
     return (
         <div className="flex flex-1 flex-col">
             <Header />
             <div className="flex flex-row flex-1 w-full p-4 bg-background_main max-w-full space-x-4">
-                <OptionSideBar />
+                <OptionSideBar filter={filter} setFilter={setFilter} />
                 <div className="flex flex-col flex-1 w-full max-w-full min-w-0 min-h-0">
                     <div className="flex w-full h-96 max-w-full min-w-0 min-h-0">
                         <ImageSwiper />
@@ -351,7 +563,10 @@ export default function Product() {
                         <PaginateTab />
                     </div>
                     <div className="flex flex-1 mt-5 flex-col items-center">
-                        <PaginatedProducts />
+                        <PaginationProducts
+                            products={products}
+                            totalPage={totalPage}
+                        />
                     </div>
                 </div>
             </div>

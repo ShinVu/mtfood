@@ -104,10 +104,18 @@ const router = createBrowserRouter([
         path: "/checkout",
         element: <Checkout />,
     },
-    { path: "/product/cat/:catId", element: <Product /> },
-    { path: "/product/cat", element: <Navigate to="/product/cat/0" replace /> },
-    { path: "/product/tag/:tagId", element: <Product /> },
-    { path: "/product/tag", element: <Navigate to="/product/tag/0" replace /> },
+    {
+        path: "/product/page/:pageNumber",
+        element: <Product />,
+    },
+    {
+        path: "/product",
+        element: <Product />,
+    },
+    // { path: "/product/cat/:catId", element: <Product /> },
+    // { path: "/product/cat", element: <Navigate to="/product/cat/0" replace /> },
+    // { path: "/product/tag/:tagId", element: <Product /> },
+    // { path: "/product/tag", element: <Navigate to="/product/tag/0" replace /> },
 ]);
 
 export default router;

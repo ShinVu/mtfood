@@ -5,6 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Rating from "@mui/material/Rating";
 import { CardActionArea } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { changePriceFormat } from "../../../utils";
 export default function ProductCard(props: {
     product: any;
     className?: string;
@@ -18,9 +19,10 @@ export default function ProductCard(props: {
             >
                 <CardMedia
                     component="img"
-                    image="/assets/image_14.png"
+                    image={product.image_url}
                     alt="green iguana"
                     className="w-full h-36 object-cover object-center"
+                    loading="lazy"
                 />
                 <CardContent className="p-3 w-full">
                     <p className="text-xs font-medium  my-0 line-clamp-2 h-8 leading-4">
@@ -34,9 +36,20 @@ export default function ProductCard(props: {
                         precision={0.5}
                         readOnly
                     />
-                    <p className="text-base font-medium text-red_main my-0">
-                        đ{product.price}
-                    </p>
+                    <div className="flex flex-col mt-2">
+                        {product.max_discount_amount ? (
+                            <p className="text-sm font-normal text-gray-100 my-0 line-through">
+                                đ{changePriceFormat(product.priceDiscount)}
+                            </p>
+                        ) : (
+                            <p className="text-sm font-normal text-gray-100 my-0">
+                                <br />
+                            </p>
+                        )}
+                        <p className="text-lg font-medium text-red_main my-0">
+                            đ{changePriceFormat(product.price)}
+                        </p>
+                    </div>
                 </CardContent>
             </CardActionArea>
         </Card>

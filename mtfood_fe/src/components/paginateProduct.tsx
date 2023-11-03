@@ -6,32 +6,10 @@ import useWindowSizeDimensions from "../hooks/useWindowResponsiveDimensions";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { colors } from "../../public/theme";
+import { filter, product } from "../models/product.model";
+import { getItemsPerPage } from "../utils";
+import { useNavigate } from "react-router-dom";
 
-function getItemsPerPage() {
-    const size = useWindowSizeDimensions();
-    let itemsPerRow = 1;
-    switch (size) {
-        case "xs":
-            itemsPerRow = 2;
-            break;
-        case "sm":
-            itemsPerRow = 3;
-            break;
-        case "md":
-            itemsPerRow = 3;
-            break;
-        case "lg":
-            itemsPerRow = 4;
-            break;
-        case "xl":
-            itemsPerRow = 6;
-            break;
-        default:
-            itemsPerRow = 2;
-            break;
-    }
-    return itemsPerRow * 4;
-}
 const products = [
     {
         id: 1,
@@ -524,7 +502,7 @@ const products = [
 
 function Items({ products }) {
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 w-full">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-4 w-full">
             {products &&
                 products.map((product) => (
                     <ProductCard
@@ -536,29 +514,28 @@ function Items({ products }) {
     );
 }
 
-export default function PaginatedProducts() {
+function PaginatedProducts({
+    products,
+    totalPage,
+}: {
+    products: Array<product>;
+    totalPage: number;
+}) {
     // Here we use item offsets; we could also use page offsets
     // following the API or data you're working with.
-    const [itemOffset, setItemOffset] = useState(0);
-    const itemsPerPage = getItemsPerPage();
     // Simulate fetching items from another resources.
     // (This could be items from props; or items loaded in a local state
     // from an API endpoint with useEffect and useState)
-    const endOffset = itemOffset + itemsPerPage;
-    const productItems = products.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(products.length / itemsPerPage);
     // Invoke when user click to request another page.
-    const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % products.length;
-        console.log(
-            `User requested page number ${event.selected}, which is offset ${newOffset}`
-        );
-        setItemOffset(newOffset);
+    const navigate = useNavigate();
+    const handlePageClick = (event: any) => {
+        const pageNumber = event.selected;
+        navigate(`/product/page/${pageNumber}`);
     };
 
     return (
         <>
-            <Items products={productItems} />
+            <Items products={products} />
 
             <ReactPaginate
                 breakLabel="..."
@@ -575,9 +552,9 @@ export default function PaginatedProducts() {
                     />
                 }
                 onPageChange={handlePageClick}
-                pageRangeDisplayed={5}
+                pageRangeDisplayed={3}
                 marginPagesDisplayed={3}
-                pageCount={pageCount}
+                pageCount={totalPage}
                 renderOnZeroPageCount={null}
                 containerClassName="flex flex-row self-center mt-5 space-x-2 items-center"
                 pageLinkClassName=" flex min-w-fit h-fit py-1 min-w-fit bg-white w-8 items-center justify-center border rounded text-black font-medium no-underline"
@@ -586,4 +563,24 @@ export default function PaginatedProducts() {
             />
         </>
     );
+}
+
+export default function PaginationProducts({
+    products,
+    totalPage,
+}: {
+    products: Array<product> | null;
+    totalPage: number;
+}) {
+    if (products) {
+        if (products.length > 0) {
+            return (
+                <PaginatedProducts products={products} totalPage={totalPage} />
+            );
+        } else {
+            return <p>No items found</p>;
+        }
+    } else {
+        return <p>Loading screen</p>;
+    }
 }

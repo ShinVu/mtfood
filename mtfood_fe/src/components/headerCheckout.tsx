@@ -23,7 +23,7 @@ export default function HeaderCheckout() {
     const { t, i18n } = useTranslation();
 
     //Get uset information from redux
-    const { user, token } = useSelector((state) => state.authentication);
+    const { user } = useSelector((state) => state.authentication);
 
     //State to save translation dropdown
     const [isDropdown, _setDropdown] = useState(false);
@@ -41,7 +41,7 @@ export default function HeaderCheckout() {
                 <div className="flex flex-col md:flex-row md:items-center  ">
                     <p className="font-medium text-xs text-white capitalize  my-0 mx-2">
                         {t("hotline")}:{" "}
-                        <span className="font-bold">096 321 9191</span>
+                        <span className="font-bold">123456</span>
                     </p>
                     <p className=" font-medium text-xs text-white capitalize my-0 mx-2">
                         {t("address")}:{" "}
@@ -55,7 +55,9 @@ export default function HeaderCheckout() {
                     {user ? (
                         <p className=" font-medium text-xs text-white capitalize my-0 mx-1">
                             {t("hello")},{" "}
-                            <span className="font-bold">{user}</span>
+                            <span className="font-bold">
+                                {user.name ? user.name : user.email}
+                            </span>
                         </p>
                     ) : (
                         <div className="flex flex-row">

@@ -25,46 +25,35 @@ const product = {
     stock: 200,
 };
 
-export default function Review() {
+export default function Review({ review }: { review: any }) {
     const { t } = useTranslation();
     return (
         <div className="flex flex-row items-start">
-            {user.avatar ? (
-                <Avatar alt={user.name} src={user.avatar} />
+            {review.avatar ? (
+                <Avatar alt={review.name} src={review.avatar} />
             ) : (
-                <Avatar {...stringAvatar("Kent Dodds")} />
+                <Avatar {...stringAvatar(review.name)} />
             )}
             <div className="ml-5 flex flex-col ">
                 <p className="text-base font-semibold text-black my-0 py-0">
-                    {user.name}
+                    {review.name}
                 </p>
                 <Rating
                     name="simple-controlled"
-                    defaultValue={product.rating}
+                    value={review.rating}
                     className="-mx-1 my-0"
                     size="small"
-                    precision={0.5}
                     readOnly
                 />
                 <p className="text-xs font-regular text-gray-100">
-                    02-9-2023 | 03.00
+                    {review.updated_at}
                 </p>
                 <p className="text-xs font-regular text-justify">
-                    {" "}
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. Lorem Ipsum has been the industry's
-                    standard dummy text ever since the 1500s, when an unknown
-                    printer took a galley of type and scrambled it to make a
-                    type specimen book. It has survived not only five centuries,
-                    but also the leap into electronic typesetting, remaining
-                    essentially unchanged. It was popularised in the 1960s with
-                    the release of Letraset sheets containing Lorem Ipsum
-                    passages, and more recently with desktop publishing software
-                    like Aldus PageMaker including versions of Lorem Ipsum.
+                    {review.content}
                 </p>
                 <div className="flex flex-1">
                     <img
-                        src="/assets/image_14.png"
+                        src={review.image_url}
                         className="w-24 h-24 object-center object-cover"
                     />
                 </div>
@@ -81,7 +70,7 @@ export default function Review() {
                         }}
                     >
                         <span className="text-xs text-gray-100 my-0">
-                            {t("useful")}
+                            {`${t("useful")} (${review.nums_of_rate_useful})`}
                         </span>
                     </IconButton>
                 </div>

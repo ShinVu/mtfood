@@ -233,7 +233,7 @@ export default function Header() {
                                 : undefined
                         }
                         className="text-white text-sm"
-                        onClick={() => navigate("/product/cat/0")}
+                        onClick={() => navigate("/product")}
                     >
                         {t("product")}
                     </TextButton>

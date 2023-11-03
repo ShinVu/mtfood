@@ -227,5 +227,14 @@
     "passwordUpdated": "Thay đổi mật khẩu thành công",
     "newDish": "Món ăn mới",
     "mostLikedDish": "Món ăn yêu thích",
-    "discountDish": "Món khuyến mãi"
+    "discountDish": "Món khuyến mãi",
+    "withImage": "Có hình ảnh",
+    "purchased": "Đã mua hàng",
+    "5star": "5 Sao",
+    "4star": "4 Sao",
+    "3star": "3 Sao",
+    "2star": "2 Sao",
+    "1star": "1 Sao",
+    "0star": "0 Sao",
+    "cartNoItem": "Bạn chưa chọn sản phẩm nào trong giỏ hàng!"
 }

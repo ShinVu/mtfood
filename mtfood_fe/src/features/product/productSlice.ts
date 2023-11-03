@@ -1,8 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 //Date time format
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { product, productCart } from "../../models/product.model";
 dayjs.extend(utc);
 
 const getLocalStorage = (key: string) => {
@@ -20,6 +21,8 @@ const initialState = {
     productNew: null,
     productMostLiked: null,
     productDiscount: null,
+    productCart: getLocalStorage("CART"),
+    cartChecked: getLocalStorage("CART_CHECKED"),
 };
 export const productSlice = createSlice({
     name: "product",
@@ -50,6 +53,42 @@ export const productSlice = createSlice({
             const productDiscount = action.payload;
             state.productDiscount = productDiscount;
         },
+        addProductToCart(state, action) {
+            //set  Cart based on action payload
+            const product: productCart = action.payload;
+            const newProductCart = {
+                ...state.productCart,
+                [product.id]: { ...product },
+            };
+            state.productCart = newProductCart;
+
+            localStorage.setItem("CART", JSON.stringify(newProductCart));
+        },
+        removeProductFromCart(state, action) {
+            let removeProductId = action.payload;
+            const { [removeProductId]: omit, ...newProductCart } =
+                state.productCart;
+            state.productCart = newProductCart;
+
+            localStorage.setItem("CART", JSON.stringify(newProductCart));
+        },
+        removeAllProductFromCart(state) {
+            state.productCart = {};
+            localStorage.setItem("CART", JSON.stringify({}));
+        },
+
+        setAllProductCheckedCart(state) {
+            const currentCheck = state.cartChecked;
+            Object.entries(state.productCart).forEach(([key, product]: any) => {
+                product.check = !currentCheck;
+            });
+            state.cartChecked = !currentCheck;
+            localStorage.setItem("CART", JSON.stringify(state.productCart));
+            localStorage.setItem(
+                "CART_CHECKED",
+                JSON.stringify(state.cartChecked)
+            );
+        },
     },
 });
 
@@ -60,6 +99,10 @@ export const {
     setProductNew,
     setProductMostLiked,
     setProductDiscount,
+    addProductToCart,
+    removeProductFromCart,
+    setAllProductCheckedCart,
+    removeAllProductFromCart,
 } = productSlice.actions;
 
 // Export reducer to create store in app/store.tsx

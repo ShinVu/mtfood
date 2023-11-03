@@ -226,6 +226,14 @@
     "passwordUpdated": "Password updated successfully",
     "newDish": "New Dish",
     "mostLikedDish": "Most liked Dish",
-    "discountDish": "On Discount Dish"
+    "discountDish": "On Discount Dish",
+    "withImage": "With image",
+    "purchased": "Purchased",
+    "5star": "5 Star",
+    "4star": "4 Star",
+    "3star": "3 Star",
+    "2star": "2 Star",
+    "1star": "1 Star",
+    "cartNoItem": "There is no product in cart"
 
 }

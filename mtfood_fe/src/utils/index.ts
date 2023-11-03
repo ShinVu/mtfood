@@ -1,3 +1,5 @@
+import useWindowSizeDimensions from "../hooks/useWindowResponsiveDimensions";
+
 //Check if text is numeric
 function matchIsNumeric(text) {
     const isNumber = typeof text === "number";
@@ -37,4 +39,59 @@ function changePriceFormat(value: string | null) {
     return formated;
 }
 
-export { matchIsNumeric, getSizeDialog, changePriceFormat };
+//Check int number
+function isInt(value: string) {
+    return (
+        !isNaN(value) &&
+        parseInt(Number(value)) == value &&
+        !isNaN(parseInt(value, 10))
+    );
+}
+
+//Get SubTotal value
+function getSubTotal(price: string, quantity: number = 1) {
+    if (!price) {
+        return "";
+    }
+    const money = Number(price);
+    const subTotal = money * quantity;
+    return String(subTotal);
+}
+
+//Get items per page for pagination
+function getItemsPerPage() {
+    const size = useWindowSizeDimensions();
+    let itemsPerRow = 1;
+    switch (size) {
+        case "xs":
+            itemsPerRow = 2;
+            break;
+        case "sm":
+            itemsPerRow = 3;
+            break;
+        case "md":
+            itemsPerRow = 3;
+            break;
+        case "lg":
+            itemsPerRow = 4;
+            break;
+        case "xl":
+            itemsPerRow = 6;
+            break;
+        case "2xl":
+            itemsPerRow = 6;
+            break;
+        default:
+            itemsPerRow = 2;
+            break;
+    }
+    return itemsPerRow * 4;
+}
+export {
+    matchIsNumeric,
+    getSizeDialog,
+    changePriceFormat,
+    isInt,
+    getSubTotal,
+    getItemsPerPage,
+};

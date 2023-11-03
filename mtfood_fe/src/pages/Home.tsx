@@ -258,7 +258,7 @@ function ProductSlideNewProductCard() {
         <div className="flex flex-col flex-1  p-4 h-fit">
             <Divider
                 className="mx-10 my-4 cursor-pointer"
-                onClick={() => navigate(`/product/tag/`)}
+                onClick={() => navigate("/product")}
             >
                 <h4 className="text-2xl my-0 text-primary_main">
                     {t("newDish")}
@@ -319,7 +319,7 @@ function ProductSlideMostLikedProductCard() {
         <div className="flex flex-col flex-1  p-4 h-fit">
             <Divider
                 className="mx-10 my-4 cursor-pointer"
-                onClick={() => navigate(`/product/tag/`)}
+                onClick={() => navigate("/product")}
             >
                 <h4 className="text-2xl my-0 text-primary_main">
                     {t("mostLikedDish")}
@@ -378,7 +378,7 @@ function ProductSlideDiscountProductCard() {
         <div className="flex flex-col flex-1  p-4 h-fit">
             <Divider
                 className="mx-10 my-4 cursor-pointer"
-                onClick={() => navigate(`/product/tag/`)}
+                onClick={() => navigate(`/product`)}
             >
                 <h4 className="text-2xl my-0 text-primary_main">
                     {t("discountDish")}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 //Import MUI
 import {
     Table,
@@ -34,6 +34,16 @@ import { useTranslation } from "react-i18next";
 //lodash
 import { debounce } from "@mui/material/utils";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
+import { productCart } from "../models/product.model.js";
+import { changePriceFormat, getSubTotal, isInt } from "../utils/index.js";
+import {
+    addProductToCart,
+    removeAllProductFromCart,
+    removeProductFromCart,
+    setAllProductCheckedCart,
+} from "../features/product/productSlice.js";
+import usePriceCart from "../hooks/usePrice.js";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
@@ -65,14 +75,55 @@ const products = [
     },
 ];
 
-function ProductCartItemCard(props) {
+function ProductCartItemCard({ product }: { product: productCart }) {
     const navigate = useNavigate();
-    const { product } = props;
+
+    //Quantity state
+    const [quantity, setQuantity] = useState<number>(
+        product.quantityForProduct
+    );
+    //Redux
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        const handleQuantityChange = () => {
+            const quantityForProduct = quantity;
+            const productCart = { ...product, quantityForProduct };
+            dispatch(addProductToCart(productCart));
+        };
+        handleQuantityChange();
+    }, [quantity]);
+
+    const quantitySubstract = () => {
+        setQuantity(quantity > 1 ? quantity - 1 : quantity);
+    };
+    const quantityAdd = () => {
+        setQuantity(quantity + 1);
+    };
+
+    const quantityChange = (value: string) => {
+        const quantity = value.trim();
+        if (isInt(quantity)) {
+            setQuantity(parseInt(quantity));
+        }
+    };
+
+    const deleteProduct = () => {
+        dispatch(removeProductFromCart(product.id));
+    };
+
+    const checkChange = () => {
+        const productCart = { ...product, check: !product.check };
+        dispatch(addProductToCart(productCart));
+    };
     return (
         <StyledTableRow>
             <TableCell align="left">
                 <div className="flex flex-row items-center space-x-4">
-                    <Checkbox checked={true} onChange={() => {}} />
+                    <Checkbox
+                        checked={product.check}
+                        onClick={() => checkChange()}
+                    />
                     <div
                         className="cursor-pointer flex flex-row items-center space-x-4"
                         onClick={() =>
@@ -85,7 +136,14 @@ function ProductCartItemCard(props) {
                 </div>
             </TableCell>
             <TableCell align="center">
-                <p className="my-0">{product.basePrice}</p>
+                <div>
+                    <p className="my-0 text-lg font-medium text-black">
+                        {changePriceFormat(product.priceDiscount)}
+                    </p>
+                    <p className="my-0 text-base text-gray-100 line-through">
+                        {changePriceFormat(product.price)}
+                    </p>
+                </div>
             </TableCell>
             <TableCell align="center">
                 <div className="flex flex-1 items-center justify-center">
@@ -93,6 +151,7 @@ function ProductCartItemCard(props) {
                         <IconButton
                             aria-label="delete"
                             className="rounded-none"
+                            onClick={quantitySubstract}
                         >
                             <RemoveIcon className="rounded-none" />
                         </IconButton>
@@ -115,6 +174,10 @@ function ProductCartItemCard(props) {
                                 width: "8ch",
                                 "& fieldset": { border: "none" },
                             }}
+                            value={quantity}
+                            onChange={(event) =>
+                                quantityChange(event.target.value)
+                            }
                         />
                         <Divider
                             orientation="vertical"
@@ -124,20 +187,42 @@ function ProductCartItemCard(props) {
                                 bgcolor: colors.gray[100],
                             }}
                         />
-                        <IconButton aria-label="delete">
+                        <IconButton aria-label="delete" onClick={quantityAdd}>
                             <AddIcon />
                         </IconButton>
                     </div>
                 </div>
             </TableCell>
             <TableCell align="center">
-                <p className="my-0">{product.price}</p>
+                <div>
+                    <p className="my-0 text-lg font-medium text-red_main">
+                        {changePriceFormat(
+                            getSubTotal(
+                                product.priceDiscount,
+                                product.quantityForProduct
+                            )
+                        )}
+                    </p>
+                    {/* {product.max_discount_amount && (
+                        <p className="my-0 text-base text-gray-100 line-through">
+                            {changePriceFormat(
+                                getSubTotal(
+                                    product.max_discount_amount,
+                                    product.quantityForProduct
+                                )
+                            )}
+                        </p>
+                    )} */}
+                </div>
             </TableCell>
             <TableCell align="center">
                 <FavoriteBorderIcon sx={{ fontSize: 24 }} />
             </TableCell>
             <TableCell align="center">
-                <div className="flex justify-center">
+                <div
+                    className="flex justify-center cursor-pointer"
+                    onClick={deleteProduct}
+                >
                     <RiDeleteBin6Line className="w-6 h-6" />
                 </div>
             </TableCell>
@@ -145,10 +230,20 @@ function ProductCartItemCard(props) {
     );
 }
 
-function ProductCartItems(props) {
+function ProductCartItems({
+    products,
+    cartChecked,
+}: {
+    products: productCart;
+    cartChecked: boolean;
+}) {
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const { product } = props;
+    //Redux
+    const dispatch = useAppDispatch();
+    const handleAllChecked = () => {
+        dispatch(setAllProductCheckedCart());
+    };
     return (
         <div className="flex flex-1 bg-white">
             <Table>
@@ -157,9 +252,9 @@ function ProductCartItems(props) {
                         <TableCell align="left">
                             <div className="space-x-3">
                                 <Checkbox
-                                    checked={true}
-                                    indeterminate={true}
-                                    onChange={() => {}}
+                                    checked={cartChecked}
+                                    indeterminate={cartChecked}
+                                    onClick={() => handleAllChecked()}
                                 />
                                 <span className="font-medium text-gray-100 my-0">
                                     {" "}
@@ -205,9 +300,13 @@ function ProductCartItems(props) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {products.map((product) => (
-                        <ProductCartItemCard product={product} />
-                    ))}
+                    {products &&
+                        Object.keys(products).map((key) => (
+                            <ProductCartItemCard
+                                product={products[key]}
+                                key={key}
+                            />
+                        ))}
                 </TableBody>
             </Table>
         </div>
@@ -226,7 +325,9 @@ function PopOverOrderPayment() {
     };
 
     const open = Boolean(anchorEl);
-    const id = open ? "simple-popover" : undefined;
+
+    //Cart prices
+    const priceCart = usePriceCart();
     return (
         <>
             <Popover
@@ -261,7 +362,10 @@ function PopOverOrderPayment() {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="text-black text-sm font-medium my-0">
-                                        500.000đ
+                                        {priceCart &&
+                                            changePriceFormat(
+                                                String(priceCart.totalSub)
+                                            )}
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
@@ -273,7 +377,12 @@ function PopOverOrderPayment() {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="text-black text-sm font-medium my-0">
-                                        500.000đ
+                                        {priceCart &&
+                                            changePriceFormat(
+                                                String(
+                                                    priceCart.totalProductDiscount
+                                                )
+                                            )}
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
@@ -285,7 +394,10 @@ function PopOverOrderPayment() {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="text-black text-sm font-medium my-0">
-                                        500.000đ
+                                        {priceCart &&
+                                            changePriceFormat(
+                                                String(priceCart.totalVoucher)
+                                            )}
                                     </span>
                                 </TableCell>
                             </TableRow>
@@ -297,7 +409,10 @@ function PopOverOrderPayment() {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="text-black text-sm font-medium my-0">
-                                        500.000đ
+                                        {priceCart &&
+                                            changePriceFormat(
+                                                String(priceCart.totalDiscount)
+                                            )}
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
@@ -309,7 +424,10 @@ function PopOverOrderPayment() {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="my-0 text-red_main text-2xl font-bold">
-                                        500.000đ
+                                        {priceCart &&
+                                            changePriceFormat(
+                                                String(priceCart.totalPrice)
+                                            )}
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
@@ -333,7 +451,10 @@ function PopOverOrderPayment() {
                             </TableCell>
                             <TableCell align="right">
                                 <p className="my-0 text-red_main text-2xl font-bold">
-                                    500.000đ
+                                    {priceCart &&
+                                        changePriceFormat(
+                                            String(priceCart.totalPrice)
+                                        )}
                                 </p>
                             </TableCell>
                         </StyledTableRow>
@@ -345,7 +466,10 @@ function PopOverOrderPayment() {
                             </TableCell>
                             <TableCell align="right">
                                 <p className="my-0 text-gray-100 line-through text-base ">
-                                    50.000đ
+                                    {priceCart &&
+                                        changePriceFormat(
+                                            String(priceCart.totalDiscount)
+                                        )}
                                 </p>
                             </TableCell>
                         </StyledTableRow>
@@ -356,10 +480,24 @@ function PopOverOrderPayment() {
     );
 }
 
-function OrderProceedCard() {
+function OrderProceedCard({
+    products,
+    cartChecked,
+}: {
+    products: productCart;
+    cartChecked: boolean;
+}) {
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const dispatch = useAppDispatch();
+    const handleAllChecked = () => {
+        dispatch(setAllProductCheckedCart());
+    };
 
+    const handleAllRemoved = () => {
+        dispatch(removeAllProductFromCart());
+    };
+    console.log(products);
     return (
         <div className="flex flex-1 flex-col bg-white p-4">
             <div className="flex flex-1 justify-end items-center space-x-24 px-4">
@@ -376,17 +514,17 @@ function OrderProceedCard() {
                 <div className="flex flex-row items-center space-x-12">
                     <div className="flex flex-row items-center -ml-3">
                         <Checkbox
-                            checked={true}
-                            indeterminate={true}
-                            onChange={() => {}}
+                            checked={cartChecked}
+                            indeterminate={cartChecked}
+                            onClick={() => handleAllChecked()}
                         />
-                        <TextButton>
+                        <TextButton onClick={() => handleAllChecked()}>
                             <p className="my-0 text-sm font-medium text-blue normal-case ml-4">
                                 {t("chooseAll")}
                             </p>
                         </TextButton>
                     </div>
-                    <TextButton>
+                    <TextButton onClick={() => handleAllRemoved()}>
                         {" "}
                         <span className="my-0 text-sm font-medium text-blue normal-case">
                             {t("delete")}
@@ -414,14 +552,44 @@ function OrderProceedCard() {
         </div>
     );
 }
-export default function Cart() {
+
+function ProductCartNoItem() {
     const { t } = useTranslation();
     return (
-        <div className="flex flex-1 flex-col">
+        <div className="bg-orange-light h-48 min-w-fit p-4">
+            <h1 className="text-3xl font-medium text-black">
+                {t("cartNoItem")}
+            </h1>
+        </div>
+    );
+}
+export default function Cart() {
+    const { t } = useTranslation();
+    const [products, setProducts] = useState<productCart | null>(null);
+    const { productCart, cartChecked } = useAppSelector(
+        (state) => state.product
+    );
+    useEffect(() => {
+        setProducts(productCart);
+    }, [productCart]);
+    return (
+        <div className="flex flex-1 min-h-screen flex-col">
             <HeaderCheckout />
-            <div className="flex flex-1 flex-col bg-background_main p-4 space-y-4">
-                <ProductCartItems products={products} />
-                <OrderProceedCard />
+            <div className="flex  flex-col flex-1 h-fit bg-background_main p-4 space-y-4">
+                {products && Object.keys(products).length ? (
+                    <>
+                        <ProductCartItems
+                            products={products}
+                            cartChecked={cartChecked}
+                        />
+                        <OrderProceedCard
+                            products={products}
+                            cartChecked={cartChecked}
+                        />
+                    </>
+                ) : (
+                    <ProductCartNoItem />
+                )}
             </div>
             <Footer />
         </div>
