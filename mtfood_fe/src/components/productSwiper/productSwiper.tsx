@@ -26,6 +26,7 @@ function ProductSwiperSkeleton() {
 function ProductSwiperCard(props: { product: any; className?: string }) {
     const navigate = useNavigate();
     const { product } = props;
+
     return (
         <Card className={props.className}>
             <CardActionArea
@@ -74,7 +75,6 @@ export default function ProductSwiper(props: {
     header?: string;
     products: any;
 }) {
-    const { header } = props;
     const [products, setProducts] = useState([]);
     useEffect(() => {
         setProducts(props.products);

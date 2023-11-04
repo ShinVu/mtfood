@@ -24,12 +24,16 @@ class getProductByFilterRequest extends FormRequest
         return [
             'category' => 'nullable|sometimes',
             'tag' => 'nullable|sometimes',
-            'price' => 'nullable|sometimes',
-            'service' => 'nullable|sometimes',
+            'price_from' => 'nullable|sometimes',
+            'price_to' => 'nullable|sometimes',
+            'discount' => 'nullable|sometimes',
+            'voucher' => 'nullable|sometimes',
+            'onStock' => 'nullable|sometimes',
+            'wholesaleProduct' => 'nullable|sometimes',
             'rating' => 'nullable|sometimes',
-            'sort' => 'nullable|sometimes',
-            'offset' => 'nullable|sometimes',
-            'limit' => 'nullable|sometimes'
+            'sort' => 'required',
+            'offset' => 'required',
+            'limit' => 'required'
         ];
     }
 }

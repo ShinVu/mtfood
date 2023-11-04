@@ -234,6 +234,11 @@
     "3star": "3 Star",
     "2star": "2 Star",
     "1star": "1 Star",
-    "cartNoItem": "There is no product in cart"
+    "cartNoItem": "There is no product in cart",
+    "common": "Common",
+    "mostPurchased": "Most Purchased",
+    "new": "Latest",
+    "priceHTL": "Price: High to Low",
+    "priceLTH": "Price: Low to High"
 
 }

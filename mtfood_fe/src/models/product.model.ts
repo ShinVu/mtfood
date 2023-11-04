@@ -63,20 +63,14 @@ export type priceCart = {
 };
 
 export type filter = {
-    category: number | null;
-    tag: Array<number> | null;
-    price: {
-        from: number | null;
-        to: number | null;
-    };
-    service: {
-        discount: boolean;
-        voucher: boolean;
-        onStock: boolean;
-        wholesaleProduct: boolean;
-    };
-    rating: number;
-    sort: string;
-    offset: number;
-    limit: number;
+    category?: number | null;
+    tag?: Array<number> | null;
+    price_from?: number | null;
+    price_to?: number | null;
+    discount?: boolean;
+    voucher?: boolean;
+    onStock?: boolean;
+    wholesaleProduct?: boolean;
+    rating?: number;
+    sort?: string;
 };

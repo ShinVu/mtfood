@@ -236,5 +236,10 @@
     "2star": "2 Sao",
     "1star": "1 Sao",
     "0star": "0 Sao",
-    "cartNoItem": "Bạn chưa chọn sản phẩm nào trong giỏ hàng!"
+    "cartNoItem": "Bạn chưa chọn sản phẩm nào trong giỏ hàng!",
+    "common": "Phổ biến",
+    "mostPurchased": "Bán chạy",
+    "new": "Mới nhất",
+    "priceHTL": "Giá: Cao đến thấp",
+    "priceLTH": "Giá: thấp đến cao"
 }

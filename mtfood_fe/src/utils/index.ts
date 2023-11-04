@@ -23,11 +23,11 @@ function getSizeDialog(size: string) {
 }
 
 //Return price in VND format
-function changePriceFormat(value: string | null) {
+function changePriceFormat(value: string | number | null) {
     if (!value) {
         return "";
     }
-    const money = Number(value);
+    const money = value;
     const config = {
         style: "currency",
         currency: "VND",
@@ -87,6 +87,7 @@ function getItemsPerPage() {
     }
     return itemsPerRow * 4;
 }
+
 export {
     matchIsNumeric,
     getSizeDialog,

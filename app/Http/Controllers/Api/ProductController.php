@@ -256,15 +256,6 @@ class ProductController extends Controller
     {
         try {
             $data = $request->validated();
-            // Decode json params 
-            $data['category'] = json_decode($data['category'], true);
-            $data['price'] = json_decode($data['price'], true);
-            $data['service'] = json_decode($data['service'], true);
-            $data['tag'] = json_decode($data['tag'], true);
-            $data['rating'] = json_decode($data['rating'], true);
-            $data['offset'] = json_decode($data['offset'], true);
-            $data['limit'] = json_decode($data['limit'], true);
-            $filter = $data;
 
             /** @var \App\Models\Review $products */
 
@@ -283,52 +274,63 @@ class ProductController extends Controller
             /**Setting query for product filter */
             //Filter category
 
-            if (isset($filter['category'])) {
+            if (isset($data['category'])) {
+                $category = (int)$data['category'];
 
-                $products = $products->where('products.category_id', (int)$filter['category']);
+                $products = $products->where('products.category_id', $category);
             }
 
             //Filter tag
-            if (isset($filter['tag'])) {
+            if (isset($data['tag'])) {
 
-                $products = $products->join('product_have_tag', 'products.id', '=', 'product_have_tag.product_id')->whereIn('product_have_tag.tag_id', $filter['tag']);
+                $tag = json_decode($data['tag'], true);
+
+                $products = $products->join('product_have_tag', 'products.id', '=', 'product_have_tag.product_id')->whereIn('product_have_tag.tag_id', $tag)->distinct();
             }
 
-            //Filter price
-            if (isset($filter['price'])) {
-                if (isset($filter['price']['from']) && isset($filter['price']['to'])) {
-                    $products = $products->havingBetween('priceDiscount', [$filter['price']['from'], $filter['price']['to']]);
-                } else if (isset($filter['price']['from'])) {
-                    $products = $products->having('priceDiscount', '>=', $filter['price']['from']);
-                } else if (isset($filter['price']['to'])) {
-                    $products = $products->having('priceDiscount', '<=', $filter['price']['to']);
-                }
+            // //Filter price
+
+            if (isset($data['price_from']) && isset($data['price_to'])) {
+
+                $priceFrom = (float)$data['price_from'];
+                $priceTo = (float)$data['price_to'];
+                $products = $products->havingBetween('priceDiscount', [$priceFrom, $priceTo]);
+            } else if (isset($data['price_from'])) {
+                $priceFrom = (float)$data['price_from'];
+                $products = $products->having('priceDiscount', '>=', $priceFrom);
+            } else if (isset($data['price_to'])) {
+                $priceTo = (float)$data['price_to'];
+                $products = $products->having('priceDiscount', '<=', $priceTo);
             }
 
-            //Filter services 
-            if (isset($filter['service'])) {
-                if ($filter['service']['discount']) {
-                    $products = $products->whereNotNull('highest_discount.max_discount_amount');
-                }
-                if ($filter['service']['voucher']) {
-                    $products = $products;
-                }
-                if ($filter['service']['onStock']) {
-                    $products = $products->where('products.quantity_available', '>', 0);
-                }
-                if ($filter['service']['wholesaleProduct']) {
-                    $products = $products->where('products.is_wholesale', true);
-                }
+
+            // //Filter services 
+
+            if (isset($data['discount']) && filter_var($data['discount'], FILTER_VALIDATE_BOOLEAN)) {
+
+                $products = $products->whereNotNull('highest_discount.max_discount_amount');
+            }
+            if (isset($data['voucher']) && filter_var($data['voucher'], FILTER_VALIDATE_BOOLEAN)) {
+                $products = $products;
+            }
+            if (isset($data['onStock']) && filter_var($data['onStock'], FILTER_VALIDATE_BOOLEAN)) {
+                $products = $products->where('products.quantity_available', '>', 0);
+            }
+            if (isset($data['wholesaleProduct']) && filter_var($data['wholesaleProduct'], FILTER_VALIDATE_BOOLEAN)) {
+                $products = $products->where('products.is_wholesale', true);
             }
 
-            if (isset($filter['rating'])) {
-                $products = $products->where('products.rating', '>=', (float)$filter['rating']);
+
+            if (isset($data['rating'])) {
+                $products = $products->where('products.rating', '>=', (float)$data['rating']);
             }
 
             //Sort product
             if (isset($data['sort'])) {
-                $sort = $data['sort'];
+                $sort = (string)$data['sort'];
                 if ($sort == "common") {
+                    $products = $products;
+                } else if ($sort == "mostPurchased") {
                     $products = $products;
                 } else if ($sort == "new") {
                     $products = $products->orderBy('products.updated_at', 'desc');
@@ -341,8 +343,10 @@ class ProductController extends Controller
 
             //Pagination
             //Get total page of products
-            $totalPageProduct = ceil($products->count() / (int)$filter['limit']);
-            $products = $products->skip((int)$filter['offset'])->take((int)$filter['limit']);
+            if (isset($data['offset']) && isset($data['limit'])) {
+                $totalPageProduct = ceil($products->count() / (int)$data['limit']);
+                $products = $products->skip((int)$data['offset'])->take((int)$data['limit']);
+            }
             // Get product
             $products = $products->get();
             return response(['message' => 'getProductSuccessfully', 'result' => ['product' => $products, 'totalPage' => $totalPageProduct]], 200);

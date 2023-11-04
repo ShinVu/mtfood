@@ -105,10 +105,6 @@ const router = createBrowserRouter([
         element: <Checkout />,
     },
     {
-        path: "/product/page/:pageNumber",
-        element: <Product />,
-    },
-    {
         path: "/product",
         element: <Product />,
     },

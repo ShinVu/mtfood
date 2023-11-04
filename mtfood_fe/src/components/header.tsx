@@ -18,7 +18,7 @@ import { FaAngleDown, FaCartShopping } from "react-icons/fa6";
 import { colors } from "../../public/theme";
 
 //Import MUI
-import { Stack } from "@mui/material";
+import { Badge, Stack } from "@mui/material";
 import LoopIcon from "@mui/icons-material/Loop";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -34,6 +34,17 @@ import {
 
 //Axios client
 import axiosClient from "../../axios-client";
+import { styled } from "@mui/material/styles";
+import { BadgeProps } from "@mui/material/Badge";
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+    "& .MuiBadge-badge": {
+        right: 11,
+        top: 0,
+        backgroundColor: colors.blue,
+        padding: "0 4px",
+    },
+}));
+
 export default function Header() {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
@@ -51,6 +62,7 @@ export default function Header() {
 
     //Redux
     const { user, token } = useAppSelector((state) => state.authentication);
+    const { productCart } = useAppSelector((state) => state.product);
     const dispatch = useAppDispatch();
     const logOut = () => {
         const payload = {
@@ -195,11 +207,22 @@ export default function Header() {
                     className="flex flex-row cursor-pointer"
                     onClick={() => navigate("/cart")}
                 >
-                    <FaCartShopping
-                        style={{ color: colors.white }}
-                        size={24}
-                        className="mr-3"
-                    />
+                    <StyledBadge
+                        badgeContent={Object.keys(productCart).length}
+                        color="primary"
+                        max={99}
+                        anchorOrigin={{
+                            vertical: "top",
+                            horizontal: "right",
+                        }}
+                    >
+                        <FaCartShopping
+                            style={{ color: colors.white }}
+                            size={24}
+                            className="mr-3"
+                        />
+                    </StyledBadge>
+
                     <span className="font-medium text-xs text-white capitalize my-0 mx-1">
                         {t("shoppingCart")}
                     </span>

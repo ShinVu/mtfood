@@ -14,7 +14,7 @@ import {
 import ImageSwiper from "../components/imageSwiper.js";
 import ProductSwiper from "../components/productSwiper/productSwiper.js";
 import { Divider, Skeleton } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { createSearchParams, useNavigate } from "react-router-dom";
 import axiosClient from "../../axios-client.js";
 import useWindowSizeDimensions from "../hooks/useWindowResponsiveDimensions.js";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
@@ -38,10 +38,20 @@ type product = {
 function CategoryCardItem(props) {
     const { category } = props;
     const navigate = useNavigate();
+    const handleCategoryClick = () => {
+        const path = {
+            pathname: "/product",
+            search: createSearchParams({
+                page: String(1),
+                category: category.id,
+            }).toString(),
+        };
+        navigate(path);
+    };
     return (
         <div
             className="flex flex-col items-center cursor-pointer min-w-fit align-center"
-            onClick={() => navigate(`/product/cat/${category.id}`)}
+            onClick={handleCategoryClick}
         >
             <img
                 src="/assets/image_14.png"
@@ -59,10 +69,21 @@ function CategoryCardItem(props) {
 function TagCardItem(props) {
     const navigate = useNavigate();
     const { tag } = props;
+
+    const handleTagClick = () => {
+        const path = {
+            pathname: "/product",
+            search: createSearchParams({
+                page: String(1),
+                tag: JSON.stringify([tag.id]),
+            }).toString(),
+        };
+        navigate(path);
+    };
     return (
         <div
             className="flex flex-col items-center cursor-pointer"
-            onClick={() => navigate(`/product/tag/${tag.id}`)}
+            onClick={handleTagClick}
         >
             <p className="text-sm mt-2 text-black font-medium">{tag.name}</p>
         </div>
@@ -254,11 +275,21 @@ function ProductSlideNewProductCard() {
         }
     }, [productNew]);
 
+    const handleNewProductClick = () => {
+        const path = {
+            pathname: "/product",
+            search: createSearchParams({
+                page: String(1),
+                sort: "new",
+            }).toString(),
+        };
+        navigate(path);
+    };
     return (
         <div className="flex flex-col flex-1  p-4 h-fit">
             <Divider
                 className="mx-10 my-4 cursor-pointer"
-                onClick={() => navigate("/product")}
+                onClick={handleNewProductClick}
             >
                 <h4 className="text-2xl my-0 text-primary_main">
                     {t("newDish")}
@@ -315,11 +346,22 @@ function ProductSlideMostLikedProductCard() {
         }
     }, [productMostLiked]);
 
+    const handleMostLikedClick = () => {
+        const path = {
+            pathname: "/product",
+            search: createSearchParams({
+                page: String(1),
+                sort: "mostPurchased",
+            }).toString(),
+        };
+        navigate(path);
+    };
+
     return (
         <div className="flex flex-col flex-1  p-4 h-fit">
             <Divider
                 className="mx-10 my-4 cursor-pointer"
-                onClick={() => navigate("/product")}
+                onClick={handleMostLikedClick}
             >
                 <h4 className="text-2xl my-0 text-primary_main">
                     {t("mostLikedDish")}
@@ -374,11 +416,22 @@ function ProductSlideDiscountProductCard() {
         }
     }, [productDiscount]);
 
+    const handleDiscountClick = () => {
+        const path = {
+            pathname: "/product",
+            search: createSearchParams({
+                page: String(1),
+                discount: String(true),
+            }).toString(),
+        };
+        navigate(path);
+    };
+
     return (
         <div className="flex flex-col flex-1  p-4 h-fit">
             <Divider
                 className="mx-10 my-4 cursor-pointer"
-                onClick={() => navigate(`/product`)}
+                onClick={handleDiscountClick}
             >
                 <h4 className="text-2xl my-0 text-primary_main">
                     {t("discountDish")}

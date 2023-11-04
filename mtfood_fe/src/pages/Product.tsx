@@ -39,6 +39,8 @@ import {
     matchPath,
     useLocation,
     useParams,
+    useSearchParams,
+    SetURLSearchParams,
 } from "react-router-dom";
 import { StaticRouter } from "react-router-dom/server";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
@@ -50,37 +52,16 @@ import {
 import useWindowDimensions from "../hooks/useWindowDimensions.js";
 import useWindowSizeDimensions from "../hooks/useWindowResponsiveDimensions.js";
 import { filter, product } from "../models/product.model.js";
-import { getItemsPerPage } from "../utils/index.js";
-
-const categories = [
-    { name: "Kho bo" },
-    { name: "Kho bo" },
-    { name: "Kho bo" },
-    { name: "Kho bo" },
-    { name: "Kho bo" },
-    { name: "Kho bo" },
-    { name: "Kho bo" },
-    { name: "Kho bo" },
-];
-
-const tags = [
-    {
-        name: "mon an chay",
-    },
-    {
-        name: "mon an chay",
-    },
-    {
-        name: "mon an chay",
-    },
-];
+import { changePriceFormat, getItemsPerPage } from "../utils/index.js";
+import { useForm } from "react-hook-form";
+import { colors } from "../../public/theme.js";
 
 function CategoryBar({
-    filter,
-    setFilter,
+    searchParams,
+    setSearchParams,
 }: {
-    filter: filter;
-    setFilter: any;
+    searchParams: URLSearchParams;
+    setSearchParams: SetURLSearchParams;
 }) {
     const { t } = useTranslation();
     const { productCategory } = useAppSelector((state) => state.product);
@@ -127,6 +108,13 @@ function CategoryBar({
             });
         }
     };
+    const handleCategoryClick = (categoryId: string) => {
+        //set query string to category
+        searchParams.set("category", categoryId);
+        //set page back to page 0
+        searchParams.set("page", String(1));
+        setSearchParams(searchParams);
+    };
     return (
         <div className="flex flex-col bg-white p-4">
             <p className="font-bold text-base my-0 text-black">
@@ -143,6 +131,9 @@ function CategoryBar({
                               <p
                                   className="text-base font-medium my-0 mt-3 text-black max-w-xs w-fit line-clamp-1"
                                   key={category.id}
+                                  onClick={() =>
+                                      handleCategoryClick(category.id)
+                                  }
                               >
                                   {category.name}
                               </p>
@@ -160,7 +151,13 @@ function CategoryBar({
     );
 }
 
-function TagBar({ filter, setFilter }: { filter: filter; setFilter: any }) {
+function TagBar({
+    searchParams,
+    setSearchParams,
+}: {
+    searchParams: URLSearchParams;
+    setSearchParams: SetURLSearchParams;
+}) {
     const { t } = useTranslation();
     const { productTag } = useAppSelector((state) => state.product);
     const dispatch = useAppDispatch();
@@ -204,12 +201,52 @@ function TagBar({ filter, setFilter }: { filter: filter; setFilter: any }) {
             });
         }
     };
+    const handleTagClick = (tagId: string) => {
+        const currentTag = searchParams.get("tag");
+        //If tag filter is not set yet
+        if (!currentTag) {
+            const newTagJSON = JSON.stringify([tagId]);
+            searchParams.set("tag", newTagJSON);
+        }
+        //If tag filter already has values in array
+        else {
+            const tagArray = JSON.parse(currentTag);
+
+            //if this tag doesn't exist => add to params
+            if (tagArray.indexOf(tagId) === -1) {
+                tagArray.push(tagId);
+                const newTagJSON = JSON.stringify(tagArray);
+                searchParams.set("tag", newTagJSON);
+            }
+            //if this tag exist =>remove to params
+            else {
+                const index = tagArray.indexOf(tagId);
+                if (index > -1) {
+                    // only splice array when item is found
+                    tagArray.splice(index, 1); // 2nd parameter means remove one item only
+                }
+
+                //if there is more then one value after remove tag params
+                if (tagArray.length > 0) {
+                    const newTagJSON = JSON.stringify(tagArray);
+                    searchParams.set("tag", newTagJSON);
+                } else {
+                    searchParams.delete("tag");
+                }
+            }
+        }
+        //set page back to page 0
+        searchParams.set("page", String(1));
+
+        //setParams
+        setSearchParams(searchParams);
+    };
     return (
         <div className="flex flex-col bg-white p-4">
             <p className="font-bold text-base my-0 text-black">{t("tag")}</p>
             <div className="mt-2">
                 {productTag
-                    ? productTag.map((tag) => (
+                    ? productTag.map((tag: any) => (
                           <Tooltip
                               title={tag.name}
                               TransitionComponent={Zoom}
@@ -218,6 +255,7 @@ function TagBar({ filter, setFilter }: { filter: filter; setFilter: any }) {
                               <p
                                   className="text-base font-medium my-0 mt-3 text-black max-w-xs w-fit line-clamp-1"
                                   key={tag.id}
+                                  onClick={() => handleTagClick(tag.id)}
                               >
                                   {tag.name}
                               </p>
@@ -235,7 +273,7 @@ function TagBar({ filter, setFilter }: { filter: filter; setFilter: any }) {
     );
 }
 
-function Filter({ filter, setFilter }: { filter: filter; setFilter: any }) {
+function Filter() {
     const { t } = useTranslation();
     return (
         <div className="flex flex-row items-center">
@@ -248,14 +286,40 @@ function Filter({ filter, setFilter }: { filter: filter; setFilter: any }) {
 }
 
 function PriceFilter({
-    filter,
-    setFilter,
+    searchParams,
+    setSearchParams,
 }: {
-    filter: filter;
-    setFilter: any;
+    searchParams: URLSearchParams;
+    setSearchParams: SetURLSearchParams;
 }) {
     const { t } = useTranslation();
+    const {
+        register,
+        watch,
+        formState: { errors },
+        handleSubmit,
+    } = useForm();
+    const priceFrom = watch("price_from", null);
+    const priceTo = watch("price_to", null);
+    const onSubmit = (data) => {
+        const _priceFrom = data.price_from;
+        const _priceTo = data.price_to;
+        if (!_priceFrom) {
+            searchParams.delete("price_from");
+        } else {
+            searchParams.set("price_from", _priceFrom);
+        }
 
+        if (!_priceTo) {
+            searchParams.delete("price_to");
+        } else {
+            searchParams.set("price_to", _priceTo);
+        }
+        //Reset page
+        searchParams.set("page", String(1));
+
+        setSearchParams(searchParams);
+    };
     return (
         <div className="flex flex-col bg-white p-4">
             <p className="font-bold text-base my-0 text-black">
@@ -268,8 +332,9 @@ function PriceFilter({
                             <InputAdornment position="start">đ</InputAdornment>
                         ),
                     }}
-                    sx={{ width: "22ch" }}
                     placeholder={t("from")}
+                    value={priceFrom}
+                    {...register("price_from", {})}
                 />
                 <HorizontalRuleIcon />
                 <TextField
@@ -278,11 +343,21 @@ function PriceFilter({
                             <InputAdornment position="start">đ</InputAdornment>
                         ),
                     }}
-                    sx={{ width: "22ch" }}
                     placeholder={t("to")}
+                    type="number"
+                    value={priceTo}
+                    {...register("price_to", {})}
+                    // {...register("price_to", {
+                    //     valueAsNumber: true,
+
+                    //     validate: (value) => value > 0,
+                    // })}
                 />
                 <div className="mt-5">
-                    <ContainedButton className="bg-primary_main">
+                    <ContainedButton
+                        className="bg-primary_main"
+                        onClick={handleSubmit(onSubmit)}
+                    >
                         {t("apply")}
                     </ContainedButton>
                 </div>
@@ -292,18 +367,18 @@ function PriceFilter({
 }
 
 function ServiceFilter({
-    filter,
-    setFilter,
+    searchParams,
+    setSearchParams,
 }: {
-    filter: filter;
-    setFilter: any;
+    searchParams: URLSearchParams;
+    setSearchParams: SetURLSearchParams;
 }) {
     const { t } = useTranslation();
     const [state, setState] = React.useState({
         discount: false,
         voucher: false,
-        available: false,
-        wholesale: false,
+        onStock: false,
+        wholesaleProduct: false,
     });
 
     const handleChange = (event) => {
@@ -311,11 +386,23 @@ function ServiceFilter({
             ...state,
             [event.target.name]: event.target.checked,
         });
+
+        if (event.target.checked) {
+            searchParams.set(event.target.name, JSON.stringify(true));
+        } else {
+            searchParams.delete(event.target.name);
+        }
+
+        //Reset page
+        searchParams.set("page", String(1));
+
+        setSearchParams(searchParams);
     };
 
-    const { discount, voucher, available, wholesale } = state;
+    const { discount, voucher, onStock, wholesaleProduct } = state;
     const error =
-        [discount, voucher, available, wholesale].filter((v) => v).length !== 2;
+        [discount, voucher, onStock, wholesaleProduct].filter((v) => v)
+            .length !== 2;
 
     return (
         <div className="flex flex-col w-full bg-white p-4">
@@ -344,7 +431,7 @@ function ServiceFilter({
                                 <Checkbox
                                     checked={voucher}
                                     onChange={handleChange}
-                                    name={t("voucher")}
+                                    name="voucher"
                                 />
                             }
                             label={
@@ -356,9 +443,9 @@ function ServiceFilter({
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={available}
+                                    checked={onStock}
                                     onChange={handleChange}
-                                    name="available"
+                                    name="onStock"
                                 />
                             }
                             label={
@@ -370,9 +457,9 @@ function ServiceFilter({
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={wholesale}
+                                    checked={wholesaleProduct}
                                     onChange={handleChange}
-                                    name="wholesale"
+                                    name="wholesaleProduct"
                                 />
                             }
                             label={
@@ -389,183 +476,268 @@ function ServiceFilter({
 }
 
 function RatingFilter({
-    filter,
-    setFilter,
+    searchParams,
+    setSearchParams,
 }: {
-    filter: filter;
-    setFilter: any;
+    searchParams: URLSearchParams;
+    setSearchParams: SetURLSearchParams;
 }) {
     const { t } = useTranslation();
+    const handleRatingClick = (value: string) => {
+        searchParams.set("rating", value);
+        //Reset page
+        searchParams.set("page", String(1));
+        setSearchParams(searchParams);
+    };
+
+    //Possbile rating
+    const ratingOptions = [5, 4, 3, 2, 1];
     return (
         <div className="flex flex-col w-full bg-white p-4">
             <p className="font-bold text-base my-0 capitalize text-black">
                 {t("rating")}
             </p>
             <div className="mt-3 w-fit -ml-1 flex flex-col space-y-1">
-                <Rating name="read-only" value={5} readOnly />
-                <Rating name="read-only" value={4} readOnly />
-                <Rating name="read-only" value={3} readOnly />
-                <Rating name="read-only" value={2} readOnly />
-                <Rating name="read-only" value={1} readOnly />
+                {ratingOptions.map((ratingOption) => (
+                    <div onClick={() => handleRatingClick(ratingOption)}>
+                        <Rating
+                            name="read-only"
+                            value={ratingOption}
+                            readOnly
+                        />
+                    </div>
+                ))}
             </div>
         </div>
     );
 }
 function OptionSideBar({
-    filter,
-    setFilter,
+    searchParams,
+    setSearchParams,
 }: {
-    filter: filter;
-    setFilter: any;
+    searchParams: URLSearchParams;
+    setSearchParams: SetURLSearchParams;
 }) {
     return (
         <div className="flex max-w-2/5 min-w-2/5 w-fit flex-col space-y-4">
-            <CategoryBar filter={filter} setFilter={setFilter} />
-            <TagBar filter={filter} setFilter={setFilter} />
-            <Filter filter={filter} setFilter={setFilter} />
-            <PriceFilter filter={filter} setFilter={setFilter} />
-            <ServiceFilter filter={filter} setFilter={setFilter} />
-            <RatingFilter filter={filter} setFilter={setFilter} />
+            <CategoryBar
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
+            />
+            <TagBar
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
+            />
+            <Filter />
+            <PriceFilter
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
+            />
+            <ServiceFilter
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
+            />
+            <RatingFilter
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
+            />
         </div>
     );
 }
 
-function SortTab() {
+function SortTab({
+    searchParams,
+    setSearchParams,
+}: {
+    searchParams: URLSearchParams;
+    setSearchParams: SetURLSearchParams;
+}) {
     const { t } = useTranslation();
+    const value = searchParams.get("sort") ?? "common";
+
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        searchParams.set("sort", newValue);
+        searchParams.set("page", String(1));
+        setSearchParams(searchParams);
+    };
+
     return (
-        <Tabs value={0} className="flex min-w-fit">
+        <Tabs className="flex min-w-fit" value={value} onChange={handleChange}>
             <Tab
                 label={
                     <span className="text-sm font-semibold my-0">
-                        {t("all")}
+                        {t("common")}
                     </span>
                 }
-                value="0"
-                to="/user/order/0"
-                component={Link}
+                value="common"
             />
 
             <Tab
                 label={
                     <span className="text-sm font-semibold my-0">
-                        {t("waitingPayment")}
+                        {t("mostPurchased")}
                     </span>
                 }
-                value="1"
-                to="/user/order/1"
-                component={Link}
+                value="mostPurchased"
             />
 
             <Tab
                 label={
                     <span className="text-sm font-semibold my-0">
-                        {t("preparing")}
+                        {t("new")}
                     </span>
                 }
-                value="2"
-                to="/user/order/2"
-                component={Link}
+                value="new"
             />
 
             <Tab
                 label={
                     <span className="text-sm font-semibold my-0">
-                        {t("preparing")}
+                        {t("priceHTL")}
                     </span>
                 }
-                value="3"
-                to="/user/order/3"
-                component={Link}
+                value="priceHTL"
+            />
+            <Tab
+                label={
+                    <span className="text-sm font-semibold my-0">
+                        {t("priceLTH")}
+                    </span>
+                }
+                value="priceLTH"
             />
         </Tabs>
     );
 }
 
-function PaginateTab() {
+function PaginateTab({
+    searchParams,
+    setSearchParams,
+    totalPage,
+}: {
+    searchParams: URLSearchParams;
+    setSearchParams: SetURLSearchParams;
+    totalPage: number;
+}) {
+    const pageNumber = searchParams.get("page")
+        ? parseInt(searchParams.get("page"))
+        : 1;
+
+    const handlePrevClick = () => {
+        if (pageNumber !== 1) {
+            searchParams.set("page", String(pageNumber - 1));
+            setSearchParams(searchParams);
+        }
+    };
+
+    const handleNextClick = () => {
+        if (pageNumber !== totalPage) {
+            searchParams.set("page", String(pageNumber + 1));
+            setSearchParams(searchParams);
+        }
+    };
     return (
         <div className="flex flex-row items-center px-4 space-x-4">
-            <p className="my-0 text-sm font-medium">1/50</p>
+            <p className="my-0 text-sm font-medium text-black">
+                {pageNumber}/{totalPage}
+            </p>
             <div className="flex flex-row items-center">
-                <KeyboardArrowLeftIcon />
-                <KeyboardArrowRightIcon />
+                <KeyboardArrowLeftIcon
+                    onClick={handlePrevClick}
+                    sx={{
+                        color: colors.primary_main,
+                        fontSize: 24,
+                    }}
+                    className={pageNumber === 1 ? "opacity-50" : undefined}
+                />
+                <KeyboardArrowRightIcon
+                    onClick={handleNextClick}
+                    sx={{ color: colors.primary_main, fontSize: 24 }}
+                    className={
+                        pageNumber === totalPage ? "opacity-50" : undefined
+                    }
+                />
             </div>
         </div>
     );
 }
 
-const initialFilter: filter = {
-    category: null,
-    tag: null,
-    price: {
-        from: null,
-        to: null,
-    },
-    service: {
-        discount: false,
-        voucher: false,
-        onStock: false,
-        wholesaleProduct: false,
-    },
-    rating: 0,
-    sort: "common",
-};
-
 export default function Product() {
     const { t } = useTranslation();
-    const params = useParams();
-    const pageNumber = params.pageNumber ? parseInt(params.pageNumber, 10) : 1;
-    const [filter, setFilter] = useState<filter>(initialFilter);
     const [products, setProduct] = useState<Array<product> | null>(null);
     const [totalPage, setTotalPage] = useState<number>(1);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [isLoading, setLoading] = useState<boolean>(false);
     const itemsPerPage = getItemsPerPage();
+
     useEffect(() => {
         const fetchProducts = async () => {
+            setLoading(true);
+            const pageNumber = searchParams.get("page")
+                ? parseInt(searchParams.get("page"))
+                : 1;
+            const offset = 0 + itemsPerPage * (pageNumber - 1);
+            const limit = itemsPerPage;
             const payload = {
-                category: JSON.stringify(filter.category),
-                tag: JSON.stringify(filter.tag),
-                price: JSON.stringify(filter.price),
-                service: JSON.stringify(filter.service),
-                rating: JSON.stringify(filter.rating),
-                sort: filter.sort,
-                offset: JSON.stringify(filter.offset),
-                limit: JSON.stringify(filter.limit),
+                category: searchParams.get("category"),
+                tag: searchParams.get("tag"),
+                price_from: searchParams.get("price_from"),
+                price_to: searchParams.get("price_to"),
+                discount: searchParams.get("discount"),
+                voucher: searchParams.get("voucher"),
+                onStock: searchParams.get("onStock"),
+                wholesaleProduct: searchParams.get("wholesaleProduct"),
+                rating: searchParams.get("rating"),
+                sort: searchParams.get("sort") ?? "common",
+                offset: offset,
+                limit: limit,
             };
-            const offset = JSON.stringify(0 + itemsPerPage * pageNumber);
-            const limit = JSON.stringify(itemsPerPage);
             const response = await axiosClient.get("/productByFilter", {
                 params: {
                     ...payload,
-                    offset: offset,
-                    limit: limit,
                 },
             });
 
             const products = response.data.result.product;
-
             const totalPage = response.data.result.totalPage;
+
             setProduct(products);
             setTotalPage(totalPage);
+            setLoading(false);
         };
 
         fetchProducts();
-    }, [filter, pageNumber]);
+    }, [searchParams]);
     return (
         <div className="flex flex-1 flex-col">
             <Header />
             <div className="flex flex-row flex-1 w-full p-4 bg-background_main max-w-full space-x-4">
-                <OptionSideBar filter={filter} setFilter={setFilter} />
+                <OptionSideBar
+                    searchParams={searchParams}
+                    setSearchParams={setSearchParams}
+                />
                 <div className="flex flex-col flex-1 w-full max-w-full min-w-0 min-h-0">
                     <div className="flex w-full h-96 max-w-full min-w-0 min-h-0">
                         <ImageSwiper />
                     </div>
                     <div className="bg-white flex flex-row items-center justify-between mt-5">
-                        <SortTab />
-                        <PaginateTab />
+                        <SortTab
+                            searchParams={searchParams}
+                            setSearchParams={setSearchParams}
+                        />
+                        <PaginateTab
+                            searchParams={searchParams}
+                            setSearchParams={setSearchParams}
+                            totalPage={totalPage}
+                        />
                     </div>
                     <div className="flex flex-1 mt-5 flex-col items-center">
                         <PaginationProducts
                             products={products}
                             totalPage={totalPage}
+                            isLoading={isLoading}
+                            searchParams={searchParams}
+                            setSearchParams={setSearchParams}
                         />
                     </div>
                 </div>
