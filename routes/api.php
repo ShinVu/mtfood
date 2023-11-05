@@ -55,6 +55,7 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/productReviews', 'getProductReview');
     Route::get('/productByCategory', 'getProductByCategory');
     Route::get('/productByFilter', 'getProductByFilter');
+    Route::get('/productSearch', 'getProductByKeyword');
 });
 
 Route::controller(ProfileController::class)->group(function () {

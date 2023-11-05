@@ -18,6 +18,7 @@ function Items({ products }) {
                     <ProductCard
                         product={product}
                         className="w-full min-w-fit h-fit"
+                        key={product.id}
                     />
                 ))
             ) : (

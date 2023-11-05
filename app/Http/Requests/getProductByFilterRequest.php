@@ -22,6 +22,7 @@ class getProductByFilterRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'keyword' => 'nullable|sometimes',
             'category' => 'nullable|sometimes',
             'tag' => 'nullable|sometimes',
             'price_from' => 'nullable|sometimes',

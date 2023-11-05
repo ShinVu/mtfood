@@ -234,9 +234,9 @@ export default function Header() {
                         sx={
                             location.pathname === "/home"
                                 ? {
-                                      "border-bottom-style": "solid",
-                                      "border-width": "2px",
-                                      "border-radius": "0",
+                                      borderBottomStyle: "solid",
+                                      borderWidth: "2px",
+                                      borderRadius: "0",
                                   }
                                 : undefined
                         }
@@ -249,9 +249,9 @@ export default function Header() {
                         sx={
                             location.pathname.split("/")[1] === "product"
                                 ? {
-                                      "border-bottom-style": "solid",
-                                      "border-width": "2px",
-                                      "border-radius": "0",
+                                      borderBottomStyle: "solid",
+                                      borderWidth: "2px",
+                                      borderRadius: "0",
                                   }
                                 : undefined
                         }

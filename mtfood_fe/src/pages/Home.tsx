@@ -226,7 +226,11 @@ function TagCard() {
                 {tags
                     ? tags.map((tag) => <TagCardItem tag={tag} key={tag.id} />)
                     : getDummy().map((value) => (
-                          <Skeleton variant="text" className="text-lg w-3/4" />
+                          <Skeleton
+                              variant="text"
+                              className="text-lg w-3/4"
+                              key={value}
+                          />
                       ))}
             </div>
         </div>

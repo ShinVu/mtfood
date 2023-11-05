@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\GetCategoryRequest;
 use App\Http\Requests\getProductByCategoryRequest;
 use App\Http\Requests\getProductByFilterRequest;
+use App\Http\Requests\getProductByKeywordRequest;
 use App\Http\Requests\GetProductDetailRequest;
 use App\Http\Requests\GetProductDiscountRequest;
 use App\Http\Requests\GetProductImageReview;
@@ -23,6 +24,7 @@ use App\Models\ProductTag;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\JoinClause;
 
@@ -257,7 +259,7 @@ class ProductController extends Controller
         try {
             $data = $request->validated();
 
-            /** @var \App\Models\Review $products */
+            /** @var \App\Models\Product $products */
 
             $products = Product::query();
 
@@ -270,6 +272,14 @@ class ProductController extends Controller
             });
 
             $products = $products->selectRaw('products.id,products.name,products.image_url,products.is_wholesale,products.category_id,products.rating,products.quantity_available,products.updated_at,products.price,highest_discount.max_discount_amount, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount');
+
+
+
+            //If user search by keyword
+            if (isset($data['keyword'])) {
+                $searchProducts = Product::search((string)$data['keyword'])->keys();
+                $products = $products->whereIn('products.id', $searchProducts);
+            }
 
             /**Setting query for product filter */
             //Filter category
@@ -350,6 +360,32 @@ class ProductController extends Controller
             // Get product
             $products = $products->get();
             return response(['message' => 'getProductSuccessfully', 'result' => ['product' => $products, 'totalPage' => $totalPageProduct]], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+    public function getProductByKeyword(getProductByKeywordRequest $request)
+    {
+        try {
+            /** @var \App\Models\Product $products */
+            $data = $request->validated();
+            $offset = 0;
+            $limit = 5;
+            $page = (int)$offset / $limit;
+
+            $productsKey = Product::search((string)$data['keyword'])->keys();
+
+
+            /** @var \App\Models\Product $products */
+
+            $products = Product::whereIn('id', $productsKey);
+
+
+            // Get product
+            $products = $products->get(['id', 'name']);
+            return response(['message' => 'getProductSuccessfully', 'result' => ['product' => $products]], 200);
+            return response(['testing' => $products], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
         }

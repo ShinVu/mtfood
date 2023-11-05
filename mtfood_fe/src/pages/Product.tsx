@@ -127,10 +127,10 @@ function CategoryBar({
                               title={category.name}
                               TransitionComponent={Zoom}
                               placement="top-start"
+                              key={category.id}
                           >
                               <p
                                   className="text-base font-medium my-0 mt-3 text-black max-w-xs w-fit line-clamp-1"
-                                  key={category.id}
                                   onClick={() =>
                                       handleCategoryClick(category.id)
                                   }
@@ -251,6 +251,7 @@ function TagBar({
                               title={tag.name}
                               TransitionComponent={Zoom}
                               placement="top-start"
+                              key={tag.id}
                           >
                               <p
                                   className="text-base font-medium my-0 mt-3 text-black max-w-xs w-fit line-clamp-1"
@@ -299,8 +300,8 @@ function PriceFilter({
         formState: { errors },
         handleSubmit,
     } = useForm();
-    const priceFrom = watch("price_from", null);
-    const priceTo = watch("price_to", null);
+    const priceFrom = watch("price_from", "");
+    const priceTo = watch("price_to", "");
     const onSubmit = (data) => {
         const _priceFrom = data.price_from;
         const _priceTo = data.price_to;
@@ -334,7 +335,7 @@ function PriceFilter({
                     }}
                     placeholder={t("from")}
                     value={priceFrom}
-                    {...register("price_from", {})}
+                    {...register("price_from")}
                 />
                 <HorizontalRuleIcon />
                 <TextField
@@ -346,7 +347,7 @@ function PriceFilter({
                     placeholder={t("to")}
                     type="number"
                     value={priceTo}
-                    {...register("price_to", {})}
+                    {...register("price_to")}
                     // {...register("price_to", {
                     //     valueAsNumber: true,
 
@@ -499,7 +500,10 @@ function RatingFilter({
             </p>
             <div className="mt-3 w-fit -ml-1 flex flex-col space-y-1">
                 {ratingOptions.map((ratingOption) => (
-                    <div onClick={() => handleRatingClick(ratingOption)}>
+                    <div
+                        onClick={() => handleRatingClick(ratingOption)}
+                        key={ratingOption}
+                    >
                         <Rating
                             name="read-only"
                             value={ratingOption}
@@ -679,6 +683,7 @@ export default function Product() {
             const offset = 0 + itemsPerPage * (pageNumber - 1);
             const limit = itemsPerPage;
             const payload = {
+                keyword: searchParams.get("keyword"),
                 category: searchParams.get("category"),
                 tag: searchParams.get("tag"),
                 price_from: searchParams.get("price_from"),

@@ -74,3 +74,9 @@ export type filter = {
     rating?: number;
     sort?: string;
 };
+
+export type searchOption = {
+    type: string;
+    id: number;
+    name: string;
+};
