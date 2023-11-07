@@ -16,9 +16,9 @@ function getSizeDialog(size: string) {
         case "md":
             return "md";
         case "lg":
-            return "md";
+            return "lg";
         case "xl":
-            return "md";
+            return "lg";
     }
 }
 

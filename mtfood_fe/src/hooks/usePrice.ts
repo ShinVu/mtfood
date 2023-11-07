@@ -24,10 +24,12 @@ export default function usePriceCart() {
                     totalPrice +
                     parseFloat(product.priceDiscount) *
                         parseFloat(product.quantityForProduct);
-                totalProductDiscount =
-                    totalProductDiscount +
-                    parseFloat(product.max_discount_amount) *
-                        parseFloat(product.quantityForProduct);
+                if (product.max_discount_amount) {
+                    totalProductDiscount =
+                        totalProductDiscount +
+                        parseFloat(product.max_discount_amount) *
+                            parseFloat(product.quantityForProduct);
+                }
                 totalVoucher = 0;
             });
 

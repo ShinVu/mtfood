@@ -25,140 +25,66 @@ import {
 } from "../../../components/button";
 import useWindowSizeDimensions from "../../../hooks/useWindowResponsiveDimensions";
 import { getSizeDialog } from "../../../utils";
+import axiosClient from "../../../../axios-client";
+import axios from "axios";
+import { Controller, useForm } from "react-hook-form";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHook";
+import { Alert, Snackbar } from "@mui/material";
+import {
+    addAddress,
+    updateAddress,
+} from "../../authentication/authenticationSlice";
 
-const box1 = [
-    { label: "The Shawshank Redemption", year: 1994 },
-    { label: "The Godfather", year: 1972 },
-    { label: "The Godfather: Part II", year: 1974 },
-    { label: "The Dark Knight", year: 2008 },
-    { label: "12 Angry Men", year: 1957 },
-    { label: "Schindler's List", year: 1993 },
-    { label: "Pulp Fiction", year: 1994 },
-    {
-        label: "The Lord of the Rings: The Return of the King",
-        year: 2003,
-    },
-    { label: "The Good, the Bad and the Ugly", year: 1966 },
-    { label: "Fight Club", year: 1999 },
-    {
-        label: "The Lord of the Rings: The Fellowship of the Ring",
-        year: 2001,
-    },
-    {
-        label: "Star Wars: Episode V - The Empire Strikes Back",
-        year: 1980,
-    },
-    { label: "Forrest Gump", year: 1994 },
-    { label: "Inception", year: 2010 },
-    {
-        label: "The Lord of the Rings: The Two Towers",
-        year: 2002,
-    },
-    { label: "One Flew Over the Cuckoo's Nest", year: 1975 },
-    { label: "Goodfellas", year: 1990 },
-    { label: "The Matrix", year: 1999 },
-    { label: "Seven Samurai", year: 1954 },
-    {
-        label: "Star Wars: Episode IV - A New Hope",
-        year: 1977,
-    },
-    { label: "City of God", year: 2002 },
-    { label: "Se7en", year: 1995 },
-    { label: "The Silence of the Lambs", year: 1991 },
-    { label: "It's a Wonderful Life", year: 1946 },
-    { label: "Life Is Beautiful", year: 1997 },
-    { label: "The Usual Suspects", year: 1995 },
-    { label: "Léon: The Professional", year: 1994 },
-    { label: "Spirited Away", year: 2001 },
-    { label: "Saving Private Ryan", year: 1998 },
-    { label: "Once Upon a Time in the West", year: 1968 },
-    { label: "American History X", year: 1998 },
-    { label: "Interstellar", year: 2014 },
-    { label: "Casablanca", year: 1942 },
-    { label: "City Lights", year: 1931 },
-    { label: "Psycho", year: 1960 },
-    { label: "The Green Mile", year: 1999 },
-    { label: "The Intouchables", year: 2011 },
-    { label: "Modern Times", year: 1936 },
-    { label: "Raiders of the Lost Ark", year: 1981 },
-    { label: "Rear Window", year: 1954 },
-    { label: "The Pianist", year: 2002 },
-    { label: "The Departed", year: 2006 },
-    { label: "Terminator 2: Judgment Day", year: 1991 },
-    { label: "Back to the Future", year: 1985 },
-    { label: "Whiplash", year: 2014 },
-    { label: "Gladiator", year: 2000 },
-    { label: "Memento", year: 2000 },
-    { label: "The Prestige", year: 2006 },
-    { label: "The Lion King", year: 1994 },
-    { label: "Apocalypse Now", year: 1979 },
-    { label: "Alien", year: 1979 },
-    { label: "Sunset Boulevard", year: 1950 },
-    {
-        label: "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb",
-        year: 1964,
-    },
-    { label: "The Great Dictator", year: 1940 },
-    { label: "Cinema Paradiso", year: 1988 },
-    { label: "The Lives of Others", year: 2006 },
-    { label: "Grave of the Fireflies", year: 1988 },
-    { label: "Paths of Glory", year: 1957 },
-    { label: "Django Unchained", year: 2012 },
-    { label: "The Shining", year: 1980 },
-    { label: "WALL·E", year: 2008 },
-    { label: "American Beauty", year: 1999 },
-    { label: "The Dark Knight Rises", year: 2012 },
-    { label: "Princess Mononoke", year: 1997 },
-    { label: "Aliens", year: 1986 },
-    { label: "Oldboy", year: 2003 },
-    { label: "Once Upon a Time in America", year: 1984 },
-    { label: "Witness for the Prosecution", year: 1957 },
-    { label: "Das Boot", year: 1981 },
-    { label: "Citizen Kane", year: 1941 },
-    { label: "North by Northwest", year: 1959 },
-    { label: "Vertigo", year: 1958 },
-    {
-        label: "Star Wars: Episode VI - Return of the Jedi",
-        year: 1983,
-    },
-    { label: "Reservoir Dogs", year: 1992 },
-    { label: "Braveheart", year: 1995 },
-    { label: "M", year: 1931 },
-    { label: "Requiem for a Dream", year: 2000 },
-    { label: "Amélie", year: 2001 },
-    { label: "A Clockwork Orange", year: 1971 },
-    { label: "Like Stars on Earth", year: 2007 },
-    { label: "Taxi Driver", year: 1976 },
-    { label: "Lawrence of Arabia", year: 1962 },
-    { label: "Double Indemnity", year: 1944 },
-    {
-        label: "Eternal Sunshine of the Spotless Mind",
-        year: 2004,
-    },
-    { label: "Amadeus", year: 1984 },
-    { label: "To Kill a Mockingbird", year: 1962 },
-    { label: "Toy Story 3", year: 2010 },
-    { label: "Logan", year: 2017 },
-    { label: "Full Metal Jacket", year: 1987 },
-    { label: "Dangal", year: 2016 },
-    { label: "The Sting", year: 1973 },
-    { label: "2001: A Space Odyssey", year: 1968 },
-    { label: "Singin' in the Rain", year: 1952 },
-    { label: "Toy Story", year: 1995 },
-    { label: "Bicycle Thieves", year: 1948 },
-    { label: "The Kid", year: 1921 },
-    { label: "Inglourious Basterds", year: 2009 },
-    { label: "Snatch", year: 2000 },
-    { label: "3 Idiots", year: 2009 },
-    { label: "Monty Python and the Holy Grail", year: 1975 },
-];
-const box2 = [{ label: "2" }];
-const box3 = [{ label: "3" }];
 export default function AddAddressDialog(props) {
+    //Redux
+    const { addressInitialDialogState } = useAppSelector(
+        (state) => state.authentication
+    );
+    const {
+        open,
+        handleModalOpen,
+        handleClose,
+        handleSnackbarOpen,
+        handleSnackbarClose,
+    } = props;
+    const {
+        register,
+        handleSubmit,
+        watch,
+        control,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            name: addressInitialDialogState.name,
+            phoneNumber: addressInitialDialogState.phoneNumber,
+            address: addressInitialDialogState.address,
+            default: addressInitialDialogState.default,
+        },
+    });
     const { t } = useTranslation();
     const size = useWindowSizeDimensions();
-    const { open, handleModalOpen, handleClose } = props;
-    const [type, setType] = useState("home");
+
+    const [type, setType] = useState(addressInitialDialogState.type);
+
+    const [province, setProvince] = useState([]);
+    const [district, setDistrict] = useState([]);
+    const [ward, setWard] = useState([]);
+
+    const [provinceValue, setProvinceValue] = useState(
+        addressInitialDialogState.provinceValue
+    );
+    const [districtValue, setDistrictValue] = useState(
+        addressInitialDialogState.districtValue
+    );
+    const [wardValue, setWardValue] = useState(
+        addressInitialDialogState.wardValue
+    );
+
+    const [provinceSearchValue, setProvinceSearchValue] = useState("");
+    const [districtSearchValue, setDistrictSearchValue] = useState("");
+    const [wardSearchValue, setWardSearchValue] = useState("");
+
+    const [update, setUpdate] = useState(addressInitialDialogState.updateFlag);
     const handleAddressType = (addressType) => {
         setType(addressType);
     };
@@ -173,6 +99,110 @@ export default function AddAddressDialog(props) {
             />
         );
     }, []);
+
+    useEffect(() => {
+        const fetchProvince = async () => {
+            const response = await axiosClient.get("/getProvince");
+            const province = response.data.result.province;
+            setProvince(province);
+        };
+
+        fetchProvince();
+    }, []);
+
+    useEffect(() => {
+        const fetchDistrict = async (provinceValue) => {
+            if (provinceValue) {
+                const payload = {
+                    provinceCode: provinceValue.code,
+                };
+                const response = await axiosClient.get("/getDistrict", {
+                    params: payload,
+                });
+                const district = response.data.result.district;
+                setDistrict(district);
+            }
+        };
+        if (!update) {
+            setDistrict([]);
+            setDistrictValue(null);
+        }
+        if (provinceValue) {
+            fetchDistrict(provinceValue);
+        }
+    }, [provinceValue]);
+
+    useEffect(() => {
+        const fetchWard = async (districtValue) => {
+            if (districtValue) {
+                const payload = {
+                    districtCode: districtValue.code,
+                };
+                const response = await axiosClient.get("/getWard", {
+                    params: payload,
+                });
+
+                const ward = response.data.result.ward;
+                setWard(ward);
+            }
+        };
+        if (!update) {
+            setWard([]);
+            setWardValue(null);
+        }
+        if (update) {
+            setUpdate(false);
+        }
+        if (districtValue) {
+            fetchWard(districtValue);
+        }
+    }, [districtValue]);
+
+    //Redux
+    const { user } = useAppSelector((state) => state.authentication);
+    const dispatch = useAppDispatch();
+    const onSubmit = (data) => {
+        let payload = {};
+        if (addressInitialDialogState.addressId) {
+            payload = {
+                name: data.name,
+                phoneNumber: data.phoneNumber,
+                address: data.address,
+                default: data.default,
+                wardCode: wardValue?.code ?? null,
+                customerId: user.id,
+                type: type,
+                addressId: addressInitialDialogState.addressId,
+            };
+        } else {
+            payload = {
+                name: data.name,
+                phoneNumber: data.phoneNumber,
+                address: data.address,
+                default: data.default,
+                wardCode: wardValue?.code ?? null,
+                customerId: user.id,
+                type: type,
+            };
+        }
+        axiosClient
+            .post("/addAddress", payload)
+            .then(({ data }) => {
+                const address = data.result.address;
+                console.log(address);
+                if (data.message === "updatedAddressSuccessfully") {
+                    dispatch(updateAddress(address));
+                } else if (data.message === "addAddressSuccessfully") {
+                    dispatch(addAddress(address));
+                }
+                handleSnackbarOpen(data.message, "success");
+                handleClose();
+            })
+            .catch(({ response }) => {
+                const responseData = response.data;
+                handleSnackbarOpen(responseData.message, "error");
+            });
+    };
     return (
         <Dialog
             open={open}
@@ -194,6 +224,7 @@ export default function AddAddressDialog(props) {
                                 id="outlined-required"
                                 placeholder={t("nameFAL")}
                                 className="w-full"
+                                {...register("name")}
                             />
                         </div>
                         <div className="w-1/4 min-w-fit">
@@ -202,6 +233,7 @@ export default function AddAddressDialog(props) {
                                 id="outlined-required"
                                 placeholder={t("phoneNumber")}
                                 className="w-full"
+                                {...register("phoneNumber")}
                             />
                         </div>
                     </div>
@@ -212,8 +244,20 @@ export default function AddAddressDialog(props) {
                         <div className="w-1/3">
                             <Autocomplete
                                 disablePortal
-                                id="combo-box-demo"
-                                options={box1}
+                                id="province"
+                                options={province}
+                                getOptionLabel={(option) => option.full_name}
+                                value={provinceValue}
+                                onChange={(event, newValue) => {
+                                    setProvinceValue(newValue);
+                                }}
+                                inputValue={provinceSearchValue}
+                                onInputChange={(event, newInputValue) => {
+                                    setProvinceSearchValue(newInputValue);
+                                }}
+                                isOptionEqualToValue={(option, value) =>
+                                    option.full_name === value.full_name
+                                }
                                 className="w-full"
                                 renderInput={(params) => (
                                     <TextField
@@ -227,8 +271,20 @@ export default function AddAddressDialog(props) {
                         <div className="w-1/3">
                             <Autocomplete
                                 disablePortal
-                                id="combo-box-demo"
-                                options={box2}
+                                id="district"
+                                value={districtValue}
+                                onChange={(event, newValue) => {
+                                    setDistrictValue(newValue);
+                                }}
+                                inputValue={districtSearchValue}
+                                onInputChange={(event, newInputValue) => {
+                                    setDistrictSearchValue(newInputValue);
+                                }}
+                                options={district}
+                                getOptionLabel={(option) => option.full_name}
+                                isOptionEqualToValue={(option, value) =>
+                                    option.full_name === value.full_name
+                                }
                                 className="w-full"
                                 renderInput={(params) => (
                                     <TextField
@@ -242,8 +298,20 @@ export default function AddAddressDialog(props) {
                         <div className="w-1/3">
                             <Autocomplete
                                 disablePortal
-                                id="combo-box-demo"
-                                options={box3}
+                                id="ward"
+                                value={wardValue}
+                                onChange={(event, newValue) => {
+                                    setWardValue(newValue);
+                                }}
+                                inputValue={wardSearchValue}
+                                onInputChange={(event, newInputValue) => {
+                                    setWardSearchValue(newInputValue);
+                                }}
+                                options={ward}
+                                getOptionLabel={(option) => option.full_name}
+                                isOptionEqualToValue={(option, value) =>
+                                    option.full_name === value.full_name
+                                }
                                 className="w-full"
                                 renderInput={(params) => (
                                     <TextField
@@ -262,6 +330,7 @@ export default function AddAddressDialog(props) {
                             rows={4}
                             className="w-full"
                             placeholder={t("addressField")}
+                            {...register("address")}
                         />
                     </div>
                     <div className="flex flex-1 flex-col">
@@ -271,36 +340,53 @@ export default function AddAddressDialog(props) {
                         <div className="flex flex-1 space-x-4">
                             <OutlinedButton
                                 sx={
-                                    !(type === "home") && {
-                                        color: colors.gray[100],
-                                        borderColor: colors.gray[100],
-                                    }
+                                    !(type == 0)
+                                        ? {
+                                              color: colors.gray[100],
+                                              borderColor: colors.gray[100],
+                                          }
+                                        : undefined
                                 }
-                                onClick={() => handleAddressType("home")}
+                                onClick={() => handleAddressType(0)}
                             >
                                 <span>Nhà riêng / chung cư</span>
                             </OutlinedButton>
                             <OutlinedButton
                                 sx={
-                                    !(type === "office") && {
-                                        color: colors.gray[100],
-                                        borderColor: colors.gray[100],
-                                    }
+                                    !(type == 1)
+                                        ? {
+                                              color: colors.gray[100],
+                                              borderColor: colors.gray[100],
+                                          }
+                                        : undefined
                                 }
-                                onClick={() => handleAddressType("office")}
+                                onClick={() => handleAddressType(1)}
                             >
                                 <span>Cơ quan / công ty</span>
                             </OutlinedButton>
                         </div>
                     </div>
                     <div className="flex flex-1 flex-row">
-                        <FormControlLabel
-                            control={<Checkbox defaultChecked />}
-                            label={
-                                <span className="text-gray-100 text-sm">
-                                    {t("setDefault")}
-                                </span>
-                            }
+                        <Controller
+                            control={control}
+                            name="default"
+                            render={({ field: { onChange, value } }) => (
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            onChange={(e) =>
+                                                onChange(e.target.checked)
+                                            }
+                                            checked={value}
+                                        />
+                                    }
+                                    label={
+                                        <span className="text-gray-100 text-sm">
+                                            {t("setDefault")}
+                                        </span>
+                                    }
+                                />
+                            )}
                         />
                     </div>
                 </div>
@@ -312,7 +398,7 @@ export default function AddAddressDialog(props) {
                 >
                     {t("cancel")}
                 </TextButton>
-                <Button onClick={handleClose}>{t("confirm")}</Button>
+                <Button onClick={handleSubmit(onSubmit)}>{t("confirm")}</Button>
             </DialogActions>
         </Dialog>
     );

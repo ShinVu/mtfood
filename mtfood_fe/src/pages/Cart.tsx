@@ -140,9 +140,11 @@ function ProductCartItemCard({ product }: { product: productCart }) {
                     <p className="my-0 text-lg font-medium text-black">
                         {changePriceFormat(product.priceDiscount)}
                     </p>
-                    <p className="my-0 text-base text-gray-100 line-through">
-                        {changePriceFormat(product.price)}
-                    </p>
+                    {product.max_discount_amount && (
+                        <p className="my-0 text-base text-gray-100 line-through">
+                            {changePriceFormat(product.price)}
+                        </p>
+                    )}
                 </div>
             </TableCell>
             <TableCell align="center">

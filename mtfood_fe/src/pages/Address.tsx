@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 //Import MUI
@@ -18,23 +18,75 @@ import {
     AddAddressDialog,
     UserAddressItem,
 } from "../features/profile/index.js";
-
-const user = {
-    address: "Bạch Đằng, Quận Tân Bình, TP.HCM",
-    avatar: "./assets/image_15.png",
-    name: "Lorem",
-    phoneNumber: "12312412412",
-};
+import { Alert, Snackbar } from "@mui/material";
+import axiosClient from "../../axios-client.js";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
+import {
+    setAddress,
+    setAddressInitialDialogStateToInitial,
+} from "../features/authentication/authenticationSlice.js";
 
 export default function UserAddress() {
     const { t } = useTranslation();
+
+    //Redux
+    const { user, addresses } = useAppSelector((state) => state.authentication);
+    const dispatch = useAppDispatch();
+
+    //Addaddress modal state
     const [open, setOpen] = React.useState(false);
     const handleModalOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
+        //Set all add Address state to null on Close
+        console.log("testing");
+        dispatch(setAddressInitialDialogStateToInitial());
         setOpen(false);
     };
+
+    //Snackbar state
+    const [openSnackbar, setOpenSnackbar] = useState({
+        state: false,
+        message: "",
+        severity: "",
+    });
+    const handleSnackbarOpen = (message: string, severity: string) => {
+        if (!severity || severity === "") {
+            severity = "info";
+        }
+        setOpenSnackbar({ state: true, message: message, severity: severity });
+    };
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+
+        setOpenSnackbar({ state: false, message: "", severity: "" });
+    };
+
+    //Get user all addresses
+    useEffect(() => {
+        const fetchAddress = () => {
+            const payload = {
+                customerId: user.id,
+            };
+            axiosClient
+                .post("/getAddress", payload)
+                .then(({ data }) => {
+                    const addresses = data.result.address;
+                    dispatch(setAddress(addresses));
+                })
+                .catch(({ response }) => {
+                    const responseData = response.data;
+                    console.log(responseData);
+                });
+        };
+        if (!addresses) {
+            fetchAddress();
+        }
+    }, [addresses]);
     return (
         <div className="flex flex-1 flex-col">
             <Header />
@@ -54,16 +106,46 @@ export default function UserAddress() {
                         </ContainedButton>
                     </div>
                     <div className="flex p-4 flex-1 flex-col xl:flex-col bg-white space-y-12">
-                        <UserAddressItem user={user} />
-                        <UserAddressItem user={user} />
+                        {addresses &&
+                            addresses.map((address) => (
+                                <UserAddressItem
+                                    key={address.id}
+                                    address={address}
+                                    handleModalOpen={handleModalOpen}
+                                    handleSnackbarOpen={handleSnackbarOpen}
+                                    handleSnackbarClose={handleSnackbarClose}
+                                />
+                            ))}
                     </div>
                 </div>
             </div>
-            <AddAddressDialog
-                open={open}
-                handleModalOpen={handleModalOpen}
-                handleClose={handleClose}
-            />
+            {open && (
+                <AddAddressDialog
+                    open={open}
+                    handleModalOpen={handleModalOpen}
+                    handleClose={handleClose}
+                    handleSnackbarOpen={handleSnackbarOpen}
+                    handleSnackbarClose={handleSnackbarClose}
+                    keepMounted={false}
+                />
+            )}
+            <Snackbar
+                open={openSnackbar.state}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+            >
+                <Alert
+                    onClose={handleSnackbarClose}
+                    severity={
+                        openSnackbar.severity === ""
+                            ? "info"
+                            : openSnackbar.severity
+                    }
+                    sx={{ width: "100%" }}
+                >
+                    {t(openSnackbar.message)}
+                </Alert>
+            </Snackbar>
             <Footer />
         </div>
     );

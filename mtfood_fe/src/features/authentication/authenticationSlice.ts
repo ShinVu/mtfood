@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 //Date time format
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { update } from "lodash";
 dayjs.extend(utc);
 
 const getLocalStorage = (key: string) => {
@@ -19,6 +20,19 @@ const initialState = {
     token: getLocalStorage("ACCESS_TOKEN"),
     signup: getLocalStorage("SIGNUP"),
     resetPassword: getLocalStorage("RESET_PASSWORD"),
+    addresses: null,
+    addressInitialDialogState: {
+        name: "",
+        phoneNumber: "",
+        address: "",
+        default: true,
+        provinceValue: null,
+        districtValue: null,
+        wardValue: null,
+        type: 0,
+        addressId: null,
+        updateFlag: false,
+    },
 };
 export const authenticationSlice = createSlice({
     name: "authentication",
@@ -68,6 +82,67 @@ export const authenticationSlice = createSlice({
             localStorage.removeItem("USER");
             localStorage.removeItem("ACCESS_TOKEN");
         },
+        setAddress(state, action) {
+            const addresses = action.payload;
+            state.addresses = addresses;
+        },
+        addAddress(state, action) {
+            const newAddress = action.payload;
+            if (newAddress.default) {
+                const addresses = state.addresses;
+                const newAddresses = addresses.map((address) => {
+                    return { ...address, default: false };
+                });
+                newAddresses.unshift(newAddress);
+                state.addresses = newAddresses;
+            } else {
+                state.addresses.push(newAddress);
+            }
+        },
+        updateAddress(state, action) {
+            const updateAddress = action.payload;
+
+            const addresses: Array<any> | null = state.addresses;
+            const newAddresses = addresses.map((address) => {
+                if (address["id"] !== updateAddress["id"]) {
+                    if (updateAddress.default) {
+                        return { ...address, default: 0 };
+                    }
+                    return { ...address };
+                } else {
+                    return { ...updateAddress };
+                }
+            });
+            state.addresses = newAddresses;
+        },
+        deleteAddress(state, action) {
+            const deleteAddressId = action.payload;
+            const addresses: Array<any> | null = state.addresses;
+            const newAddresses = addresses.filter(
+                (address) => address["id"] !== deleteAddressId
+            );
+            state.addresses = newAddresses;
+        },
+        setDefaultAddress(state, action) {
+            const defaultAddressId = action.payload;
+            const addresses: Array<any> | null = state.addresses;
+            const newAddresses = addresses.map((address) => {
+                if (address["id"] !== defaultAddressId) {
+                    return { ...address, default: 0 };
+                } else {
+                    return { ...address, default: 1 };
+                }
+            });
+            state.addresses = newAddresses;
+        },
+        setAddressInitialDialogStateToInitial(state) {
+            state.addressInitialDialogState =
+                initialState.addressInitialDialogState;
+        },
+        setAddressInitialDialogState(state, action) {
+            const initialAddress = action.payload;
+            state.addressInitialDialogState = initialAddress;
+        },
     },
 });
 
@@ -80,6 +155,13 @@ export const {
     setResetPassword,
     clearResetPassword,
     signOut,
+    setAddress,
+    addAddress,
+    updateAddress,
+    deleteAddress,
+    setDefaultAddress,
+    setAddressInitialDialogStateToInitial,
+    setAddressInitialDialogState,
 } = authenticationSlice.actions;
 
 // Export reducer to create store in app/store.tsx
