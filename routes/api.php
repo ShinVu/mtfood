@@ -65,4 +65,8 @@ Route::controller(ProfileController::class)->group(function () {
     Route::get('/getProvince', 'getProvince');
     Route::get('/getDistrict', 'getDistrict');
     Route::get('/getWard', 'getWard');
+    Route::post('/getAddress', 'getAddress');
+    Route::post('/deleteAddress', 'deleteAddress');
+    Route::post('/updateAddress', 'updateAddress');
+    Route::post('/setDefaultAddress', 'setDefaultAddress');
 });

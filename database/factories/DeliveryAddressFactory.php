@@ -20,6 +20,8 @@ class DeliveryAddressFactory extends Factory
             'name' => fake()->name(),
             'phone_number' => fake()->e164PhoneNumber(),
             'address' => fake()->address(),
+            'default' => fake()->boolean(),
+            'type' => fake()->boolean(),
             'ward_code' => \App\Models\Ward::all()->random()->code,
             'customer_id' => \App\Models\Customer::all()->random()->id
         ];

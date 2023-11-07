@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('address'); //Exact address to deliver
             $table->string('ward_code', 20); //Foreign key to ward_code on table ward
             $table->unsignedBigInteger('customer_id')->nullable(); //FK to id on customer
+            $table->unsignedTinyInteger('type')->default(0); //address type
+            $table->boolean('default')->default(0); //Whether this address is default
             $table->timestamps(); //created at, update at
             //CONSTRAINT
             $table->foreign('customer_id')->references('id')->on('customers')->cascadeOnUpdate()->cascadeOnDelete();

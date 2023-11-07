@@ -33,5 +33,7 @@ class DeliveryAddress extends Model
         'address',
         'ward_code',
         'customer_id',
+        'type',
+        'default'
     ];
 }
