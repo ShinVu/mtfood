@@ -40,7 +40,7 @@ export default function UserAddress() {
     };
     const handleClose = () => {
         //Set all add Address state to null on Close
-        console.log("testing");
+
         dispatch(setAddressInitialDialogStateToInitial());
         setOpen(false);
     };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { colors } from "../../public/theme.js";
 import styled from "styled-components";
@@ -35,6 +35,12 @@ import {
 } from "../features/profile/index.js";
 
 import { ProductCard } from "../features/product";
+import { useAppSelector } from "../hooks/reduxHook.js";
+import { useSearchParams } from "react-router-dom";
+import axiosClient from "../../axios-client.js";
+import PaginationProducts from "../components/paginateProduct.js";
+import { product } from "../models/product.model.js";
+import { getItemsPerPage } from "../utils/index.js";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
@@ -42,172 +48,36 @@ const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const user = {
-    address: "Bạch Đằng, Quận Tân Bình, TP.HCM",
-    avatar: "./assets/image_15.png",
-    name: "Lorem",
-};
-
-const StyledBadge = styled(Badge)(({ theme }) => ({
-    "& .MuiBadge-badge": {
-        right: 10,
-        bottom: 10,
-        width: 28,
-        height: 28,
-        borderRadius: 28,
-        boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-    },
-}));
-
-const productSameCat = [
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-    {
-        name: "Khô bò",
-        imgList: ["/assets/image_15.png"],
-        numsOfRating: 10,
-        rating: 4.6,
-        stock: 200,
-        price: "500.000",
-    },
-];
-
-const delivery = {
-    price: "50.000",
-};
-
-const listProductDetails = [
-    "category",
-    "origin",
-    "expDate",
-    "preserveInstruction",
-    "useInstruction",
-    "weightProduct",
-    "packProtocol",
-    "ingredients",
-];
-
 export default function UserSeenProduct() {
     const { t } = useTranslation();
+    const { user } = useAppSelector((state) => state.authentication);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [products, setProduct] = useState<product[] | null>(null);
+    const [totalPage, setTotalPage] = useState<number>(1);
+    const itemsPerPage = getItemsPerPage();
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const pageNumber = searchParams.get("page")
+                ? parseInt(searchParams.get("page"))
+                : 1;
+            const offset = 0 + itemsPerPage * (pageNumber - 1);
+            const limit = itemsPerPage;
+            const payload = {
+                customerId: user.id,
+                offset: offset,
+                limit: limit,
+            };
+            const response = await axiosClient.post("/getSeenProduct", payload);
 
+            const products = response.data.result.product;
+            const totalPage = response.data.result.totalPage;
+
+            setProduct(products);
+            setTotalPage(totalPage);
+        };
+
+        fetchProducts();
+    }, [searchParams]);
     return (
         <div className="flex flex-1 flex-col">
             <Header />
@@ -218,15 +88,13 @@ export default function UserSeenProduct() {
                         {t("seenProduct")}
                     </p>
 
-                    <div className="flex p-2 flex-1 ">
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
-                            {productSameCat.map((product) => (
-                                <ProductCard
-                                    product={product}
-                                    className="w-full min-w-fit h-fit"
-                                />
-                            ))}
-                        </div>
+                    <div className="flex flex-1 mt-5 flex-col items-center">
+                        <PaginationProducts
+                            products={products}
+                            totalPage={totalPage}
+                            searchParams={searchParams}
+                            setSearchParams={setSearchParams}
+                        />
                     </div>
                 </div>
             </div>

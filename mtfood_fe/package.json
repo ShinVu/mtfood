@@ -48,6 +48,7 @@
     "react-hook-form": "^7.47.0",
     "react-i18next": "^13.2.2",
     "react-icons": "^4.11.0",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-material-ui-carousel": "^3.4.2",
     "react-paginate": "github:ShinVu/react-paginate",
     "react-redux": "^8.1.2",

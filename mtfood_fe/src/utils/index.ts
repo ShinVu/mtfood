@@ -19,6 +19,8 @@ function getSizeDialog(size: string) {
             return "lg";
         case "xl":
             return "lg";
+        case "2xl":
+            return "lg";
     }
 }
 
@@ -88,6 +90,32 @@ function getItemsPerPage() {
     return itemsPerRow * 4;
 }
 
+function changeTimeFormat(value: string) {
+    var a = new Date(value).toString().split(/\s/);
+    return (
+        a[2] +
+        "/" +
+        {
+            Jan: "01",
+            Feb: "02",
+            Mar: "03",
+            Apr: "04",
+            May: "05",
+            Jun: "06",
+            Jul: "07",
+            Aug: "08",
+            Sep: "09",
+            Oct: "10",
+            Nov: "11",
+            Dec: "12",
+        }[a[1]] +
+        "/" +
+        a[3] +
+        " " +
+        a[4]
+    );
+}
+
 export {
     matchIsNumeric,
     getSizeDialog,
@@ -95,4 +123,5 @@ export {
     isInt,
     getSubTotal,
     getItemsPerPage,
+    changeTimeFormat,
 };

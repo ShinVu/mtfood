@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Traits\Serialization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 class Order extends Model
 {
     use HasFactory;
+    use Searchable;
     /**
      * The table associated with the model.
      *
@@ -49,4 +53,12 @@ class Order extends Model
         'delivery_address_id',
         'order_discount_id'
     ];
+
+    /**
+     * Get the order details for the order.
+     */
+    public function orderDetail(): HasMany
+    {
+        return $this->hasMany(OrderDetail::class, 'order_id', 'id');
+    }
 }

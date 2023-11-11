@@ -1,5 +1,5 @@
 // Import react library
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // Import MUI
 import TextField from "@mui/material/TextField";
@@ -10,6 +10,15 @@ import SearchIcon from "@mui/icons-material/Search";
 //Import color theme
 import { colors } from "../../../../public/theme";
 import { useTranslation } from "react-i18next";
+import {
+    createSearchParams,
+    useNavigate,
+    useSearchParams,
+} from "react-router-dom";
+import { debounce } from "lodash";
+import axiosClient from "../../../../axios-client";
+import { Box, Typography } from "@mui/material";
+import { searchOption } from "../../../models/product.model";
 
 // const options = [
 //     { value: "chocolate", label: "Chocolate" },
@@ -73,36 +82,135 @@ import { useTranslation } from "react-i18next";
 
 export default function SearchOrderBar() {
     const { t } = useTranslation();
+
+    const hint = useRef("");
+    //Get keyword from params
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [value, setValue] = useState<any | null>(null);
+    const [searchValue, setSearchValue] = useState<string>("");
+    const [options, setOptions] = useState<readonly searchOption[]>([]);
+    const navigate = useNavigate();
+    const getOptionsDelayed = useCallback(
+        debounce(async (keyword) => {
+            const fetchOptions = async () => {
+                const payload = {
+                    keyword: keyword,
+                };
+                const response = await axiosClient.get("/orderSearch", {
+                    params: {
+                        ...payload,
+                    },
+                });
+                return response.data.result.order;
+            };
+            let newOptions = [];
+
+            if (keyword !== "") {
+                newOptions = await fetchOptions();
+            }
+            setOptions(newOptions);
+        }, 500),
+        []
+    );
+
+    useEffect(() => {
+        setSearchValue(searchParams.get("keyword") ?? "");
+    }, [searchParams.get("keyword")]);
+
+    useEffect(() => {
+        hint.current = "";
+        getOptionsDelayed(searchValue);
+    }, [searchValue]);
+
+    const onSubmit = () => {
+        const path = {
+            pathname: "/user/order",
+            search: createSearchParams({
+                type: searchParams.get("type") ?? "all",
+                keyword: searchValue ?? "",
+            }).toString(),
+        };
+
+        navigate(path);
+    };
     return (
         <Autocomplete
             disablePortal
             id="combo-box-demo"
+            onKeyDown={(event) => {
+                if (event.key === "Tab") {
+                    if (hint.current) {
+                        setSearchValue(hint.current);
+                        hint.current = "";
+                        event.preventDefault();
+                    }
+                }
+            }}
+            onBlur={() => {
+                hint.current = "";
+            }}
             sx={{
                 width: "100%",
-                "background-color": colors.white,
+            }}
+            filterOptions={(x) => x}
+            options={options}
+            freeSolo
+            getOptionLabel={(option) => option.name}
+            value={value}
+            onChange={(event: any, newValue: searchOption) => {
+                if (event.key === "Enter") {
+                    onSubmit();
+                    event.preventDefault();
+                } else {
+                    const productId = newValue.id;
+                    navigate(`/product/details/${productId}`);
+                }
+            }}
+            inputValue={searchValue}
+            onInputChange={(event: any, newInputValue: string | null) => {
+                setSearchValue(newInputValue ?? "");
             }}
             size="small"
-            options={["a", "b", "c"]}
             renderInput={(params) => (
-                <TextField
-                    {...params}
-                    placeholder={t("searchOrder")}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start" className="mx-2">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <span className=" mr-2">|</span>
-                                <span className="text-primary_main font-medium">
-                                    {t("search")}
-                                </span>
-                            </InputAdornment>
-                        ),
-                    }}
-                />
+                <Box sx={{ position: "relative" }}>
+                    <TextField
+                        {...params}
+                        className="bg-white"
+                        InputProps={{
+                            ...params.InputProps,
+                            autoComplete: "new-password",
+                            startAdornment: (
+                                <InputAdornment
+                                    position="start"
+                                    className="mx-2"
+                                >
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                            endAdornment: (
+                                <InputAdornment
+                                    position="end"
+                                    onClick={onSubmit}
+                                >
+                                    <span className=" mr-2">|</span>
+                                    <span className="text-primary_main font-medium">
+                                        {t("search")}
+                                    </span>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    <Typography
+                        sx={{
+                            position: "absolute",
+                            opacity: 0.5,
+                            left: 54,
+                            top: 8,
+                        }}
+                    >
+                        {hint.current}
+                    </Typography>
+                </Box>
             )}
         />
     );

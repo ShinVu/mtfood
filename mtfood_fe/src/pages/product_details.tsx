@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import Header from "../components/header";
 import Footer from "../components/footer";
@@ -32,6 +32,7 @@ import Chip from "@mui/material/Chip";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { styled as mui_styled } from "@mui/material/styles";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 //Import element
 import {
     ContainedButton,
@@ -50,18 +51,15 @@ import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
 import { addProductToCart } from "../features/product/productSlice.js";
 import usePriceCart from "../hooks/usePrice.js";
 import AddressDialog from "../features/profile/addressDialog.js";
+import { current } from "@reduxjs/toolkit";
+import { setAddress } from "../features/authentication/authenticationSlice.js";
+import { debounce } from "lodash";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
         border: 0,
     },
 }));
-
-const user = {
-    address: "Bạch Đằng, Quận Tân Bình, TP.HCM",
-    avatar: "./assets/image_15.png",
-    name: "Lorem",
-};
 
 const delivery = {
     price: "50.000",
@@ -87,11 +85,84 @@ const filter = [
     { id: 6, label: "2star" },
     { id: 7, label: "1star" },
 ];
-function ProductMainCard({ product }: { product: product | null }) {
+function ProductMainCard({
+    product,
+    likeProduct,
+    setLikedProduct,
+}: {
+    product: product | null;
+    likeProduct: boolean;
+    setLikedProduct: any;
+}) {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { addresses, user, currentAddress } = useAppSelector(
+        (state) => state.authentication
+    );
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        const fetchAddress = async () => {
+            const payload = {
+                customerId: user.id,
+            };
+            const response = await axiosClient.post("/getAddress", payload);
+            const newAddress = response.data.result.address;
+
+            dispatch(setAddress(newAddress));
+        };
+        if (!addresses) {
+            fetchAddress();
+        }
+    }, [addresses]);
+
+    //Add to user_see_product
+    useEffect(() => {
+        const addUserSeeProduct = () => {
+            if (user && user.id && product && product.id) {
+                const payload = {
+                    customerId: user.id,
+                    productId: product.id,
+                };
+                axiosClient
+                    .post("/addSeenProduct", payload)
+                    .then(({ data }) => {
+                        console.log(data);
+                    })
+                    .catch(({ response }) => {
+                        console.log(response);
+                    });
+            }
+        };
+
+        addUserSeeProduct();
+    }, [user, product]);
+
+    //Add like product
+
+    const handleLikeProduct = useCallback(
+        debounce((likeProduct) => {
+            if (user && user.id && product && product.id) {
+                const payload = {
+                    customerId: user.id,
+                    productId: product.id,
+                };
+                axiosClient
+                    .post("/addLikedProduct", payload)
+                    .then(({ data }) => {
+                        console.log(data);
+                    })
+                    .catch(({ response }) => {
+                        console.log(response);
+                    });
+            }
+            setLikedProduct(!likeProduct);
+        }, 300),
+        []
+    );
+
     //Address dialog state
     const [open, setOpen] = useState<boolean>(false);
+
     const handleModalOpen = () => {
         setOpen(true);
     };
@@ -102,9 +173,6 @@ function ProductMainCard({ product }: { product: product | null }) {
     //Quantity state
     const [quantity, setQuantity] = useState<number>(1);
 
-    //Redux state
-    const { productCart } = useAppSelector((state) => state.product);
-    const dispatch = useAppDispatch();
     const quantitySubstract = () => {
         setQuantity(quantity > 1 ? quantity - 1 : quantity);
     };
@@ -130,6 +198,10 @@ function ProductMainCard({ product }: { product: product | null }) {
         const productCart = { ...product, quantityForProduct, check: false };
         dispatch(addProductToCart(productCart));
         navigate("/cart");
+    };
+
+    const getFullAddress = () => {
+        return `${currentAddress.address}, ${currentAddress.ward_name}, ${currentAddress.district_name}, ${currentAddress.province_name}`;
     };
     return (
         <div className="flex p-4 flex-row bg-white pl-6">
@@ -175,24 +247,50 @@ function ProductMainCard({ product }: { product: product | null }) {
                                     bgcolor: colors.gray[100],
                                 }}
                             />
-                            <div className="mx-4">
-                                <Button
-                                    component="label"
-                                    variant="text"
-                                    sx={{ textTransform: "none" }}
-                                    startIcon={
-                                        <FavoriteBorderIcon
-                                            sx={{
-                                                color: colors.primary_main,
-                                            }}
-                                        />
-                                    }
-                                    className="bg-transparent"
-                                >
-                                    <span className="text-base font-semibold text-gray-100 my-0">
-                                        {t("favorite")}
-                                    </span>
-                                </Button>
+                            <div className="mx-4 cursor-pointer">
+                                {likeProduct ? (
+                                    <Button
+                                        component="label"
+                                        variant="text"
+                                        sx={{ textTransform: "none" }}
+                                        className="bg-transparent"
+                                        onClick={() =>
+                                            handleLikeProduct(likeProduct)
+                                        }
+                                        startIcon={
+                                            <FavoriteIcon
+                                                sx={{
+                                                    color: colors.primary_main,
+                                                }}
+                                            />
+                                        }
+                                    >
+                                        <span className="text-base font-semibold text-gray-100 my-0">
+                                            {t("favorite")}
+                                        </span>
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        component="label"
+                                        variant="text"
+                                        sx={{ textTransform: "none" }}
+                                        className="bg-transparent"
+                                        onClick={() =>
+                                            handleLikeProduct(likeProduct)
+                                        }
+                                        startIcon={
+                                            <FavoriteBorderIcon
+                                                sx={{
+                                                    color: colors.primary_main,
+                                                }}
+                                            />
+                                        }
+                                    >
+                                        <span className="text-base font-semibold text-gray-100 my-0">
+                                            {t("favorite")}
+                                        </span>
+                                    </Button>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -233,7 +331,7 @@ function ProductMainCard({ product }: { product: product | null }) {
                                     <p className="text-base font-medium text-gray-100 my-0  mr-5">
                                         Vận chuyển tới{" "}
                                         <span className="text-base font-bold my-0 text-black ml-5">
-                                            {user.address}
+                                            {currentAddress && getFullAddress()}
                                         </span>
                                     </p>
                                 </div>
@@ -506,7 +604,11 @@ function ProductReviewCard({ product }: { product: product | null }) {
             axiosClient
                 .get(`/imageReviews?product_id=${product?.id}`)
                 .then(({ data }) => {
-                    setImageReviews(data.result);
+                    if (data.result) {
+                        setImageReviews(data.result);
+                    } else {
+                        setImageReviews({ image: [], numOfImages: 0 });
+                    }
                 })
                 .catch(({ response }) => console.log(response));
         };
@@ -590,7 +692,7 @@ function ProductReviewCard({ product }: { product: product | null }) {
                                           />
                                       </div>
                                   ))}
-                            {imageReviews?.numOfImages ? (
+                            {imageReviews?.numOfImages >= 0 ? (
                                 <div className="w-24 h-24 flex items-center justify-center bg-gray-200 text-white text-3xl">
                                     {imageReviews.numOfImages}+
                                 </div>
@@ -824,14 +926,26 @@ export default function ProductDetails() {
     const { t } = useTranslation();
     const { id } = useParams();
     const [product, setProduct] = useState<product | null>(null);
+    const { user } = useAppSelector((state) => state.authentication);
+    //Like product state
+    const [likeProduct, setLikedProduct] = useState<boolean>(false);
 
     //Fetch product
     useEffect(() => {
         const fetchProduct = () => {
-            axiosClient.get(`/productDetail?id=${id}`).then(({ data }) => {
-                const product = data.result.product;
-                setProduct(product);
-            });
+            axiosClient
+                .get(`/productDetail?id=${id}`, {
+                    params: { customerId: user?.id },
+                })
+                .then(({ data }) => {
+                    const product = data.result.product;
+                    const likeState = data.result.likeState;
+
+                    setProduct(product);
+                    if (likeState) {
+                        setLikedProduct(true);
+                    }
+                });
         };
         fetchProduct();
         window.scrollTo(0, 0);
@@ -844,7 +958,11 @@ export default function ProductDetails() {
                 <p className="text-base font-bold my-0">
                     {t("home")} {">"} {t("product")} {">"}
                 </p>
-                <ProductMainCard product={product} />
+                <ProductMainCard
+                    product={product}
+                    likeProduct={likeProduct}
+                    setLikedProduct={setLikedProduct}
+                />
                 <ProductDetailCard product={product} />
                 <ProductDescriptionCard product={product} />
                 <ProductReviewCard product={product} />

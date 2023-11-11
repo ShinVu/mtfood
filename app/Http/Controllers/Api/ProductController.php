@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\addLikedProductRequest;
+use App\Http\Requests\addSeenProductRequest;
 use App\Http\Requests\GetCategoryRequest;
+use App\Http\Requests\getLikeProductRequest;
 use App\Http\Requests\getProductByCategoryRequest;
 use App\Http\Requests\getProductByFilterRequest;
 use App\Http\Requests\getProductByKeywordRequest;
@@ -13,8 +16,10 @@ use App\Http\Requests\GetProductImageReview;
 use App\Http\Requests\GetProductMostLikedRequest;
 use App\Http\Requests\GetProductNewRequest;
 use App\Http\Requests\GetProductReview;
+use App\Http\Requests\getSeenProductRequest;
 use App\Http\Requests\GetTagRequest;
 use App\Models\Category;
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
@@ -22,6 +27,8 @@ use App\Models\ProductDiscount;
 use App\Models\ProductHaveTag;
 use App\Models\ProductTag;
 use App\Models\Review;
+use App\Models\UserLikeProduct;
+use App\Models\UserSeeProduct;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Auth\Events\Validated;
@@ -105,6 +112,18 @@ class ProductController extends Controller
         try {
             $data = $request->validated();
             $productId = $data['id'];
+
+            $likeState = false;
+            //Check user like product status
+            if (isset($data['customerId'])) {
+                $customerId = $data['customerId'];
+
+                $likeStatus = UserLikeProduct::where('product_id', $productId)->where('customer_id', $customerId);
+
+                if ($likeStatus->exists()) {
+                    $likeState = true;
+                }
+            }
             /** @var \App\Models\Product $product */
             /** @var \App\Models\ProductDiscount $highestDiscount */
             $highestDiscount = ProductDiscount::select('product_id', DB::raw('MAX(discount_amount) as max_discount_amount'))
@@ -117,7 +136,7 @@ class ProductController extends Controller
                 ->selectRaw('*, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
                 ->first();
 
-            return response(['message' => 'getProductSuccessfully', 'result' => ['product' => $product]], 200);
+            return response(['message' => 'getProductSuccessfully', 'result' => ['product' => $product, 'likeState' => $likeState]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
         }
@@ -385,7 +404,168 @@ class ProductController extends Controller
             // Get product
             $products = $products->get(['id', 'name']);
             return response(['message' => 'getProductSuccessfully', 'result' => ['product' => $products]], 200);
-            return response(['testing' => $products], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+    public function addSeenProduct(addSeenProductRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            //Customer collection that matches id
+            $user = Customer::where('id', $data['customerId']);
+            $token = $request->bearerToken();
+
+            //Check if customer id exists
+            if (!$user->exists()) {
+                return response(['message' => 'userInvalid', 'result' => []], 422);
+            }
+
+            //Check request authorization
+            if ($token != $user->first()['remember_token']) {
+                return response(['message' => 'invalidAccess', 'result' => []], 401);
+            }
+
+            //Add seen product
+
+            $newSeenProduct = UserSeeProduct::updateOrCreate(
+                ['customer_id' => $data['customerId'], 'product_id' => $data['productId']]
+
+            );
+
+            return response(['message' => 'addSeenProductSuccessfully', 'result' => ['userSeeProduct' => $newSeenProduct]], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+    public function addLikedProduct(addLikedProductRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            //Customer collection that matches id
+            $user = Customer::where('id', $data['customerId']);
+            $token = $request->bearerToken();
+
+            //Check if customer id exists
+            if (!$user->exists()) {
+                return response(['message' => 'userInvalid', 'result' => []], 422);
+            }
+
+            //Check request authorization
+            if ($token != $user->first()['remember_token']) {
+                return response(['message' => 'invalidAccess', 'result' => []], 401);
+            }
+
+            //Add seen product
+            $userLikeProduct = UserLikeProduct::where('customer_id', $data['customerId'])->where('product_id', $data['productId']);
+            if ($userLikeProduct->exists()) {
+                $unlikeProduct = $userLikeProduct->delete();
+                return response(['message' => 'removeLikedProductSuccessfully', 'result' => ['userSeeProduct' => $unlikeProduct]], 200);
+            } else {
+                $newLikedProduct = UserLikeProduct::create(
+                    ['customer_id' => $data['customerId'], 'product_id' => $data['productId']]
+                );
+                return response(['message' => 'addLikedProductSuccessfully', 'result' => ['userSeeProduct' => $newLikedProduct]], 200);
+            }
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+    public function getSeenProduct(getSeenProductRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            /** @var \App\Models\UserSeeProduct $userSeeProduct */
+
+            $offset = 0;
+            $limit = 10;
+
+            if (isset($data['offset'])) {
+                $limit = $data['offset'];
+            }
+            if (isset($data['limit'])) {
+                $limit = $data['limit'];
+            }
+
+            $userSeeProduct = UserSeeProduct::where('user_see_product.customer_id', $data['customerId'])->distinct();
+
+            $highestDiscount = ProductDiscount::select('product_discounts.product_id', DB::raw('MAX(product_discounts.discount_amount) as max_discount_amount'))
+                ->where('product_discounts.is_active', true)
+                ->groupBy('product_discounts.product_id');
+
+            $products = Product::joinSub($userSeeProduct, 'user_see_product', function (JoinClause $join) {
+                $join->on('products.id', '=', 'user_see_product.product_id');
+            })
+                ->leftJoinSub($highestDiscount, 'highest_discount', function (JoinClause $join) {
+                    $join->on('products.id', '=', 'highest_discount.product_id');
+                });
+
+
+            //Pagination
+            //Get total page of products
+            $totalPageProduct = 1;
+            if (isset($data['offset']) && isset($data['limit'])) {
+                $totalPageProduct = ceil($products->count() / (int)$data['limit']);
+                $products = $products->skip((int)$data['offset'])->take((int)$data['limit']);
+            }
+
+            // Get product
+            $products = $products->selectRaw('products.id,products.name,products.image_url,products.price,highest_discount.max_discount_amount, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
+                ->get();
+
+            return response(['message' => 'getUserSeenProductSuccessfully', 'result' => ['product' => $products, 'totalPage' => $totalPageProduct]], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+    public function getLikedProduct(getLikeProductRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            /** @var \App\Models\UserLikeProduct $userLikeProduct */
+
+            $offset = 0;
+            $limit = 10;
+
+            if (isset($data['offset'])) {
+                $limit = $data['offset'];
+            }
+            if (isset($data['limit'])) {
+                $limit = $data['limit'];
+            }
+
+            $userLikeProduct = UserLikeProduct::where('user_like_product.customer_id', $data['customerId'])->distinct();
+
+            $highestDiscount = ProductDiscount::select('product_discounts.product_id', DB::raw('MAX(product_discounts.discount_amount) as max_discount_amount'))
+                ->where('product_discounts.is_active', true)
+                ->groupBy('product_discounts.product_id');
+
+            $products = Product::joinSub($userLikeProduct, 'user_see_product', function (JoinClause $join) {
+                $join->on('products.id', '=', 'user_see_product.product_id');
+            })
+                ->leftJoinSub($highestDiscount, 'highest_discount', function (JoinClause $join) {
+                    $join->on('products.id', '=', 'highest_discount.product_id');
+                });
+
+
+            //Pagination
+            //Get total page of products
+            $totalPageProduct = 1;
+            if (isset($data['offset']) && isset($data['limit'])) {
+                $totalPageProduct = ceil($products->count() / (int)$data['limit']);
+                $products = $products->skip((int)$data['offset'])->take((int)$data['limit']);
+            }
+
+            // Get product
+            $products = $products->selectRaw('products.id,products.name,products.image_url,products.price,highest_discount.max_discount_amount, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
+                ->get();
+
+
+            return response(['message' => 'getUserLikeProductSuccessfully', 'result' => ['product' => $products, 'totalPage' => $totalPageProduct]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
         }

@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 //Date time format
 import dayjs from "dayjs";
@@ -33,6 +33,7 @@ const initialState = {
         addressId: null,
         updateFlag: false,
     },
+    currentAddress: null,
 };
 export const authenticationSlice = createSlice({
     name: "authentication",
@@ -85,6 +86,9 @@ export const authenticationSlice = createSlice({
         setAddress(state, action) {
             const addresses = action.payload;
             state.addresses = addresses;
+            if (addresses) {
+                state.currentAddress = addresses[0];
+            }
         },
         addAddress(state, action) {
             const newAddress = action.payload;
@@ -143,6 +147,10 @@ export const authenticationSlice = createSlice({
             const initialAddress = action.payload;
             state.addressInitialDialogState = initialAddress;
         },
+        setCurrentAddress(state, action) {
+            const currentAddress = action.payload;
+            state.currentAddress = currentAddress;
+        },
     },
 });
 
@@ -160,6 +168,7 @@ export const {
     updateAddress,
     deleteAddress,
     setDefaultAddress,
+    setCurrentAddress,
     setAddressInitialDialogStateToInitial,
     setAddressInitialDialogState,
 } = authenticationSlice.actions;

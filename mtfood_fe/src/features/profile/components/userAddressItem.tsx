@@ -61,11 +61,15 @@ export default function UserAddressItem(props) {
             .post("/deleteAddress", payload)
             .then(({ data }) => {
                 dispatch(deleteAddress(address.id));
-                handleSnackbarOpen(data.message, "success");
+                if (handleSnackbarOpen) {
+                    handleSnackbarOpen(data.message, "success");
+                }
             })
             .catch(({ response }) => {
                 const responseData = response.data;
-                handleSnackbarOpen(responseData.message, "error");
+                if (handleSnackbarOpen) {
+                    handleSnackbarOpen(responseData.message, "error");
+                }
             });
     };
 
@@ -78,11 +82,15 @@ export default function UserAddressItem(props) {
             .post("/setDefaultAddress", payload)
             .then(({ data }) => {
                 dispatch(setDefaultAddress(address.id));
-                handleSnackbarOpen(data.message, "success");
+                if (handleSnackbarOpen) {
+                    handleSnackbarOpen(data.message, "success");
+                }
             })
             .catch(({ response }) => {
                 const responseData = response.data;
-                handleSnackbarOpen(responseData.message, "error");
+                if (handleSnackbarOpen) {
+                    handleSnackbarOpen(responseData.message, "error");
+                }
             });
     };
     return (

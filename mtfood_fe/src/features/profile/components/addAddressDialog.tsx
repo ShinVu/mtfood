@@ -185,6 +185,7 @@ export default function AddAddressDialog(props) {
                 type: type,
             };
         }
+        console.log(payload);
         axiosClient
             .post("/addAddress", payload)
             .then(({ data }) => {
@@ -195,12 +196,16 @@ export default function AddAddressDialog(props) {
                 } else if (data.message === "addAddressSuccessfully") {
                     dispatch(addAddress(address));
                 }
-                handleSnackbarOpen(data.message, "success");
+                if (handleSnackbarOpen) {
+                    handleSnackbarOpen(data.message, "success");
+                }
                 handleClose();
             })
             .catch(({ response }) => {
                 const responseData = response.data;
-                handleSnackbarOpen(responseData.message, "error");
+                if (handleSnackbarOpen) {
+                    handleSnackbarOpen(responseData.message, "error");
+                }
             });
     };
     return (

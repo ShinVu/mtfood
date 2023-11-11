@@ -11,6 +11,8 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Popper from "@mui/material/Popper";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+
+import AddIcon from "@mui/icons-material/Add";
 //Import i18-next
 import { useTranslation } from "react-i18next";
 
@@ -18,12 +20,13 @@ import { useTranslation } from "react-i18next";
 import { colors } from "../../../public/theme";
 
 //Import components
-import { TextButton } from "../../components/button";
+import { ContainedButton, TextButton } from "../../components/button";
 import useWindowSizeDimensions from "../../hooks/useWindowResponsiveDimensions";
 import { getSizeDialog } from "../../utils";
 import {
     Divider,
     Radio,
+    RadioGroup,
     Table,
     TableBody,
     TableCell,
@@ -31,14 +34,41 @@ import {
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHook";
 import axiosClient from "../../../axios-client";
-import { setAddress } from "../authentication/authenticationSlice";
+import {
+    setAddress,
+    setAddressInitialDialogStateToInitial,
+    setCurrentAddress,
+} from "../authentication/authenticationSlice";
+import { AddAddressDialog, UserAddressItem } from ".";
+import { current } from "@reduxjs/toolkit";
 
 export default function AddressDialog(props) {
     const { t } = useTranslation();
     const size = useWindowSizeDimensions();
     const { open, handleModalOpen, handleClose } = props;
-    const { addresses, user } = useAppSelector((state) => state.authentication);
+    const { addresses, user, currentAddress } = useAppSelector(
+        (state) => state.authentication
+    );
     const dispatch = useAppDispatch();
+
+    //AddAddress dialog state
+    const [addAddressOpen, setAddAddressOpen] = useState<boolean>(false);
+    const handleNewAddModalOpen = () => {
+        dispatch(setAddressInitialDialogStateToInitial());
+        setAddAddressOpen(true);
+    };
+    const handleAddAddressModalOpen = () => {
+        setAddAddressOpen(true);
+    };
+    const handleAddAddressClose = () => {
+        setAddAddressOpen(false);
+    };
+
+    const handleAddressChecked = (address) => {
+        if (address) {
+            dispatch(setCurrentAddress(address));
+        }
+    };
     useEffect(() => {
         const fetchAddress = async () => {
             const payload = {
@@ -46,6 +76,7 @@ export default function AddressDialog(props) {
             };
             const response = await axiosClient.post("/getAddress", payload);
             const newAddress = response.data.result.address;
+
             dispatch(setAddress(newAddress));
         };
         if (!addresses) {
@@ -61,64 +92,55 @@ export default function AddressDialog(props) {
             disableScrollLock
         >
             <DialogTitle>
-                {" "}
-                <span className="uppercase text-black text-medium text-xl">
-                    {t("address")}
-                </span>
+                <div className="flex w-full justify-between">
+                    <span className="uppercase text-black text-medium text-xl">
+                        {t("address")}
+                    </span>
+                    <ContainedButton
+                        className="h-fit w-fit bg-primary_main"
+                        startIcon={<AddIcon />}
+                        onClick={handleNewAddModalOpen}
+                    >
+                        {t("addAddress")}
+                    </ContainedButton>
+                </div>
             </DialogTitle>
             <DialogContent>
                 <div className="flex flex-1 flex-col space-y-8">
-                    <Table>
-                        <TableBody>
-                            {addresses && addresses.length === 0 ? (
-                                <span>No item</span>
-                            ) : (
-                                addresses.map((address) => {
-                                    <TableRow>
-                                        <TableCell className="w-0 px-0 align-top">
-                                            <Radio className="pl-0 pr-4" />
-                                        </TableCell>
-                                        <TableCell className="w-full align-top px-0">
-                                            <div className="flex flex-row space-x-4  mt-2">
-                                                <p className="text-black text-base font-medium uppercase">
-                                                    {address.name}
-                                                </p>
-                                                <Divider
-                                                    orientation="vertical"
-                                                    flexItem
-                                                />
-                                                <p className="text-gray-100 text-base">
-                                                    {address.phoneNumber}
-                                                </p>
-                                            </div>
-
-                                            <p className="text-base text-gray-100 mt-3">
-                                                {address.address}
-                                            </p>
-                                            <p className="text-base text-gray-100">
-                                                {address.ward},{" "}
-                                                {address.district},{" "}
-                                                {address.province}
-                                            </p>
-                                            {address.default && (
-                                                <div className="text-primary_main border-2 border-primary_main  mt-4 w-fit p-2 rounded font-semibold text-sm">
-                                                    {t("default")}
-                                                </div>
-                                            )}
-                                        </TableCell>
-                                        <TableCell className="px-0 align-top">
-                                            <Button
-                                                variant="text"
-                                                className="w-24 text-blue"
-                                            >
-                                                {t("update")}
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>;
-                                })
-                            )}
-                        </TableBody>
-                    </Table>
+                    {addresses && addresses.length !== 0 ? (
+                        addresses.map((address) => (
+                            <div
+                                key={address.id}
+                                className="flex flex-row space-x-4"
+                            >
+                                <Radio
+                                    checked={
+                                        currentAddress
+                                            ? currentAddress.id === address.id
+                                            : false
+                                    }
+                                    onClick={() =>
+                                        handleAddressChecked(address)
+                                    }
+                                    value={address.id}
+                                    name={String(address.id)}
+                                    inputProps={{ "aria-label": address.id }}
+                                    className="h-fit"
+                                />
+                                <UserAddressItem
+                                    key={address.id}
+                                    address={address}
+                                    handleModalOpen={handleAddAddressModalOpen}
+                                    // handleSnackbarOpen={handleSnackbarOpen}
+                                    // handleSnackbarClose={
+                                    //     handleSnackbarClose
+                                    // }
+                                />
+                            </div>
+                        ))
+                    ) : (
+                        <span>No item</span>
+                    )}
                 </div>
             </DialogContent>
             <DialogActions>
@@ -130,6 +152,12 @@ export default function AddressDialog(props) {
                 </TextButton>
                 <Button onClick={handleClose}>{t("confirm")}</Button>
             </DialogActions>
+            {addAddressOpen && (
+                <AddAddressDialog
+                    open={addAddressOpen}
+                    handleClose={handleAddAddressClose}
+                />
+            )}
         </Dialog>
     );
 }

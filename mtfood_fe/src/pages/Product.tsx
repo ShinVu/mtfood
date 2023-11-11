@@ -736,6 +736,16 @@ export default function Product() {
                             totalPage={totalPage}
                         />
                     </div>
+                    <div className="mt-4">
+                        {searchParams.get("keyword") && (
+                            <p>
+                                {t("searchResultFor")}:
+                                <span className="text-black font-bold ml-5">
+                                    {searchParams.get("keyword")}
+                                </span>
+                            </p>
+                        )}
+                    </div>
                     <div className="flex flex-1 mt-5 flex-col items-center">
                         <PaginationProducts
                             products={products}
