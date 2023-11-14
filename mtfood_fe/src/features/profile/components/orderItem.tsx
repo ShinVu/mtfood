@@ -1,6 +1,7 @@
 import {
     Collapse,
     Divider,
+    Paper,
     Table,
     TableBody,
     TableCell,
@@ -127,7 +128,7 @@ export default function OrderItem(props: { order: orderType }) {
     const { order } = props;
     const [open, setOpen] = useState<boolean>(false);
     return (
-        <div className="flex flex-1 flex-col p-4 bg-white mb-8 shadow">
+        <Paper elevation={5} className="flex flex-1 flex-col p-4">
             <div className="flex flex-row w-full justify-between px-4">
                 <MapHeader orderStatus={order.status} />
                 <p className="text-sm text-gray-100">
@@ -173,6 +174,6 @@ export default function OrderItem(props: { order: orderType }) {
                     </OutlinedButton>
                 </div>
             </div>
-        </div>
+        </Paper>
     );
 }

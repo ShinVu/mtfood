@@ -16,6 +16,11 @@ import StepConnector, {
 } from "@mui/material/StepConnector";
 import { colors } from "../../../../public/theme";
 import { Payment } from "@mui/icons-material";
+import { orderType } from "../../../models/order.model";
+import {
+    MapActiveStepMessage,
+    mapActiveStep,
+} from "../../order/components/message.";
 
 const StyledConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -104,30 +109,26 @@ StyledStepIcon.propTypes = {
     icon: PropTypes.node,
 };
 
-export default function CustomizedSteppers() {
+export default function CustomizedSteppers({ order }: { order: orderType }) {
     const { t } = useTranslation();
     const steps = [
-        { status: t("orderCreated"), time: Date.now() },
-        { status: t("paymentConfirmed"), time: Date.now() },
-        { status: t("shipmentConfirmed"), time: Date.now() },
-        { status: t("shipped"), time: Date.now() },
-        { status: t("rate"), time: Date.now() },
+        { status: "orderCreated" },
+        { status: "paymentConfirmed" },
+        { status: "shipmentConfirmed" },
+        { status: "shipped" },
+        { status: "rate" },
     ];
     return (
         <Stack sx={{ width: "100%" }} spacing={4}>
             <Stepper
                 alternativeLabel
-                activeStep={3}
+                activeStep={mapActiveStep(order.status)}
                 connector={<StyledConnector />}
             >
                 {steps.map((label) => (
                     <Step key={label.status}>
                         <StepLabel StepIconComponent={StyledStepIcon}>
-                            <span className="text-gray-100 text-sm">
-                                {label.status}
-                                <br />
-                                {label.time}
-                            </span>
+                            <MapActiveStepMessage order={order} label={label} />
                         </StepLabel>
                     </Step>
                 ))}

@@ -1,6 +1,8 @@
 <?php
 
+use App\Events\PublicMessageEvent;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\api\ChatController;
 use App\Http\Controllers\api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProfileController;
@@ -80,4 +82,8 @@ Route::controller(OrderController::class)->group(function () {
     Route::post('/getOrders', 'getOrders');
     Route::post('/orderSearch', 'orderSearch');
     Route::post('/getOrderDetail', 'getOrderDetail');
+});
+
+Route::controller(ChatController::class)->group(function () {
+    Route::post('/publicEvent', 'publicEvent')->middleware('throttle:60,1'); // 60 requests/minute are allowed.;
 });

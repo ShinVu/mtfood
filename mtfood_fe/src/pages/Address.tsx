@@ -18,7 +18,7 @@ import {
     AddAddressDialog,
     UserAddressItem,
 } from "../features/profile/index.js";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, Paper, Snackbar } from "@mui/material";
 import axiosClient from "../../axios-client.js";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
 import {
@@ -105,7 +105,11 @@ export default function UserAddress() {
                             {t("addAddress")}
                         </ContainedButton>
                     </div>
-                    <div className="flex p-4 flex-1 flex-col xl:flex-col bg-white space-y-12">
+
+                    <Paper
+                        className="flex flex-col p-4 space-y-8"
+                        elevation={3}
+                    >
                         {addresses &&
                             addresses.map((address) => (
                                 <UserAddressItem
@@ -116,7 +120,7 @@ export default function UserAddress() {
                                     handleSnackbarClose={handleSnackbarClose}
                                 />
                             ))}
-                    </div>
+                    </Paper>
                 </div>
             </div>
             {open && (

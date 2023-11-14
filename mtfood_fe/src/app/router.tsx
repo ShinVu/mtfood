@@ -22,92 +22,107 @@ import Product from "../pages/Product";
 import ForgetPassword from "../pages/forgetPassword";
 import ForgetVerify from "../pages/forget_verify";
 import ForgetNewPassword from "../pages/forget_password";
+import Dashboard from "../pages/Dashboard";
+import LoginRedirect from "../pages/LoginRedirect";
 
 const router = createBrowserRouter([
     {
-        path: "/login",
-        element: <Login />,
-    },
-    {
-        path: "/signup",
-        element: <SignUp />,
-    },
-    {
-        path: "/signup/verify",
-        element: <SignUpVerify />,
-    },
-    {
-        path: "/signup/password",
-        element: <SignUpNewPassword />,
-    },
-    {
-        path: "/forgetPassword",
-        element: <ForgetPassword />,
-    },
-    {
-        path: "/forgetPassword/verify",
-        element: <ForgetVerify />,
-    },
-    {
-        path: "/forgetPassword/newPassword",
-        element: <ForgetNewPassword />,
-    },
-    {
-        path: "/product/details/:id",
-        element: <ProductDetails />,
-    },
-    {
-        path: "/user/account",
-        element: <Profile />,
-    },
-    {
-        path: "/user/address",
-        element: <UserAddress />,
-    },
-    {
-        path: "/user/seen",
-        element: <UserSeenProduct />,
-    },
-    {
-        path: "/user/liked",
-        element: <UserLikedProduct />,
-    },
-    {
-        path: "/user/notification/settings",
-        element: <UserNotificationSetting />,
-    },
-    {
-        path: "/user/notification",
-        element: <UserNotification />,
-    },
-    {
-        path: "/user/order/:type?",
-        element: <UserOrder />,
-    },
-    {
-        path: "/user/order/details/:id",
-        element: <OrderDetail />,
+        path: "/",
+        element: <LoginRedirect />,
+        children: [
+            {
+                path: "/login",
+                element: <Login />,
+            },
+            {
+                path: "/signup",
+                element: <SignUp />,
+            },
+            {
+                path: "/signup/verify",
+                element: <SignUpVerify />,
+            },
+            {
+                path: "/signup/password",
+                element: <SignUpNewPassword />,
+            },
+            {
+                path: "/forgetPassword",
+                element: <ForgetPassword />,
+            },
+            {
+                path: "/forgetPassword/verify",
+                element: <ForgetVerify />,
+            },
+            {
+                path: "/forgetPassword/newPassword",
+                element: <ForgetNewPassword />,
+            },
+        ],
     },
     {
         path: "/",
-        element: <Navigate to="/home" replace />,
+        element: <Dashboard />,
+        children: [
+            {
+                path: "product/details/:id",
+                element: <ProductDetails />,
+            },
+            {
+                path: "user/account",
+                element: <Profile />,
+            },
+            {
+                path: "user/address",
+                element: <UserAddress />,
+            },
+            {
+                path: "user/seen",
+                element: <UserSeenProduct />,
+            },
+            {
+                path: "user/liked",
+                element: <UserLikedProduct />,
+            },
+            {
+                path: "user/notification/settings",
+                element: <UserNotificationSetting />,
+            },
+            {
+                path: "user/notification",
+                element: <UserNotification />,
+            },
+            {
+                path: "user/order/:type?",
+                element: <UserOrder />,
+            },
+            {
+                path: "user/order/details/:id",
+                element: <OrderDetail />,
+            },
+            {
+                path: "",
+                element: <Navigate to="/home" replace />,
+            },
+            {
+                path: "home",
+                element: <Home />,
+            },
+            {
+                path: "cart",
+                element: <Cart />,
+            },
+            {
+                path: "checkout",
+                element: <Checkout />,
+            },
+            {
+                path: "product",
+                element: <Product />,
+            },
+        ],
     },
-    {
-        path: "/home",
-        element: <Home />,
-    },
-    {
-        path: "/cart",
-        element: <Cart />,
-    },
-    {
-        path: "/checkout",
-        element: <Checkout />,
-    },
-    {
-        path: "/product",
-        element: <Product />,
-    },
+
     // { path: "/product/cat/:catId", element: <Product /> },
     // { path: "/product/cat", element: <Navigate to="/product/cat/0" replace /> },
     // { path: "/product/tag/:tagId", element: <Product /> },

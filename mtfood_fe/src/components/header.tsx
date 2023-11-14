@@ -165,7 +165,7 @@ export default function Header() {
                         </label>
                         <div
                             tabIndex={0}
-                            className="dropdown-content z-[1] menu  shadow  rounded-box w-52 bg-white"
+                            className="dropdown-content z-[999] menu  shadow  rounded-box w-52 bg-white"
                         >
                             <div
                                 className="flex flex-row items-center py-2 px-2 hover:bg-gray-100"

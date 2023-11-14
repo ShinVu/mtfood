@@ -9,6 +9,8 @@ import { colors } from "../../public/theme";
 import { filter, product } from "../models/product.model";
 import { getItemsPerPage } from "../utils";
 import { SetURLSearchParams, useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 function Items({ products }) {
     return (
@@ -105,6 +107,7 @@ export default function PaginationProducts({
     searchParams: URLSearchParams;
     setSearchParams: SetURLSearchParams;
 }) {
+    const { t } = useTranslation();
     if (products) {
         if (products.length > 0) {
             return (
@@ -116,9 +119,13 @@ export default function PaginationProducts({
                 />
             );
         } else {
-            return <p>No items found</p>;
+            return <p>{t("noItems")}</p>;
         }
     } else {
-        return <p>Loading screen</p>;
+        return (
+            <div className="flex w-full items-center justify-center">
+                <CircularProgress />
+            </div>
+        );
     }
 }

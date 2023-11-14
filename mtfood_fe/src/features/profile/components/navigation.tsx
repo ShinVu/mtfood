@@ -39,7 +39,7 @@ export default function ProfileNavigation(props) {
                     </div>
                 </div>
             </div>
-            <div>
+            <div className="px-3">
                 <Divider
                     sx={{
                         borderBottomWidth: 1,

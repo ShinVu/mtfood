@@ -177,3 +177,29 @@ export type updateProfileFailResponse = {
         result: {};
     };
 };
+
+export type addressType = {
+    id: number;
+    name: string;
+    phone_number: string;
+    address: string;
+    default: boolean;
+    type: number;
+    ward_code: string;
+    district_code: string;
+    province_code: string;
+    ward_name: string;
+    district_name: string;
+    province_name: string;
+};
+
+export type userType = {
+    id: number;
+    name: string;
+    phoneNumber: string;
+    email: string;
+    identificationNumber: string;
+    gender: string;
+    dateOfBirth: string;
+    googleId: string;
+};

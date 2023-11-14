@@ -1,4 +1,5 @@
 import useWindowSizeDimensions from "../hooks/useWindowResponsiveDimensions";
+import { orderType } from "../models/order.model";
 
 //Check if text is numeric
 function matchIsNumeric(text) {
@@ -116,6 +117,30 @@ function changeTimeFormat(value: string) {
     );
 }
 
+function getOrderItemSubTotal(price: string, quantity: number) {
+    return String(parseFloat(price) * quantity);
+}
+
+function getOrderTotal(order: orderType) {
+    const total = String(
+        parseFloat(order.subtotal) +
+            parseFloat("5") -
+            parseFloat(order.shipping_discount) -
+            parseFloat(order.voucher_discount)
+    );
+    return total;
+}
+
+function getOrderBillingValue(order: orderType) {
+    const billing = {
+        subTotal: order.subtotal,
+        shippingFee: "5",
+        shippingDiscount: order.shipping_discount,
+        voucherDiscount: order.voucher_discount,
+        total: getOrderTotal(order),
+    };
+    return billing;
+}
 export {
     matchIsNumeric,
     getSizeDialog,
@@ -124,4 +149,6 @@ export {
     getSubTotal,
     getItemsPerPage,
     changeTimeFormat,
+    getOrderItemSubTotal,
+    getOrderBillingValue,
 };

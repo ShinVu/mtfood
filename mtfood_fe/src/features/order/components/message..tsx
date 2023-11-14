@@ -1,19 +1,21 @@
 import { useTranslation } from "react-i18next";
+import { changeTimeFormat } from "../../../utils";
+import { orderType } from "../../../models/order.model";
 const order_states = [
-    "created",
-    "waiting_payment",
-    "waiting_confirm_payment",
-    "waiting_confirm",
-    "packing",
-    "waiting_shipment",
-    "shipping",
-    "delivered",
-    "completed",
-    "cancel_waiting_refund",
-    "canceled_refund",
-    "canceled",
-    "return_wating_refund",
-    "returned",
+    "created", //0
+    "waiting_payment", //1
+    "waiting_confirm_payment", //2
+    "waiting_confirm", //3
+    "packing", //4
+    "waiting_shipment", //5
+    "shipping", //6
+    "delivered", //7
+    "completed", //8
+    "cancel_waiting_refund", //9
+    "canceled_refund", //10
+    "canceled", //11
+    "return_waiting_refund", //12
+    "returned", //13
 ];
 function MapHeader({ orderStatus }: { orderStatus: string }) {
     const { t } = useTranslation();
@@ -106,7 +108,6 @@ function MapHeader({ orderStatus }: { orderStatus: string }) {
 
 function MapToText({ order }: { order: orderType }) {
     const { t } = useTranslation();
-    console.log(order_states[10]);
     if (order.status === order_states[0]) {
         return (
             <p className="text-gray-100 text-xs my-0">
@@ -182,4 +183,151 @@ function MapToText({ order }: { order: orderType }) {
     }
 }
 
-export { MapHeader, MapToText };
+function mapActiveStep(orderStatus: string) {
+    if (orderStatus === order_states[0]) {
+        return 0;
+    } else if (orderStatus === order_states[1]) {
+        return 1;
+    } else if (orderStatus === order_states[2]) {
+        return 1;
+    } else if (orderStatus === order_states[3]) {
+        return 1;
+    } else if (orderStatus === order_states[4]) {
+        return 2;
+    } else if (orderStatus === order_states[5]) {
+        return 2;
+    } else if (orderStatus === order_states[6]) {
+        return 3;
+    } else if (orderStatus === order_states[7]) {
+        return 4;
+    } else if (orderStatus === order_states[8]) {
+        return 4;
+    }
+}
+
+function MapActiveStepMessage({
+    order,
+    label,
+}: {
+    order: orderType;
+    label: { status: string };
+}) {
+    const { t } = useTranslation();
+    if (label.status == "orderCreated") {
+        if (order_states.indexOf(order.status) >= 0) {
+            return (
+                <p className="text-gray-100 text-xs my-0">
+                    {t("orderStepperCreated")}
+                    <br />
+                    {changeTimeFormat(order.created_at)}
+                </p>
+            );
+        }
+    }
+    if (label.status == "paymentConfirmed") {
+        if (order_states.indexOf(order.status) == 1) {
+            return (
+                <p className="text-gray-100 text-xs my-0">
+                    {t("orderStepperWaitingPayment")}
+                    <br />
+                </p>
+            );
+        } else if (order_states.indexOf(order.status) == 2) {
+            return (
+                <p className="text-gray-100 text-xs my-0">
+                    {t("orderStepperWaitingPaymentConfirm")}
+                </p>
+            );
+        } else if (order_states.indexOf(order.status) == 3) {
+            return (
+                <p className="text-gray-100 text-xs my-0">
+                    {t("orderStepperWaitingConfirm")}
+                    <br />
+                </p>
+            );
+        } else if (order_states.indexOf(order.status) > 3) {
+            return (
+                <p className="text-gray-100 text-xs my-0">
+                    {t("orderStepperConfirmed")}
+                    <br />
+                    {changeTimeFormat(order.confirmed_at)}
+                </p>
+            );
+        }
+    }
+    if (label.status == "shipmentConfirmed") {
+        if (order_states.indexOf(order.status) == 4) {
+            return (
+                <p className="text-gray-100 text-xs my-0">
+                    {t("orderStepperPacking")}
+                    <br />
+                </p>
+            );
+        } else if (order_states.indexOf(order.status) == 5) {
+            return (
+                <p className="text-gray-100 text-xs my-0">
+                    {t("orderStepperWaitingShipment")}
+                    <br />
+                </p>
+            );
+        } else if (order_states.indexOf(order.status) > 5) {
+            return (
+                <p className="text-gray-100 text-xs my-0">
+                    {t("orderStepperWaitingShipmentCompleted")}
+                    <br />
+                    {changeTimeFormat(order.shipping_at)}
+                </p>
+            );
+        }
+    }
+    if (label.status == "shipped") {
+        if (order_states.indexOf(order.status) == 6) {
+            return (
+                <p className="text-gray-100 text-xs my-0">
+                    {t("orderStepperShipping")}
+                    <br />
+                </p>
+            );
+        } else if (order_states.indexOf(order.status) == 7) {
+            return (
+                <p className="text-gray-100 text-xs my-0">
+                    {t("orderStepperDelivered")}
+                    <br />
+                    {changeTimeFormat(order.delivered_at)}
+                </p>
+            );
+        } else if (order_states.indexOf(order.status) > 7) {
+            return (
+                <p className="text-gray-100 text-xs my-0">
+                    {t("orderStepperDelivered")}
+                    <br />
+                    {changeTimeFormat(order.delivered_at)}
+                </p>
+            );
+        }
+    }
+    if (label.status == "rate") {
+        if (order_states.indexOf(order.status) == 7) {
+            return (
+                <p className="text-gray-100 text-xs my-0">
+                    {t("orderStepperWaitingRating")}
+                    <br />
+                </p>
+            );
+        } else if (order_states.indexOf(order.status) == 8) {
+            return (
+                <p className="text-gray-100 text-xs my-0">
+                    {t("orderStepperCompleted")}
+                    <br />
+                </p>
+            );
+        }
+    }
+}
+export {
+    order_states,
+    MapHeader,
+    MapToText,
+    mapActiveStep,
+    MapActiveStepMessage,
+};

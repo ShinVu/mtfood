@@ -63,7 +63,7 @@ import {
     ChangeDialog,
 } from "../features/profile";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
-import { Button } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import axiosClient from "../../axios-client.js";
 import {
     updateProfileFailResponse,
@@ -189,7 +189,7 @@ export default function Profile() {
                             {t("profile")}
                         </p>
                     </div>
-                    <div className="flex p-2 flex-1 flex-col xl:flex-row bg-white">
+                    <Paper elevation={3} className="p-4 flex flex-row">
                         <div className="flex  flex-col flex-1 min-w-fit">
                             <p className="text-sm font-medium my-0 text-gray-200 mt-3 ml-3">
                                 {t("personalInformation")}
@@ -634,7 +634,7 @@ export default function Profile() {
                                 </StyledTableRow> */}
                             </Table>
                         </div>
-                    </div>
+                    </Paper>
                 </div>
             </div>
             <ChangeDialog

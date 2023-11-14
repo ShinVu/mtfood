@@ -9,15 +9,22 @@ import {
 import { useTranslation } from "react-i18next";
 import { styled as mui_styled } from "@mui/material/styles";
 import { colors } from "../../../../public/theme";
+import { orderDetail } from "../../../models/order.model";
+import { changePriceFormat, getOrderItemSubTotal } from "../../../utils";
+import { useNavigate } from "react-router-dom";
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
         border: 0,
     },
 }));
 
-export default function OrderItemsDetailCard(props) {
+export default function OrderItemsDetailCard({
+    orderDetails,
+}: {
+    orderDetails: orderDetail[];
+}) {
     const { t } = useTranslation();
-    const { products } = props;
+    const navigate = useNavigate();
     return (
         <div className="flex flex-col flex-1">
             <Table>
@@ -47,86 +54,45 @@ export default function OrderItemsDetailCard(props) {
                 </TableHead>
 
                 <TableBody>
-                    {products.map((product) => (
+                    {orderDetails.map((orderDetail: orderDetail) => (
                         <StyledTableRow>
                             <TableCell align="left">
-                                <div className="flex flex-row space-x-4">
+                                <div
+                                    className="flex flex-row space-x-4 cursor-pointer"
+                                    onClick={() => {
+                                        navigate(
+                                            `/product/details/${orderDetail.product.id}`
+                                        );
+                                    }}
+                                >
                                     <img
-                                        src="/assets/image_14.png"
+                                        src={orderDetail.product.image_url}
                                         className="w-24 h-24"
                                     />
                                     <p className="text-base font-medium">
-                                        {product.name}
+                                        {orderDetail.product.name}
                                     </p>
                                 </div>
                             </TableCell>
                             <TableCell align="right">
-                                {product.basePrice}
+                                {changePriceFormat(orderDetail.unit_discount)}
                             </TableCell>
                             <TableCell align="right">
-                                {product.quantity}
+                                {orderDetail.quantity}
                             </TableCell>
-                            <TableCell align="right">{product.price}</TableCell>
+                            <TableCell align="right">
+                                {changePriceFormat(
+                                    getOrderItemSubTotal(
+                                        orderDetail.unit_discount,
+                                        orderDetail.quantity
+                                    )
+                                )}
+                            </TableCell>
                         </StyledTableRow>
                     ))}
                 </TableBody>
             </Table>
             <Divider />
-            <div className="flex flex-col items-end  mt-8">
-                <div>
-                    <Table>
-                        <TableBody>
-                            <StyledTableRow>
-                                <TableCell className="w-96">
-                                    <span className="text-gray-100 font-medium">
-                                        {" "}
-                                        {t("subTotal")}
-                                    </span>
-                                </TableCell>
-                                <TableCell align="right">1234</TableCell>
-                            </StyledTableRow>
-                            <StyledTableRow>
-                                <TableCell>
-                                    <span className="text-gray-100 font-medium">
-                                        {t("deliveryFee")}
-                                    </span>
-                                </TableCell>
-                                <TableCell align="right">
-                                    213123121234
-                                </TableCell>
-                            </StyledTableRow>
-                            <StyledTableRow>
-                                <TableCell>
-                                    <span className="text-gray-100 font-medium">
-                                        {t("deliveryFeeDiscount")}
-                                    </span>
-                                </TableCell>
-                                <TableCell align="right">1234</TableCell>
-                            </StyledTableRow>
-                            <StyledTableRow>
-                                <TableCell>
-                                    <span className="text-gray-100 font-medium">
-                                        {t("voucherDiscount")}
-                                    </span>
-                                </TableCell>
-                                <TableCell align="right">1234</TableCell>
-                            </StyledTableRow>
-                            <StyledTableRow>
-                                <TableCell>
-                                    <span className="text-gray-100 font-medium">
-                                        {t("total")}
-                                    </span>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <span className="text-2xl font-bold text-red_main">
-                                        1234
-                                    </span>
-                                </TableCell>
-                            </StyledTableRow>
-                        </TableBody>
-                    </Table>
-                </div>
-            </div>
         </div>
     );
 }

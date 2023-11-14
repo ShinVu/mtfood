@@ -25,6 +25,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 //import Google Provider
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
+//import laravel Echo
+import Echo from "laravel-echo";
+import Pusher from "pusher-js";
 //import Swiper
 // import function to register Swiper custom elements
 import { register } from "swiper/element/bundle";
@@ -75,6 +78,19 @@ i18n.use(Backend)
         },
     });
 
+//init laravel echo
+
+window.Pusher = Pusher;
+window.Echo = new Echo({
+    broadcaster: "pusher",
+    key: import.meta.env.VITE_MIX_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_MIX_PUSHER_APP_CLUSTER,
+
+    encrypted: true,
+});
+window.Echo.channel("testing").listen("PublicMessageEvent", (e) => {
+    console.log(e);
+});
 function App() {
     return (
         // <React.StrictMode>

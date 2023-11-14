@@ -17,34 +17,166 @@ import {
 //Import MUI
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import { Divider } from "@mui/material";
+import {
+    Divider,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
+} from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
-import { MapHeader, MapToText } from "../features/order/components/message..js";
+import {
+    MapHeader,
+    MapToText,
+    order_states,
+} from "../features/order/components/message..js";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { orderType } from "../models/order.model.js";
 import axiosClient from "../../axios-client.js";
 import { setAddress } from "../features/authentication/authenticationSlice.js";
+import { styled as mui_styled } from "@mui/material/styles";
+import { changePriceFormat, getOrderBillingValue } from "../utils/index.js";
 
-const order = {
-    status: "canceled",
-    totalAmount: "đ500.000",
-    code: "54323123",
-    products: [
-        {
-            name: "Khô bò",
-            basePrice: "đ1.000.000",
-            price: "đ500.000",
-            quantity: "5",
-        },
-        {
-            name: "Khô bò",
-            basePrice: "đ1.000.000",
-            price: "đ500.000",
-            quantity: "5",
-        },
-    ],
-};
+const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
+    "& td, & th": {
+        border: 0,
+    },
+}));
+
+function OrderSummary({ order }: { order: orderType }) {
+    const { t } = useTranslation();
+    const billing = getOrderBillingValue(order);
+    return (
+        <div className="flex flex-col items-end  mt-8">
+            <div>
+                <Table>
+                    <TableBody>
+                        <StyledTableRow>
+                            <TableCell className="w-96">
+                                <span className="text-gray-100 font-medium">
+                                    {" "}
+                                    {t("subTotal")}
+                                </span>
+                            </TableCell>
+                            <TableCell align="right">
+                                {changePriceFormat(billing.subTotal)}
+                            </TableCell>
+                        </StyledTableRow>
+                        <StyledTableRow>
+                            <TableCell>
+                                <span className="text-gray-100 font-medium">
+                                    {t("deliveryFee")}
+                                </span>
+                            </TableCell>
+                            <TableCell align="right">
+                                {changePriceFormat(billing.shippingFee)}
+                            </TableCell>
+                        </StyledTableRow>
+                        <StyledTableRow>
+                            <TableCell>
+                                <span className="text-gray-100 font-medium">
+                                    {t("deliveryFeeDiscount")}
+                                </span>
+                            </TableCell>
+                            <TableCell align="right">
+                                {changePriceFormat(billing.shippingDiscount)}
+                            </TableCell>
+                        </StyledTableRow>
+                        <StyledTableRow>
+                            <TableCell>
+                                <span className="text-gray-100 font-medium">
+                                    {t("voucherDiscount")}
+                                </span>
+                            </TableCell>
+                            <TableCell align="right">
+                                {changePriceFormat(billing.voucherDiscount)}
+                            </TableCell>
+                        </StyledTableRow>
+                        <StyledTableRow>
+                            <TableCell>
+                                <span className="text-gray-100 font-medium">
+                                    {t("total")}
+                                </span>
+                            </TableCell>
+                            <TableCell align="right">
+                                <span className="text-2xl font-bold text-red_main">
+                                    {changePriceFormat(billing.total)}
+                                </span>
+                            </TableCell>
+                        </StyledTableRow>
+                    </TableBody>
+                </Table>
+            </div>
+        </div>
+    );
+}
+
+function OrderCancel({ orderStatus }: { orderStatus: string }) {
+    const { t } = useTranslation();
+    if (order_states.indexOf(orderStatus) >= 12) {
+        return (
+            <Paper elevation={0} className="w-full p-2 bg-orange-light">
+                <p>{t("orderIsReturned")}</p>
+            </Paper>
+        );
+    } else if (order_states.indexOf(orderStatus) >= 9) {
+        return (
+            <Paper elevation={0} className="w-full p-2 bg-orange-light">
+                <p>{t("orderIsCanceled")}</p>
+            </Paper>
+        );
+    }
+}
+
+function MapToButton({ order }: { order: orderType }) {
+    const { t } = useTranslation();
+
+    if (order.status === order_states[1]) {
+        return (
+            <div className="flex flex-col space-y-4">
+                <ContainedButton className=" bg-primary_main">
+                    {t("payNow")}
+                </ContainedButton>
+                <OutlinedButton>{t("Contact")}</OutlinedButton>
+                <OutlinedButton>{t("CancelOrder")}</OutlinedButton>
+            </div>
+        );
+    }
+    if (
+        order_states.indexOf(order.status) == 7 ||
+        order_states.indexOf(order.status) == 8
+    ) {
+        return (
+            <div className="flex flex-col space-y-4">
+                <ContainedButton className=" bg-primary_main">
+                    {t("rateNow")}
+                </ContainedButton>
+                <OutlinedButton>{t("Contact")}</OutlinedButton>
+            </div>
+        );
+    }
+    if (order_states.indexOf(order.status) <= 5) {
+        return (
+            <div className="flex flex-col space-y-4">
+                <ContainedButton className=" bg-primary_main">
+                    {t("Contact")}
+                </ContainedButton>
+                <OutlinedButton>{t("CancelOrder")}</OutlinedButton>
+            </div>
+        );
+    }
+    if (order_states.indexOf(order.status) >= 6) {
+        return (
+            <div className="flex flex-col space-y-4">
+                <ContainedButton className=" bg-primary_main">
+                    {t("Contact")}
+                </ContainedButton>
+            </div>
+        );
+    }
+}
 export default function OrderDetail() {
     const { t } = useTranslation();
     const { user, currentAddress, addresses } = useAppSelector(
@@ -102,7 +234,7 @@ export default function OrderDetail() {
                 <ProfileNavigation user={user} />
                 {order && (
                     <div className="flex flex-col space-y-4 flex-1">
-                        <div className="flex flex-col flex-1 p-4 bg-white">
+                        <Paper elevation={2} className="p-4">
                             <div className="flex flex-row w-full justify-between ">
                                 <div className="flex flex-row items-center">
                                     <KeyboardArrowLeftIcon />
@@ -113,7 +245,8 @@ export default function OrderDetail() {
                                 <div className="flex flex-row items-center  divide-x-2">
                                     <div className="px-2">
                                         <p className="my-0 text-gray-100 text-base">
-                                            {t("orderCode")}: {order.code}
+                                            {t("orderCode")}: #
+                                            {order.order_code}
                                         </p>
                                     </div>
                                     <div className="px-2">
@@ -126,25 +259,20 @@ export default function OrderDetail() {
                                 </div>
                             </div>
                             <div className="my-8">
-                                <OrderStepper />
+                                {order_states.indexOf(order.status) > 8 ? (
+                                    <OrderCancel orderStatus={order.status} />
+                                ) : (
+                                    <OrderStepper order={order} />
+                                )}
                             </div>
                             <Divider className="mt-4 mb-4" />
                             <div className="flex flex-row justify-between px-4">
-                                <div>
-                                    <MapToText order={order} />
-                                </div>
-                                <div className="flex flex-col space-y-4">
-                                    <ContainedButton className=" bg-primary_main">
-                                        Liên hệ
-                                    </ContainedButton>
-                                    <OutlinedButton>
-                                        Thanh toán ngay
-                                    </OutlinedButton>
-                                </div>
+                                <MapToText order={order} />
+                                <MapToButton order={order} />
                             </div>
-                        </div>
+                        </Paper>
                         <div className="flex flex-row flex-1 space-x-4">
-                            <div className="w-1/3 bg-white items-center justify-center p-4">
+                            <Paper elevation={2} className="w-1/3 p-4">
                                 <h5 className="text-primary_main text-base uppercase my-0">
                                     {t("orderAddress")}
                                 </h5>
@@ -161,8 +289,8 @@ export default function OrderDetail() {
                                         {getFullAddress()}
                                     </p>
                                 </div>
-                            </div>
-                            <div className="w-1/3 bg-white items-center justify-center p-4">
+                            </Paper>
+                            <Paper elevation={2} className="w-1/3 p-4">
                                 <h5 className="text-primary_main text-base uppercase my-0">
                                     {t("orderDelivery")}
                                 </h5>
@@ -178,8 +306,8 @@ export default function OrderDetail() {
                                         {user.address}
                                     </p>
                                 </div>
-                            </div>
-                            <div className="w-1/3 bg-white items-center justify-center p-4">
+                            </Paper>
+                            <Paper elevation={2} className="w-1/3 p-4">
                                 <h5 className="text-primary_main text-base uppercase my-0">
                                     {t("orderPayment")}
                                 </h5>
@@ -195,11 +323,12 @@ export default function OrderDetail() {
                                         {user.address}
                                     </p>
                                 </div>
-                            </div>
+                            </Paper>
                         </div>
-                        <div className="flex flex-1 p-4 bg-white">
-                            {/* <OrderItemCard products={order.products} /> */}
-                        </div>
+                        <Paper elevation={3} className="p-2">
+                            <OrderItemCard orderDetails={order.order_detail} />
+                            <OrderSummary order={order} />
+                        </Paper>
                     </div>
                 )}
             </div>

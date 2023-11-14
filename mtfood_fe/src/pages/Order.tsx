@@ -30,7 +30,7 @@ import { pushOrder, setOrder } from "../features/order/orderSlice";
 import { orderType } from "../models/order.model";
 import { debounce } from "lodash";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Paper } from "@mui/material";
 //Import colors
 
 const user = {
@@ -171,9 +171,9 @@ export default function UserOrder() {
             <div className="flex flex-row flex-1 w-full px-4 py-12 bg-background_main">
                 <ProfileNavigation user={user} />
                 <div className="flex flex-col flex-1 px-4">
-                    <div className="flex w-full bg-white">
+                    <Paper className="w-full">
                         <MyTabs />
-                    </div>
+                    </Paper>
                     <div className="mt-4">
                         <OrderSearchBar />
                     </div>
@@ -202,6 +202,7 @@ export default function UserOrder() {
                                     <b>Không có đơn hàng nào</b>
                                 </p>
                             }
+                            className="space-y-4"
                         >
                             {orders &&
                                 orders.map((order) => (

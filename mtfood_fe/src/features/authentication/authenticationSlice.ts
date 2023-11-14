@@ -4,6 +4,8 @@ import { createSlice, current } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { update } from "lodash";
+import { string } from "yup";
+import { addressType, userType } from "../../models/user.model";
 dayjs.extend(utc);
 
 const getLocalStorage = (key: string) => {
@@ -15,7 +17,7 @@ const getLocalStorage = (key: string) => {
     }
 };
 //initial state for authentication slice
-const initialState = {
+const initialState: initialStateType = {
     user: getLocalStorage("USER"),
     token: getLocalStorage("ACCESS_TOKEN"),
     signup: getLocalStorage("SIGNUP"),
@@ -34,6 +36,27 @@ const initialState = {
         updateFlag: false,
     },
     currentAddress: null,
+};
+
+type initialStateType = {
+    user: userType;
+    token: string;
+    signup: any;
+    resetPassword: any;
+    addresses: addressType[] | null;
+    addressInitialDialogState: {
+        name: string;
+        phoneNumber: string;
+        address: string;
+        default: boolean;
+        provinceValue: any | null;
+        districtValue: any | null;
+        wardValue: any | null;
+        type: number;
+        addressId: number | null;
+        updateFlag: boolean;
+    };
+    currentAddress: addressType | null;
 };
 export const authenticationSlice = createSlice({
     name: "authentication",

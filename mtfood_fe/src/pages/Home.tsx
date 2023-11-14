@@ -13,7 +13,7 @@ import {
 } from "../components/button.jsx";
 import ImageSwiper from "../components/imageSwiper.js";
 import ProductSwiper from "../components/productSwiper/productSwiper.js";
-import { Divider, Skeleton } from "@mui/material";
+import { Divider, Paper, Skeleton } from "@mui/material";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import axiosClient from "../../axios-client.js";
 import useWindowSizeDimensions from "../hooks/useWindowResponsiveDimensions.js";
@@ -139,7 +139,7 @@ function CategoryCard() {
         }
     };
     return (
-        <div className="flex flex-col flex-1 bg-white p-4 shadow">
+        <Paper elevation={2} className="flex flex-col flex-1 p-4">
             <h5 className="font-medium my-0 text-base text-gray-100">
                 {t("category")}
             </h5>
@@ -167,7 +167,7 @@ function CategoryCard() {
                           </div>
                       ))}
             </div>
-        </div>
+        </Paper>
     );
 }
 
@@ -218,7 +218,7 @@ function TagCard() {
         }
     };
     return (
-        <div className="flex flex-col flex-1 bg-white p-4 shadow">
+        <Paper elevation={2} className="flex flex-col flex-1 p-4">
             <h5 className="font-medium my-0 text-base text-gray-100">
                 {t("tag")}
             </h5>
@@ -233,7 +233,7 @@ function TagCard() {
                           />
                       ))}
             </div>
-        </div>
+        </Paper>
     );
 }
 
@@ -299,9 +299,12 @@ function ProductSlideNewProductCard() {
                     {t("newDish")}
                 </h4>
             </Divider>
-            <div className="flex w-full h-fit max-w-full shadow bg-white">
+            <Paper
+                elevation={0}
+                className="flex flex-col flex-1 p-4 bg-transparent"
+            >
                 <ProductSwiper products={products} />
-            </div>
+            </Paper>
         </div>
     );
 }
@@ -371,9 +374,12 @@ function ProductSlideMostLikedProductCard() {
                     {t("mostLikedDish")}
                 </h4>
             </Divider>
-            <div className="flex w-full h-fit max-w-full shadow bg-white">
+            <Paper
+                elevation={0}
+                className="flex flex-col flex-1 p-4 bg-transparent"
+            >
                 <ProductSwiper products={products} />
-            </div>
+            </Paper>
         </div>
     );
 }
@@ -441,9 +447,12 @@ function ProductSlideDiscountProductCard() {
                     {t("discountDish")}
                 </h4>
             </Divider>
-            <div className="flex w-full h-fit max-w-full shadow bg-white">
+            <Paper
+                elevation={0}
+                className="flex flex-col flex-1 p-4 bg-transparent"
+            >
                 <ProductSwiper products={products} />
-            </div>
+            </Paper>
         </div>
     );
 }
