@@ -34,17 +34,23 @@ import { register } from "swiper/element/bundle";
 // register Swiper custom elements
 register();
 
+//Set locale to VN
+import moment from "moment";
+import "moment/dist/locale/vi";
+import { colors } from "../../public/theme.ts";
+console.log(moment.locale("vi"));
+
 const { palette } = createTheme();
 const { augmentColor } = palette;
 const createColor = (mainColor: string) =>
     augmentColor({ color: { main: mainColor } });
 const theme = createTheme({
     typography: {
-        fontFamily: ["Montserrat", "sans-serif"].join(","),
+        fontFamily: ["Nunito", "sans-serif"].join(","),
     },
     palette: {
         primary: {
-            main: "#333333",
+            main: colors["rich-black"],
             contrastText: "#fff",
         },
         secondary: {

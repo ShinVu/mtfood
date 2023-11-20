@@ -93,12 +93,12 @@ export default function UserAddress() {
             <div className="flex flex-row flex-1 w-full px-4 py-12 bg-background_main">
                 <ProfileNavigation user={user} />
                 <div className="flex flex-col flex-1 mx-12 space-y-4">
-                    <div className="flex flex-row flex-1 justify-between items-center">
+                    <div className="flex flex-row w-full justify-between items-center">
                         <p className="text-base font-bold  text-primary_main uppercase my-0">
                             {t("address")}
                         </p>
                         <ContainedButton
-                            className="h-fit w-fit bg-primary_main"
+                            className="h-fit w-fit bg-rich-black"
                             startIcon={<AddIcon />}
                             onClick={handleModalOpen}
                         >
@@ -106,12 +106,12 @@ export default function UserAddress() {
                         </ContainedButton>
                     </div>
 
-                    <Paper
-                        className="flex flex-col p-4 space-y-8"
-                        elevation={3}
-                    >
-                        {addresses &&
-                            addresses.map((address) => (
+                    {addresses && addresses.length > 0 && (
+                        <Paper
+                            className="flex flex-col p-4 space-y-8"
+                            elevation={3}
+                        >
+                            {addresses.map((address) => (
                                 <UserAddressItem
                                     key={address.id}
                                     address={address}
@@ -120,7 +120,8 @@ export default function UserAddress() {
                                     handleSnackbarClose={handleSnackbarClose}
                                 />
                             ))}
-                    </Paper>
+                        </Paper>
+                    )}
                 </div>
             </div>
             {open && (

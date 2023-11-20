@@ -157,7 +157,7 @@ class ProductController extends Controller
     {
         try {
             /** @var \App\Models\Tag $tag */
-            $tag = ProductTag::all(['id', 'name']);
+            $tag = ProductTag::all(['id', 'name', 'description']);
             return response(['message' => 'getTagSuccessfully', 'result' => ['tag' => $tag]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);

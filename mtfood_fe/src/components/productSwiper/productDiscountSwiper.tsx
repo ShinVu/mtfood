@@ -76,7 +76,7 @@ function ProductSwiperCard(props: { product: any; className?: string }) {
     );
 }
 
-export default function ProductSwiper(props: {
+export default function ProductDiscountSwiper(props: {
     header?: string;
     products: any;
 }) {
@@ -128,16 +128,16 @@ export default function ProductSwiper(props: {
         }
     };
     return (
-        <div className="w-full h-fit  relative px-4">
+        <div className="w-full h-fit  relative px-6">
             <Swiper
                 // install Swiper modules
                 modules={[Navigation, A11y, Scrollbar]}
                 breakpoints={{
                     640: { slidesPerView: 2 },
-                    768: { slidesPerView: 3 },
-                    1024: { slidesPerView: 4 },
-                    1280: { slidesPerView: 5 },
-                    1586: { slidesPerView: 5 },
+                    768: { slidesPerView: 2 },
+                    1024: { slidesPerView: 3 },
+                    1280: { slidesPerView: 4 },
+                    1586: { slidesPerView: 4 },
                 }}
                 scrollbar={{
                     draggable: true,

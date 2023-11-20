@@ -19,6 +19,7 @@ import SearchBar from "./searchBar";
 
 //Import type
 import { lang } from "../models/lang.model";
+import { useNavigate } from "react-router-dom";
 export default function HeaderCheckout() {
     const { t, i18n } = useTranslation();
 
@@ -35,6 +36,8 @@ export default function HeaderCheckout() {
     const changeLanguageHandler = (lang: lang) => {
         i18n.changeLanguage(lang);
     };
+
+    const navigate = useNavigate();
     return (
         <div className="flex flex-col bg-primary_main">
             <div className="flex flex-row grow items-center justify-between p-2">
@@ -130,7 +133,7 @@ export default function HeaderCheckout() {
                 </div>
             </div>
             <div className="flex flex-1 items-center justify-between my-3 px-4 ">
-                <p>icon</p>
+                <p onClick={() => navigate("/home")}>icon</p>
                 <div className="flex self-end w-1/2">
                     <SearchBar />
                 </div>

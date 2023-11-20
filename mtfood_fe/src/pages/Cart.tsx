@@ -44,6 +44,7 @@ import {
     setAllProductCheckedCart,
 } from "../features/product/productSlice.js";
 import usePriceCart from "../hooks/usePrice.js";
+import usePriceCheckout from "../hooks/usePriceCheckout.js";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
@@ -138,11 +139,11 @@ function ProductCartItemCard({ product }: { product: productCart }) {
             <TableCell align="center">
                 <div>
                     <p className="my-0 text-lg font-medium text-black">
-                        {changePriceFormat(product.priceDiscount)}
+                        {changePriceFormat(product.priceDiscount)}đ
                     </p>
                     {product.max_discount_amount && (
                         <p className="my-0 text-base text-gray-100 line-through">
-                            {changePriceFormat(product.price)}
+                            {changePriceFormat(product.price)}đ
                         </p>
                     )}
                 </div>
@@ -204,6 +205,7 @@ function ProductCartItemCard({ product }: { product: productCart }) {
                                 product.quantityForProduct
                             )
                         )}
+                        đ
                     </p>
                     {/* {product.max_discount_amount && (
                         <p className="my-0 text-base text-gray-100 line-through">
@@ -368,6 +370,7 @@ function PopOverOrderPayment() {
                                             changePriceFormat(
                                                 String(priceCart.totalSub)
                                             )}
+                                        đ
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
@@ -385,6 +388,7 @@ function PopOverOrderPayment() {
                                                     priceCart.totalProductDiscount
                                                 )
                                             )}
+                                        đ
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
@@ -400,6 +404,7 @@ function PopOverOrderPayment() {
                                             changePriceFormat(
                                                 String(priceCart.totalVoucher)
                                             )}
+                                        đ
                                     </span>
                                 </TableCell>
                             </TableRow>
@@ -415,6 +420,7 @@ function PopOverOrderPayment() {
                                             changePriceFormat(
                                                 String(priceCart.totalDiscount)
                                             )}
+                                        đ
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
@@ -430,6 +436,7 @@ function PopOverOrderPayment() {
                                             changePriceFormat(
                                                 String(priceCart.totalPrice)
                                             )}
+                                        đ
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
@@ -457,24 +464,30 @@ function PopOverOrderPayment() {
                                         changePriceFormat(
                                             String(priceCart.totalPrice)
                                         )}
+                                    đ
                                 </p>
                             </TableCell>
                         </StyledTableRow>
-                        <StyledTableRow>
-                            <TableCell align="left">
-                                <p className="my-0 text-sm font-medium">
-                                    {t("saving")}
-                                </p>
-                            </TableCell>
-                            <TableCell align="right">
-                                <p className="my-0 text-gray-100 line-through text-base ">
-                                    {priceCart &&
-                                        changePriceFormat(
-                                            String(priceCart.totalDiscount)
-                                        )}
-                                </p>
-                            </TableCell>
-                        </StyledTableRow>
+                        {priceCart && priceCart.totalDiscount !== 0 && (
+                            <StyledTableRow>
+                                <TableCell align="left">
+                                    <p className="my-0 text-sm font-medium">
+                                        {t("saving")}
+                                    </p>
+                                </TableCell>
+
+                                <TableCell align="right">
+                                    <p className="my-0 text-gray-100 text-base ">
+                                        {priceCart &&
+                                            priceCart.totalDiscount !== 0 &&
+                                            changePriceFormat(
+                                                String(priceCart.totalDiscount)
+                                            )}
+                                        đ
+                                    </p>
+                                </TableCell>
+                            </StyledTableRow>
+                        )}
                     </TableBody>
                 </Table>
             </div>
@@ -499,7 +512,7 @@ function OrderProceedCard({
     const handleAllRemoved = () => {
         dispatch(removeAllProductFromCart());
     };
-    console.log(products);
+
     return (
         <div className="flex flex-1 flex-col bg-white p-4">
             <div className="flex flex-1 justify-end items-center space-x-24 px-4">
@@ -514,7 +527,7 @@ function OrderProceedCard({
             <Divider className="my-4" />
             <div className="flex flex-1 items-center  justify-between">
                 <div className="flex flex-row items-center space-x-12">
-                    <div className="flex flex-row items-center -ml-3">
+                    <div className="flex flex-row items-center">
                         <Checkbox
                             checked={cartChecked}
                             indeterminate={cartChecked}

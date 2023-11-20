@@ -297,13 +297,13 @@ function ProductMainCard({
 
                     <div>
                         <h1 className="text-3xl font-bold text-red_main">
-                            đ
                             {product &&
                                 changePriceFormat(product?.priceDiscount)}
+                            đ
                         </h1>
                         <p className="text-base font-medium text-gray-100 line-through">
                             {product.max_discount_amount ? (
-                                "đ" + changePriceFormat(product.price)
+                                changePriceFormat(product.price) + "đ"
                             ) : (
                                 <br />
                             )}

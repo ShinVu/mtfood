@@ -1,17 +1,14 @@
-import { Fab } from "@mui/material";
+import { Box, Fab, Paper, Popper } from "@mui/material";
 import { Outlet } from "react-router-dom";
+import ChatIcon from "@mui/icons-material/Chat";
+import { colors } from "../../public/theme";
+import { useState } from "react";
+import Chat from "../components/chatBox";
 
 export default function Dashboard() {
     return (
-        <div className="relative">
-            <Fab
-                color="primary"
-                aria-label="add"
-                className="absolute top-[75vh] right-2 w-8 h-4"
-            >
-                hello
-            </Fab>
-
+        <div>
+            <Chat />
             <Outlet />
         </div>
     );

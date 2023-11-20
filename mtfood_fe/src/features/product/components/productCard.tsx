@@ -21,7 +21,7 @@ export default function ProductCard(props: {
                     component="img"
                     image={product.image_url}
                     alt="green iguana"
-                    className="w-full h-36 object-cover object-center"
+                    className="w-full h-44 object-cover object-center"
                     loading="lazy"
                 />
                 <CardContent className="p-3 w-full">
@@ -39,7 +39,7 @@ export default function ProductCard(props: {
                     <div className="flex flex-col mt-2">
                         {product.max_discount_amount ? (
                             <p className="text-sm font-normal text-gray-100 my-0 line-through">
-                                đ{changePriceFormat(product.price)}
+                                {changePriceFormat(product.price)}đ
                             </p>
                         ) : (
                             <p className="text-sm font-normal text-gray-100 my-0">
@@ -47,7 +47,7 @@ export default function ProductCard(props: {
                             </p>
                         )}
                         <p className="text-lg font-medium text-red_main my-0">
-                            đ{changePriceFormat(product.priceDiscount)}
+                            {changePriceFormat(product.priceDiscount)}đ
                         </p>
                     </div>
                 </CardContent>

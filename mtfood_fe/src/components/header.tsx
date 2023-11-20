@@ -18,7 +18,16 @@ import { FaAngleDown, FaCartShopping } from "react-icons/fa6";
 import { colors } from "../../public/theme";
 
 //Import MUI
-import { Badge, Stack } from "@mui/material";
+import {
+    Badge,
+    Button,
+    Divider,
+    MenuItem,
+    Popper,
+    Select,
+    SelectChangeEvent,
+    Stack,
+} from "@mui/material";
 import LoopIcon from "@mui/icons-material/Loop";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -45,6 +54,90 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     },
 }));
 
+function LanguagePopper() {
+    const { t, i18n } = useTranslation();
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const changeLanguageHandler = (lang: string) => {
+        if (lang === "en" || lang === "vn") {
+            i18n.changeLanguage(lang);
+        }
+        handleClick();
+    };
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(anchorEl ? null : event.currentTarget);
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? "simple-popper" : undefined;
+
+    return (
+        <div>
+            <div
+                className="mx-3 flex flex-row items-center"
+                id="dropdownDefaultButton"
+                data-dropdown-toggle="dropdown"
+                onClick={handleClick}
+            >
+                <div className="mx-2">
+                    {i18n.language === "vn" && (
+                        <img
+                            src="/assets/vietnamese_flag.png"
+                            className="h-auto w-6"
+                        />
+                    )}
+                    {i18n.language === "en" && (
+                        <img
+                            src="/assets/english_flag.png"
+                            className="h-auto w-6"
+                        />
+                    )}
+                </div>
+
+                <FaAngleDown style={{ color: colors.white }} />
+            </div>
+            <Popper
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                className="z-50"
+                placement={"bottom-end"}
+            >
+                <div className="mt-2 bg-white">
+                    <div
+                        className="flex flex-row items-center  hover:bg-gray-100 px-2 py-3 "
+                        onClick={() => changeLanguageHandler("vn")}
+                    >
+                        <img
+                            src="/assets/vietnamese_flag.png"
+                            className="h-auto w-6"
+                        />
+                        <span className="flex flex-col">
+                            <span className="font-medium text-xs capitalize my-0 mx-1 text-black">
+                                Tiếng Việt
+                            </span>
+                        </span>
+                    </div>
+                    <Divider />
+                    <div
+                        className="flex flex-row items-center  hover:bg-gray-100 px-2 py-2"
+                        onClick={() => changeLanguageHandler("en")}
+                    >
+                        <img
+                            src="/assets/english_flag.png"
+                            className="h-auto w-6"
+                        />
+                        <span className="flex flex-col">
+                            <span className="font-medium text-xs capitalize my-0 mx-1 text-black">
+                                English
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </Popper>
+        </div>
+    );
+}
+
 export default function Header() {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
@@ -55,10 +148,6 @@ export default function Header() {
     function setDropdown() {
         _setDropdown(!isDropdown);
     }
-
-    const changeLanguageHandler = (lang: "en" | "vn") => {
-        i18n.changeLanguage(lang);
-    };
 
     //Redux
     const { user, token } = useAppSelector((state) => state.authentication);
@@ -78,8 +167,9 @@ export default function Header() {
                 console.log(response.data.message);
             });
     };
+
     return (
-        <div className="flex flex-col bg-primary_main ">
+        <div className="flex flex-col bg-rich-black">
             <div className="flex flex-row grow items-center justify-between p-2">
                 <div className="flex flex-col md:flex-row md:items-center">
                     <p className="font-medium text-xs text-white capitalize  my-0 mx-2">
@@ -116,29 +206,25 @@ export default function Header() {
                             </span>
                         </p>
                     ) : (
-                        <div className="flex flex-row">
+                        <div className="flex flex-row items-center">
                             <p
                                 className=" font-bold text-xs text-white capitalize my-0 mx-1 cursor-pointer"
                                 onClick={() => navigate("/login")}
                             >
                                 {t("login")}
                             </p>
-                            <div className="border-1 border-white"></div>
-                            <p
-                                className=" font-bold text-xs text-white capitalize my-0 mx-1 cursor-pointer"
-                                onClick={() => navigate("/signup")}
-                            >
+
+                            <Button className="bg-orange-web font-bold text-xs text-white capitalize my-0 mx-1 cursor-pointer">
                                 {t("signup")}
-                            </p>
+                            </Button>
                         </div>
                     )}
-
-                    <div className="dropdown dropdown-bottom dropdown-end my-0  flex">
+                    <LanguagePopper />
+                    {/* <div className="dropdown dropdown-bottom dropdown-end my-0  flex">
                         <label tabIndex={0} className="">
-                            <div>
+                            <div onClick={() => setDropdown()}>
                                 <div
                                     className="mx-3 flex flex-row items-center "
-                                    onClick={() => setDropdown()}
                                     id="dropdownDefaultButton"
                                     data-dropdown-toggle="dropdown"
                                 >
@@ -163,9 +249,10 @@ export default function Header() {
                                 </div>
                             </div>
                         </label>
+
                         <div
                             tabIndex={0}
-                            className="dropdown-content z-[999] menu  shadow  rounded-box w-52 bg-white"
+                            className="dropdown-content z-[999] menu  shadow  rounded-box w-52 bg-white mt-2"
                         >
                             <div
                                 className="flex flex-row items-center py-2 px-2 hover:bg-gray-100"
@@ -176,7 +263,7 @@ export default function Header() {
                                     className="h-auto w-6"
                                 />
                                 <span className="flex flex-col">
-                                    <span className="font-medium text-xs capitalize my-0 mx-1 text-gray-100">
+                                    <span className="font-medium text-xs capitalize my-0 mx-1 text-black">
                                         Tiếng Việt
                                     </span>
                                 </span>
@@ -190,13 +277,13 @@ export default function Header() {
                                     className="h-auto w-6"
                                 />
                                 <span className="flex flex-col">
-                                    <span className="font-medium text-xs capitalize my-0 mx-1 text-gray-100">
+                                    <span className="font-medium text-xs capitalize my-0 mx-1 text-black">
                                         English
                                     </span>
                                 </span>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className="flex flex-1 items-center justify-between mt-3 px-4">

@@ -78,7 +78,7 @@ export default function GoogleSignIn() {
         <Button
             component="label"
             variant="contained"
-            className="w-full"
+            className="w-full bg-rich-black"
             startIcon={<img src={Google} className="w-4 h-4" />}
             onClick={() => login()}
         >

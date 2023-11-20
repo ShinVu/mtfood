@@ -12,6 +12,7 @@ function TextButton(props: any) {
             onClick={props.onClick}
             className={props.className}
             sx={props.sx}
+            {...props}
         >
             {props.children}
         </Button>

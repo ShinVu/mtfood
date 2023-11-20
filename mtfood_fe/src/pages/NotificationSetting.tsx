@@ -15,6 +15,7 @@ import Switch from "@mui/material/Switch";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { ProfileNavigation } from "../features/profile";
+import { useState } from "react";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
@@ -31,7 +32,42 @@ const user = {
 const label = { inputProps: { "aria-label": "switch" } };
 export default function UserNotificationSetting() {
     const { t } = useTranslation();
+    const [notificationSetting, setNotificationSetting] = useState({
+        all: true,
+        common: true,
+        sale: true,
+        order: true,
+        system: true,
+    });
 
+    const handleChangeNotificationSetting = (
+        key: "all" | "sale" | "order" | "system" | "common"
+    ) => {
+        if (key === "all") {
+            setNotificationSetting({
+                all: !notificationSetting["all"],
+                common: !notificationSetting["all"],
+                sale: !notificationSetting["all"],
+                order: !notificationSetting["all"],
+                system: !notificationSetting["all"],
+            });
+        } else {
+            const newSetting = {
+                ...notificationSetting,
+                [key]: !notificationSetting[key],
+            };
+            const allChecked =
+                newSetting["common"] &&
+                newSetting["sale"] &&
+                newSetting["order"] &&
+                newSetting["system"];
+            setNotificationSetting({
+                ...notificationSetting,
+                [key]: !notificationSetting[key],
+                all: allChecked,
+            });
+        }
+    };
     return (
         <div className="flex flex-1 flex-col">
             <Header />
@@ -51,7 +87,15 @@ export default function UserNotificationSetting() {
                                         </p>
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Switch {...label} defaultChecked />
+                                        <Switch
+                                            {...label}
+                                            checked={notificationSetting.all}
+                                            onClick={() =>
+                                                handleChangeNotificationSetting(
+                                                    "all"
+                                                )
+                                            }
+                                        />
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
@@ -64,7 +108,17 @@ export default function UserNotificationSetting() {
                                         </p>
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Switch {...label} defaultChecked />
+                                        <Switch
+                                            {...label}
+                                            checked={
+                                                notificationSetting["common"]
+                                            }
+                                            onClick={() =>
+                                                handleChangeNotificationSetting(
+                                                    "common"
+                                                )
+                                            }
+                                        />
                                     </TableCell>
                                 </StyledTableRow>
                                 <StyledTableRow>
@@ -75,7 +129,17 @@ export default function UserNotificationSetting() {
                                         </p>
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Switch {...label} defaultChecked />
+                                        <Switch
+                                            {...label}
+                                            checked={
+                                                notificationSetting["sale"]
+                                            }
+                                            onClick={() =>
+                                                handleChangeNotificationSetting(
+                                                    "sale"
+                                                )
+                                            }
+                                        />
                                     </TableCell>
                                 </StyledTableRow>
                                 <StyledTableRow>
@@ -86,7 +150,17 @@ export default function UserNotificationSetting() {
                                         </p>
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Switch {...label} defaultChecked />
+                                        <Switch
+                                            {...label}
+                                            checked={
+                                                notificationSetting["order"]
+                                            }
+                                            onClick={() =>
+                                                handleChangeNotificationSetting(
+                                                    "order"
+                                                )
+                                            }
+                                        />
                                     </TableCell>
                                 </StyledTableRow>
                                 <StyledTableRow>
@@ -97,7 +171,17 @@ export default function UserNotificationSetting() {
                                         </p>
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Switch {...label} defaultChecked />
+                                        <Switch
+                                            {...label}
+                                            checked={
+                                                notificationSetting["system"]
+                                            }
+                                            onClick={() =>
+                                                handleChangeNotificationSetting(
+                                                    "system"
+                                                )
+                                            }
+                                        />
                                     </TableCell>
                                 </StyledTableRow>
                             </TableBody>

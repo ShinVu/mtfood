@@ -291,5 +291,20 @@
     "Contact": "Liên hệ",
     "CancelOrder" : "Hủy đơn",
     "rateNow": "Đánh giá",
-    "payNow": "Thanh toán"
+    "payNow": "Thanh toán",
+    "chatMessage": "Tin nhắn chat",
+    "typeMessage": "Nhập tin nhắn mới",
+    "searchProduct": "Tìm kiếm sản phẩm theo từ khóa, danh mục...",
+    "introduction": "Mua sắm những món ăn vặt yêu thích của bạn",
+    "seeMores": "Xem thêm",
+    "freeShipping": "Giao hàng miễn phí",
+    "freeShippingDescription": "Giao hàng miễn phí cho đơn hàng trên 500K",
+    "securePayment": "",
+    "securePaymentDescription": "",
+    "100%Satisfaction": "",
+    "100%SatisfactionDescription": "",
+    "24hSupport": "Hỗ trợ Online",
+    "24SupportDescription": "Chúng tôi hỗ trợ online 24 giờ mỗi ngày",
+    "up": "trở lên",
+    "deleteAll": "Xóa tất cả"
 }

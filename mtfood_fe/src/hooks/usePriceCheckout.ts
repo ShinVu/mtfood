@@ -3,7 +3,7 @@ import { useAppSelector } from "./reduxHook";
 import { priceCart, product, productCart } from "../models/product.model";
 
 //Return prices,... of cart
-export default function usePriceCart() {
+export default function usePriceCheckout() {
     const [price, setPrice] = useState<priceCart | null>(null);
     const { productCart } = useAppSelector((state) => state.product);
 

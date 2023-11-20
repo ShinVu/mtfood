@@ -1,4 +1,7 @@
+import { ServerOffIcon } from "lucide-react";
+
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme");
 export default {
     content: [
         "./index.html",
@@ -27,9 +30,23 @@ export default {
                     light: "#FFF5EC",
                     heavy: "#FD820A",
                 },
+                "rich-black": "#03071eff",
+                "chocolate-cosmos": "#370617ff",
+                rosewood: "#6a040fff",
+                "penn-red": "#9d0208ff",
+                "engineering-orange": "#d00000ff",
+                sinopia: "#dc2f02ff",
+                persimmon: "#e85d04ff",
+                "princeton-orange": "#f48c06ff",
+                "orange-web": "#faa307ff",
+                "selective-yellow": "#ffba08ff",
+                "forest-green": "#4d8b31ff",
+                error: "#B00020",
+
+                "light-pink": "#F8F3F0",
             },
             fontFamily: {
-                montserrat: ["Montserrat", "sans-serif"],
+                sans: ["Nunito", "sans-serif", ...defaultTheme.fontFamily.sans],
             },
             screens: {
                 sm: "640px",
@@ -40,13 +57,11 @@ export default {
             backgroundImage: {
                 signUp: "url('/assets/image_15.png')",
                 signIn: "url('/assets/image_14.png')",
+                saleBadge:
+                    "url('//bizweb.dktcdn.net/100/491/159/themes/915419/assets/icon_giamgia.png?1699001498002')",
+                sale: "url(//bizweb.dktcdn.net/100/491/159/themes/915419/assets/bg_flash_sale.jpg?1699002238658)",
             },
         },
     },
-    plugins: [
-        require("flowbite/plugin"),
-        require("preline/plugin"),
-        require("daisyui"),
-        require("@tailwindcss/line-clamp"),
-    ],
+    plugins: [],
 };

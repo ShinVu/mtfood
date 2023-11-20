@@ -20,8 +20,8 @@ export default function ProfileNavigation(props) {
             <div className="flex flex-row w-full  items-center space-x-5">
                 <Avatar alt={user.name} src={user.avatar} />
                 <div className="flex flex-col">
-                    <p className="text-base font-bold w-36 md:w-40 lg:w-44 xl:w-48 my-0 line-clamp-4 text-black">
-                        {user.name}
+                    <p className="text-base font-semibold w-36 md:w-40 lg:w-44 xl:w-48 my-0 line-clamp-4 text-black">
+                        {user.name ?? user.email}
                     </p>
                     <div className="flex flex-row items-center mt-1">
                         <CreateIcon

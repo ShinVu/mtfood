@@ -185,7 +185,7 @@ export default function Profile() {
                 <ProfileNavigation user={user} />
                 <div className="flex flex-col flex-1 mx-12 space-y-4">
                     <div>
-                        <p className="text-base font-bold  text-primary_main">
+                        <p className="text-base font-bold  text-rich-black uppercase">
                             {t("profile")}
                         </p>
                     </div>

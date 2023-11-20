@@ -11,7 +11,7 @@ function FacebookButton(props: any) {
         <Button
             component="label"
             variant="contained"
-            className="w-full"
+            className="w-full bg-rich-black"
             startIcon={<img src={Facebook} className="w-4 h-4" />}
             onClick={onClick}
         >

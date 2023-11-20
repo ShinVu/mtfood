@@ -183,6 +183,7 @@ export default function SearchBar() {
                     <TextField
                         {...params}
                         className="bg-white"
+                        placeholder={t("searchProduct")}
                         InputProps={{
                             ...params.InputProps,
                             autoComplete: "new-password",

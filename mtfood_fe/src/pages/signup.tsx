@@ -238,7 +238,7 @@ export default function SignUp() {
         <div className="flex flex-col flex-1   min-h-fit h-screen w-full ">
             <div className="flex flex-1 py-5 h-full bg-signUp bg-center bg-cover justify-center items-center">
                 <div className="flex  flex-col p-6 bg-white shadow space-y-6 rounded">
-                    <h1 className="uppercase text-xl font-bold">
+                    <h1 className="uppercase text-black font-bold text-xl">
                         {t("signUp")}
                     </h1>
                     <form>
@@ -270,7 +270,7 @@ export default function SignUp() {
                     <div className="self-center mt-7  flex flex-col">
                         <Button
                             variant="contained"
-                            className="w-full  bg-primary_main"
+                            className="w-full  bg-rich-black"
                             onClick={handleSubmit((value) => onSubmit(value))}
                         >
                             {t("continue")}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 //Import MUI
 import {
     Table,
@@ -37,6 +37,14 @@ import { useTranslation } from "react-i18next";
 
 //lodash
 import { debounce } from "@mui/material/utils";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
+import axiosClient from "../../axios-client.js";
+import { setAddress } from "../features/authentication/authenticationSlice.js";
+import AddressDialog from "../features/profile/addressDialog.js";
+import { current } from "@reduxjs/toolkit";
+import { productCart } from "../models/product.model.js";
+import { changePriceFormat, getSubTotal } from "../utils/index.js";
+import usePriceCheckout from "../hooks/usePriceCheckout.js";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
@@ -70,12 +78,37 @@ const products = [
 
 function CheckoutAddress() {
     const { t } = useTranslation();
-    const [open, setOpen] = useState(false);
+
+    const { addresses, user, currentAddress } = useAppSelector(
+        (state) => state.authentication
+    );
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        const fetchAddress = async () => {
+            const payload = {
+                customerId: user.id,
+            };
+            const response = await axiosClient.post("/getAddress", payload);
+            const newAddress = response.data.result.address;
+
+            dispatch(setAddress(newAddress));
+        };
+        if (!addresses) {
+            fetchAddress();
+        }
+    }, [addresses]);
+
+    //Address dialog state
+    const [open, setOpen] = useState<boolean>(false);
+
     const handleModalOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
         setOpen(false);
+    };
+    const getFullAddress = () => {
+        return `${currentAddress?.address}, ${currentAddress?.ward_name}, ${currentAddress?.district_name}, ${currentAddress?.province_name}`;
     };
     return (
         <div className="flex flex-col flex-1 bg-white py-4 px-10">
@@ -84,18 +117,22 @@ function CheckoutAddress() {
             </h5>
             <div className="flex flex-1 justify-between items-center mt-4">
                 <div className="flex flex-col">
-                    <p className="font-medium text-sm my-0">Le Minh Tuan</p>
-                    <p className="font-medium text-sm my-0">123456789</p>
+                    <p className="font-medium text-sm my-0">
+                        {currentAddress?.name}
+                    </p>
+                    <p className="font-medium text-sm my-0">
+                        {currentAddress?.phone_number}
+                    </p>
                 </div>
-                <p className="font-normal text-sm my-0">address</p>
+                <p className="font-normal text-sm my-0">{getFullAddress()}</p>
                 <p className="text-primary_main normal-case my-0 text-sm">
-                    {t("default")}
+                    {currentAddress?.default ? t("default") : <></>}
                 </p>
                 <TextButton onClick={handleModalOpen}>
                     <span className="normal-case text-blue">{t("change")}</span>
                 </TextButton>
             </div>
-            <AddAddressDialog
+            <AddressDialog
                 open={open}
                 handleModalOpen={handleModalOpen}
                 handleClose={handleClose}
@@ -193,8 +230,7 @@ function CheckoutDelivery() {
     );
 }
 
-function ProductCartItemCard(props) {
-    const { product } = props;
+function ProductCartItemCard({ product }: { product: productCart }) {
     return (
         <StyledTableRow>
             <TableCell align="left">
@@ -204,22 +240,241 @@ function ProductCartItemCard(props) {
                 </div>
             </TableCell>
             <TableCell align="right">
-                <p className="my-0">{product.basePrice}</p>
+                <p className="my-0 font-medium text-base">
+                    {changePriceFormat(product.priceDiscount)}đ
+                </p>
             </TableCell>
             <TableCell align="right">
-                <p className="my-0">{product.quantity}</p>
+                <p className="my-0 font-medium text-base">
+                    {product.quantityForProduct}
+                </p>
             </TableCell>
             <TableCell align="right">
-                <p className="my-0">{product.price}</p>
+                <p className="my-0 font-medium text-base text-red_main">
+                    {changePriceFormat(
+                        getSubTotal(
+                            product.priceDiscount,
+                            product.quantityForProduct
+                        )
+                    )}
+                    đ
+                </p>
             </TableCell>
         </StyledTableRow>
     );
 }
 
-function CheckoutItem() {
+function PopOverOrderPayment() {
     const { t } = useTranslation();
+    const [anchorEl, setAnchorEl] = useState(null);
+    const handlePopoverOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+
+    //Checkout prices
+    const priceCheckout = usePriceCheckout();
     return (
-        <div className="flex flex-col flex-1 bg-white p-4">
+        <>
+            <Popover
+                id="mouse-over-popover"
+                sx={{
+                    pointerEvents: "none",
+                }}
+                disableRestoreFocus
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handlePopoverClose}
+                anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                }}
+                transformOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                }}
+            >
+                <div className="p-4">
+                    <p id="tableTitle" className="text-sm font-medium">
+                        {t("discountDetail")}
+                    </p>
+                    <Table aria-labelledby="tableTitle">
+                        <TableBody>
+                            <StyledTableRow>
+                                <TableCell align="left">
+                                    <span className="text-gray-100 text-sm my-0">
+                                        {t("productSum")}
+                                    </span>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <span className="text-black text-sm font-medium my-0">
+                                        {priceCheckout &&
+                                            changePriceFormat(
+                                                String(priceCheckout.totalSub)
+                                            )}
+                                        đ
+                                    </span>
+                                </TableCell>
+                            </StyledTableRow>
+                            <StyledTableRow>
+                                <TableCell align="left">
+                                    <span className="text-gray-100 text-sm my-0">
+                                        {t("productDiscount")}
+                                    </span>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <span className="text-black text-sm font-medium my-0">
+                                        {priceCheckout &&
+                                            changePriceFormat(
+                                                String(
+                                                    priceCheckout.totalProductDiscount
+                                                )
+                                            )}
+                                        đ
+                                    </span>
+                                </TableCell>
+                            </StyledTableRow>
+                            <TableRow>
+                                <TableCell align="left">
+                                    <span className="text-gray-100 text-sm my-0">
+                                        {t("voucherDiscounts")}
+                                    </span>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <span className="text-black text-sm font-medium my-0">
+                                        {priceCheckout &&
+                                            changePriceFormat(
+                                                String(
+                                                    priceCheckout.totalVoucher
+                                                )
+                                            )}
+                                        đ
+                                    </span>
+                                </TableCell>
+                            </TableRow>
+                            <StyledTableRow>
+                                <TableCell align="left">
+                                    <span className="text-gray-100 text-sm my-0">
+                                        {t("saving")}
+                                    </span>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <span className="text-black text-sm font-medium my-0">
+                                        {priceCheckout &&
+                                            changePriceFormat(
+                                                String(
+                                                    priceCheckout.totalDiscount
+                                                )
+                                            )}
+                                        đ
+                                    </span>
+                                </TableCell>
+                            </StyledTableRow>
+                            <StyledTableRow>
+                                <TableCell align="left">
+                                    <span className="text-gray-100 text-sm my-0">
+                                        {t("totalPayment")}
+                                    </span>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <span className="my-0 text-red_main text-2xl font-bold">
+                                        {priceCheckout &&
+                                            changePriceFormat(
+                                                String(priceCheckout.totalPrice)
+                                            )}
+                                        đ
+                                    </span>
+                                </TableCell>
+                            </StyledTableRow>
+                        </TableBody>
+                    </Table>
+                </div>
+            </Popover>
+            <div
+                aria-owns={open ? "mouse-over-popover" : undefined}
+                aria-haspopup="true"
+                onMouseEnter={handlePopoverOpen}
+                onMouseLeave={handlePopoverClose}
+            >
+                <Table size="small">
+                    <TableBody>
+                        <StyledTableRow>
+                            <TableCell align="left">
+                                <p className="my-0 text-sm font-medium">
+                                    {t("totalOrder")}
+                                </p>
+                            </TableCell>
+                            <TableCell align="right">
+                                <p className="my-0 text-red_main text-2xl font-bold">
+                                    {priceCheckout &&
+                                        changePriceFormat(
+                                            String(priceCheckout.totalPrice)
+                                        )}
+                                    đ
+                                </p>
+                            </TableCell>
+                        </StyledTableRow>
+                        {priceCheckout && priceCheckout.totalDiscount !== 0 && (
+                            <StyledTableRow>
+                                <TableCell align="left">
+                                    <p className="my-0 text-sm font-medium">
+                                        {t("saving")}
+                                    </p>
+                                </TableCell>
+
+                                <TableCell align="right">
+                                    <p className="my-0 text-gray-100 text-base ">
+                                        {priceCheckout &&
+                                            priceCheckout.totalDiscount !== 0 &&
+                                            changePriceFormat(
+                                                String(
+                                                    priceCheckout.totalDiscount
+                                                )
+                                            )}
+                                        đ
+                                    </p>
+                                </TableCell>
+                            </StyledTableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+        </>
+    );
+}
+
+const CheckoutItem = forwardRef((props, ref) => {
+    const { t } = useTranslation();
+    const { productCart } = useAppSelector((state) => state.product);
+    const [productCheckout, setProductCheckout] = useState<any>(null);
+    useEffect(() => {
+        const getProductCheckout = () => {
+            if (productCart) {
+                // const result = productCart.filter(
+                //     (product: any) => product.check
+                // );
+                // console.log(result);
+                // setProductCheckout(result);
+                const newProductCheckout = {};
+                Object.entries(productCart).forEach(([key, product]: any) => {
+                    if (product.check) {
+                        newProductCheckout[key] = product;
+                    }
+                });
+
+                setProductCheckout(newProductCheckout);
+            }
+        };
+
+        getProductCheckout();
+    }, [productCart]);
+    return (
+        <div className="flex flex-col flex-1 bg-white p-4" ref={ref}>
             <Table>
                 <TableHead>
                     <TableRow>
@@ -246,25 +501,22 @@ function CheckoutItem() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {products.map((product) => (
-                        <ProductCartItemCard product={product} />
-                    ))}
+                    {productCheckout &&
+                        Object.keys(productCheckout).map((key) => (
+                            <ProductCartItemCard
+                                product={productCheckout[key]}
+                                key={key}
+                            />
+                        ))}
                 </TableBody>
             </Table>
             <Divider className="my-4" />
-            <div className="flex flex-1 flex-row items-center px-3 justify-between">
-                <div className="flex flex-row items-center space-x-4">
-                    <p className="my-0 text-gray-100">{t("message")}</p>
-                    <TextField size="small" placeholder={t("note")} />
-                </div>
-                <div className="flex flex-row items-center space-x-12">
-                    <p className="my-0 text-gray-100">{t("totalProduct")}</p>
-                    <p className="my-0 text-red_main font-semibold">500.000đ</p>
-                </div>
+            <div className="flex flex-1 flex-row items-center px-3 justify-end">
+                <PopOverOrderPayment />
             </div>
         </div>
     );
-}
+});
 
 function CheckoutVoucher() {
     const { t } = useTranslation();
@@ -364,8 +616,17 @@ function CheckoutPayment() {
     );
 }
 
-function CheckoutSumup() {
+function CheckoutSumup({ refProps }: { refProps: any }) {
     const { t } = useTranslation();
+    const handleSeeInformation = () => {
+        console.log(refProps);
+        if (refProps) {
+            refProps.current.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+            });
+        }
+    };
     return (
         <div className="flex flex-col flex-1 bg-white p-4">
             <div className="flex flex-row flex-1 justify-between px-3 items-center">
@@ -386,6 +647,7 @@ function CheckoutSumup() {
                     endIcon={
                         <KeyboardArrowUpIcon sx={{ color: colors.blue }} />
                     }
+                    onClick={() => handleSeeInformation()}
                 >
                     <span className="normal-case my-0 text-blue">
                         {t("seeInformation")}
@@ -477,16 +739,17 @@ function CheckoutSumup() {
 }
 export default function Checkout() {
     const { t } = useTranslation();
+    const itemCard = useRef();
     return (
         <div className="flex flex-1 flex-col">
             <HeaderCheckout />
             <div className="flex flex-1 flex-col bg-background_main p-4 space-y-4">
                 <CheckoutAddress />
                 <CheckoutDelivery />
-                <CheckoutItem />
+                <CheckoutItem ref={itemCard} />
                 <CheckoutVoucher />
                 <CheckoutPayment />
-                <CheckoutSumup />
+                <CheckoutSumup refProps={itemCard} />
             </div>
             <Footer />
         </div>

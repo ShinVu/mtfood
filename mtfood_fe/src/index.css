@@ -2,13 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-    font-family: "Montserrat";
-    src: url("../public/fonts/Montserrat-VariableFont_wght.ttf");
-}
+
 
 @layer base {
-    * {
-        @apply font-montserrat;
-    }
+    input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }

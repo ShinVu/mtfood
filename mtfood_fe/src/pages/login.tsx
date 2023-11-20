@@ -177,7 +177,7 @@ export default function Login() {
         <div className="flex flex-col flex-1 min-h-fit h-screen w-full ">
             <div className="flex flex-1 py-5 bg-signUp bg-center bg-cover justify-center items-center">
                 <div className="flex  flex-col p-6 bg-white shadow space-y-6 rounded">
-                    <h1 className="uppercase text-xl font-bold">
+                    <h1 className="uppercase text-xl font-bold text-black">
                         {t("login")}
                     </h1>
                     <FormControl
@@ -252,7 +252,7 @@ export default function Login() {
                     <div className="self-center  mt-5 flex flex-col">
                         <Button
                             variant="contained"
-                            className="w-full bg-primary_main"
+                            className="w-full bg-rich-black"
                             onClick={handleSubmit((value) => onSubmit(value))}
                         >
                             {t("login")}

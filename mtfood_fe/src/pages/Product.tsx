@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 //Import MUI
 import FilterListIcon from "@mui/icons-material/FilterList";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
-import { Skeleton, TextField, Tooltip } from "@mui/material";
+import { Button, Paper, Skeleton, TextField, Tooltip } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
@@ -111,32 +111,53 @@ function CategoryBar({
     const handleCategoryClick = (categoryId: string) => {
         //set query string to category
         searchParams.set("category", categoryId);
+        setCat(categoryId);
         //set page back to page 0
         searchParams.set("page", String(1));
+
         setSearchParams(searchParams);
     };
+
+    const [cat, setCat] = useState<string | null>(searchParams.get("category"));
     return (
         <div className="flex flex-col bg-white p-4">
-            <p className="font-bold text-base my-0 text-black">
-                {t("category")}
-            </p>
+            <p className="font-bold text-lg my-0 text-black">{t("category")}</p>
             <div className="mt-2">
                 {productCategory
                     ? productCategory.map((category) => (
                           <Tooltip
                               title={category.name}
                               TransitionComponent={Zoom}
-                              placement="top-start"
+                              placement="right"
                               key={category.id}
+                              enterNextDelay={1000}
+                              enterDelay={1000}
                           >
-                              <p
-                                  className="text-base font-medium my-0 mt-3 text-black max-w-xs w-fit line-clamp-1"
-                                  onClick={() =>
-                                      handleCategoryClick(category.id)
-                                  }
-                              >
-                                  {category.name}
-                              </p>
+                              {cat && cat === category.id ? (
+                                  <div
+                                      onClick={() =>
+                                          handleCategoryClick(category.id)
+                                      }
+                                      className="flex flex-row items-center justify-start cursor-pointer  bg-rich-black group px-1 py-2"
+                                  >
+                                      <div className="w-1 h-1 rounded-full mr-2 bg-white" />
+                                      <p className=" max-w-xs w-fit line-clamp-1 font-bold text-base transition-all ease-out delay-200 text-white">
+                                          {category.name}
+                                      </p>
+                                  </div>
+                              ) : (
+                                  <div
+                                      onClick={() =>
+                                          handleCategoryClick(category.id)
+                                      }
+                                      className="flex flex-row items-center justify-start cursor-pointer bg-[length:205%_100%] bg-gradient-to-r from-rich-black from-50% via-white via-50% to-white to-100%  transition-all delay-300 duration-500 ease-out bg-right-bottom hover:bg-left-bottom  group px-1 py-2"
+                                  >
+                                      <div className="w-1 h-1 rounded-full mr-2 transition-all ease-out delay-200 bg-rich-black group-hover:bg-white" />
+                                      <p className="max-w-xs w-fit line-clamp-1 font-medium group-hover:font-bold text-base transition-all ease-out delay-200 text-rich-black group-hover:text-white">
+                                          {category.name}
+                                      </p>
+                                  </div>
+                              )}
                           </Tooltip>
                       ))
                     : getDummy().map((key) => (
@@ -161,7 +182,15 @@ function TagBar({
     const { t } = useTranslation();
     const { productTag } = useAppSelector((state) => state.product);
     const dispatch = useAppDispatch();
-
+    const [tagsArray, setTagsArray] = useState<string[]>(
+        searchParams.get("tag") ? JSON.parse(searchParams.get("tag")) : []
+    );
+    console.log(tagsArray);
+    useEffect(() => {
+        setTagsArray(
+            searchParams.get("tag") ? JSON.parse(searchParams.get("tag")) : []
+        );
+    }, [searchParams]);
     useEffect(() => {
         const fetchTag = async () => {
             const response = await axiosClient.get("/tag");
@@ -243,23 +272,39 @@ function TagBar({
     };
     return (
         <div className="flex flex-col bg-white p-4">
-            <p className="font-bold text-base my-0 text-black">{t("tag")}</p>
-            <div className="mt-2">
+            <p className="font-bold text-lg my-0 text-black">{t("tag")}</p>
+            <div className="mt-2 space-y-1">
                 {productTag
                     ? productTag.map((tag: any) => (
                           <Tooltip
                               title={tag.name}
                               TransitionComponent={Zoom}
-                              placement="top-start"
+                              placement="right"
                               key={tag.id}
+                              enterNextDelay={1000}
+                              enterDelay={1000}
                           >
-                              <p
-                                  className="text-base font-medium my-0 mt-3 text-black max-w-xs w-fit line-clamp-1"
-                                  key={tag.id}
-                                  onClick={() => handleTagClick(tag.id)}
-                              >
-                                  {tag.name}
-                              </p>
+                              {tagsArray.indexOf(tag.id) === -1 ? (
+                                  <div
+                                      onClick={() => handleTagClick(tag.id)}
+                                      className="flex flex-row items-center justify-start cursor-pointer bg-[length:205%_100%] bg-gradient-to-r from-rich-black from-50% via-white via-50% to-white to-100%  transition-all delay-100 duration-500 ease-out bg-right-bottom hover:bg-left-bottom  group px-1 py-2"
+                                  >
+                                      <div className="w-1 h-1 rounded-full mr-2 transition-all ease-out delay-200 bg-rich-black group-hover:bg-white" />
+                                      <p className=" font-medium group-hover:font-bold text-base transition-all ease-out delay-200 text-rich-black group-hover:text-white">
+                                          {tag.name}
+                                      </p>
+                                  </div>
+                              ) : (
+                                  <div
+                                      onClick={() => handleTagClick(tag.id)}
+                                      className="flex flex-row items-center justify-start cursor-pointer  bg-rich-black group px-1 py-2"
+                                  >
+                                      <div className="w-1 h-1 rounded-full mr-2 bg-white" />
+                                      <p className=" font-bold text-base transition-all ease-out delay-200 text-white">
+                                          {tag.name}
+                                      </p>
+                                  </div>
+                              )}
                           </Tooltip>
                       ))
                     : getDummy().map((key) => (
@@ -278,7 +323,9 @@ function Filter() {
     const { t } = useTranslation();
     return (
         <div className="flex flex-row items-center">
-            <FilterListIcon sx={{ fontSize: 40 }} />
+            <FilterListIcon
+                sx={{ fontSize: 40, color: colors["rich-black"] }}
+            />
             <p className="my-0 font-bold text-xl ml-2 uppercase text-black">
                 {t("filter")}
             </p>
@@ -323,7 +370,7 @@ function PriceFilter({
     };
     return (
         <div className="flex flex-col bg-white p-4">
-            <p className="font-bold text-base my-0 text-black">
+            <p className="font-bold text-lg my-0 text-black">
                 {t("priceRange")}
             </p>
             <div className="mt-4 flex flex-col items-center">
@@ -333,9 +380,16 @@ function PriceFilter({
                             <InputAdornment position="start">đ</InputAdornment>
                         ),
                     }}
+                    type="number"
+                    className="w-full"
                     placeholder={t("from")}
                     value={priceFrom}
-                    {...register("price_from")}
+                    {...register("price_from", {
+                        pattern: {
+                            value: /^\d+$/,
+                            message: "Please enter a number",
+                        },
+                    })}
                 />
                 <HorizontalRuleIcon />
                 <TextField
@@ -346,13 +400,15 @@ function PriceFilter({
                     }}
                     placeholder={t("to")}
                     type="number"
+                    className="w-full"
                     value={priceTo}
-                    {...register("price_to")}
-                    // {...register("price_to", {
-                    //     valueAsNumber: true,
-
-                    //     validate: (value) => value > 0,
-                    // })}
+                    // {...register("price_to")}
+                    {...register("price_to", {
+                        pattern: {
+                            value: /^\d+$/,
+                            message: "Please enter a number",
+                        },
+                    })}
                 />
                 <div className="mt-5">
                     <ContainedButton
@@ -407,7 +463,7 @@ function ServiceFilter({
 
     return (
         <div className="flex flex-col w-full bg-white p-4">
-            <p className="font-bold text-base my-0 text-black">
+            <p className="font-bold text-lg my-0 text-black">
                 {t("serviceAndDiscount")}
             </p>
             <div className="mt-2 w-fit ">
@@ -422,7 +478,7 @@ function ServiceFilter({
                                 />
                             }
                             label={
-                                <span className="font-medium text-sm text-black">
+                                <span className="font-medium text-base text-black">
                                     {t("onSale")}
                                 </span>
                             }
@@ -436,7 +492,7 @@ function ServiceFilter({
                                 />
                             }
                             label={
-                                <span className="font-medium text-sm text-black">
+                                <span className="font-medium text-base text-black">
                                     {t("Voucher")}
                                 </span>
                             }
@@ -450,7 +506,7 @@ function ServiceFilter({
                                 />
                             }
                             label={
-                                <span className="font-medium text-sm text-black">
+                                <span className="font-medium text-base text-black">
                                     {t("available")}
                                 </span>
                             }
@@ -464,7 +520,7 @@ function ServiceFilter({
                                 />
                             }
                             label={
-                                <span className="font-medium text-sm text-black">
+                                <span className="font-medium text-base text-black">
                                     {t("wholesaleProduct")}
                                 </span>
                             }
@@ -485,7 +541,15 @@ function RatingFilter({
 }) {
     const { t } = useTranslation();
     const handleRatingClick = (value: string) => {
-        searchParams.set("rating", value);
+        console.log(searchParams.get("rating"));
+        if (
+            searchParams.get("rating") &&
+            searchParams.get("rating") === value
+        ) {
+            searchParams.delete("rating");
+        } else {
+            searchParams.set("rating", value);
+        }
         //Reset page
         searchParams.set("page", String(1));
         setSearchParams(searchParams);
@@ -493,26 +557,65 @@ function RatingFilter({
 
     //Possbile rating
     const ratingOptions = [5, 4, 3, 2, 1];
+    const ratingChoose = (ratingOption: number) => {
+        const ratingFilter = searchParams.get("rating");
+        if (ratingFilter) {
+            return parseInt(ratingFilter) === ratingOption;
+        }
+        return false;
+    };
     return (
         <div className="flex flex-col w-full bg-white p-4">
-            <p className="font-bold text-base my-0 capitalize text-black">
+            <p className="font-bold text-lg my-0 capitalize text-black">
                 {t("rating")}
             </p>
-            <div className="mt-3 w-fit -ml-1 flex flex-col space-y-1">
+            <div className="mt-3 w-fit -ml-1 flex flex-col space-y-2">
                 {ratingOptions.map((ratingOption) => (
                     <div
-                        onClick={() => handleRatingClick(ratingOption)}
                         key={ratingOption}
+                        className={
+                            ratingChoose(ratingOption)
+                                ? "flex flex-row items-center px-2 rounded-lg bg-[#EBEBEB]"
+                                : "flex flex-row items-center px-2"
+                        }
+                        onClick={() => handleRatingClick(String(ratingOption))}
                     >
                         <Rating
                             name="read-only"
                             value={ratingOption}
                             readOnly
                         />
+                        {ratingOption !== 5 && (
+                            <span className="ml-1 text-black text-base font-medium">
+                                {" "}
+                                {t("up")}
+                            </span>
+                        )}
                     </div>
                 ))}
             </div>
         </div>
+    );
+}
+
+function DeleteFilterButton({
+    searchParams,
+    setSearchParams,
+}: {
+    searchParams: URLSearchParams;
+    setSearchParams: SetURLSearchParams;
+}) {
+    const { t } = useTranslation();
+    const handleDeleteFilterClick = () => {
+        setSearchParams({});
+    };
+    return (
+        <Button
+            className="bg-rich-black text-white w-fit self-center"
+            onClick={handleDeleteFilterClick}
+        >
+            {t("deleteAll")}
+        </Button>
     );
 }
 function OptionSideBar({
@@ -542,6 +645,10 @@ function OptionSideBar({
                 setSearchParams={setSearchParams}
             />
             <RatingFilter
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
+            />
+            <DeleteFilterButton
                 searchParams={searchParams}
                 setSearchParams={setSearchParams}
             />
@@ -623,19 +730,20 @@ function PaginateTab({
     setSearchParams: SetURLSearchParams;
     totalPage: number;
 }) {
-    const pageNumber = searchParams.get("page")
-        ? parseInt(searchParams.get("page"))
-        : 1;
-
+    const pageNumber = totalPage
+        ? searchParams.get("page")
+            ? parseInt(searchParams.get("page"))
+            : 1
+        : 0;
     const handlePrevClick = () => {
-        if (pageNumber !== 1) {
+        if (pageNumber > 1) {
             searchParams.set("page", String(pageNumber - 1));
             setSearchParams(searchParams);
         }
     };
 
     const handleNextClick = () => {
-        if (pageNumber !== totalPage) {
+        if (pageNumber < totalPage) {
             searchParams.set("page", String(pageNumber + 1));
             setSearchParams(searchParams);
         }
@@ -652,13 +760,13 @@ function PaginateTab({
                         color: colors.primary_main,
                         fontSize: 24,
                     }}
-                    className={pageNumber === 1 ? "opacity-50" : undefined}
+                    className={pageNumber <= 1 ? "opacity-50" : undefined}
                 />
                 <KeyboardArrowRightIcon
                     onClick={handleNextClick}
                     sx={{ color: colors.primary_main, fontSize: 24 }}
                     className={
-                        pageNumber === totalPage ? "opacity-50" : undefined
+                        pageNumber >= totalPage ? "opacity-50" : undefined
                     }
                 />
             </div>
@@ -676,7 +784,7 @@ export default function Product() {
 
     useEffect(() => {
         const fetchProducts = async () => {
-            setLoading(true);
+            setProduct(null);
             const pageNumber = searchParams.get("page")
                 ? parseInt(searchParams.get("page"))
                 : 1;
@@ -708,11 +816,20 @@ export default function Product() {
 
             setProduct(products);
             setTotalPage(totalPage);
-            setLoading(false);
         };
 
         fetchProducts();
     }, [searchParams]);
+
+    const mainProductLocationRef = useRef(null);
+
+    const handleMainProductLocationFocus = () => {
+        if (mainProductLocationRef) {
+            mainProductLocationRef.current?.scrollIntoView({
+                behavior: "smooth",
+            });
+        }
+    };
     return (
         <div className="flex flex-1 flex-col">
             <Header />
@@ -725,7 +842,10 @@ export default function Product() {
                     <div className="flex w-full h-96 max-w-full min-w-0 min-h-0">
                         <ImageSwiper />
                     </div>
-                    <div className="bg-white flex flex-row items-center justify-between mt-5">
+                    <div
+                        className="bg-white flex flex-row items-center justify-between mt-5"
+                        ref={mainProductLocationRef}
+                    >
                         <SortTab
                             searchParams={searchParams}
                             setSearchParams={setSearchParams}
@@ -753,6 +873,9 @@ export default function Product() {
                             isLoading={isLoading}
                             searchParams={searchParams}
                             setSearchParams={setSearchParams}
+                            handleMainProductLocationFocus={
+                                handleMainProductLocationFocus
+                            }
                         />
                     </div>
                 </div>

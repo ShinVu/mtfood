@@ -187,7 +187,7 @@ export default function UserOrder() {
                             </p>
                         )}
                     </div>
-                    <div className="flex flex-col mt-8" id="scrollableDiv">
+                    <div className="flex flex-col" id="scrollableDiv">
                         <InfiniteScroll
                             dataLength={orders?.length ?? 0}
                             next={fetchMoreData}

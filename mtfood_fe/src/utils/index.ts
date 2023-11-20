@@ -1,6 +1,6 @@
 import useWindowSizeDimensions from "../hooks/useWindowResponsiveDimensions";
 import { orderType } from "../models/order.model";
-
+import moment from "moment";
 //Check if text is numeric
 function matchIsNumeric(text) {
     const isNumber = typeof text === "number";
@@ -141,6 +141,18 @@ function getOrderBillingValue(order: orderType) {
     };
     return billing;
 }
+
+function timeChatMessageFormat(time: string) {
+    return moment.unix(time).format("kk:mm");
+}
+
+function timeChatMessageHeaderFormat(time: string) {
+    return moment.unix(time).format("kk:mm, DD/MM/YYYY");
+}
+
+function compareTimeDiffDay(day1: string, day2: string) {
+    return moment.unix(day1).diff(moment.unix(day2), "days") > 0;
+}
 export {
     matchIsNumeric,
     getSizeDialog,
@@ -151,4 +163,7 @@ export {
     changeTimeFormat,
     getOrderItemSubTotal,
     getOrderBillingValue,
+    timeChatMessageFormat,
+    compareTimeDiffDay,
+    timeChatMessageHeaderFormat,
 };

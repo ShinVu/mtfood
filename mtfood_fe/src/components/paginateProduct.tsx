@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Ref, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import ReactPaginate from "react-paginate";
 import { ProductCard } from "../features/product";
@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 
 function Items({ products }) {
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-4 w-full">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-5 gap-4 w-full">
             {products.length > 0 ? (
                 products.map((product) => (
                     <ProductCard
@@ -35,11 +35,13 @@ function PaginatedProducts({
     totalPage,
     searchParams,
     setSearchParams,
+    handleMainProductLocationFocus,
 }: {
     products: Array<product>;
     totalPage: number;
     searchParams: URLSearchParams;
     setSearchParams: SetURLSearchParams;
+    handleMainProductLocationFocus: () => void;
 }) {
     // Here we use item offsets; we could also use page offsets
     // following the API or data you're working with.
@@ -54,10 +56,10 @@ function PaginatedProducts({
 
     const handlePageClick = (event: any) => {
         const pageNumber = event.selected + 1; //First page default to 1
-
         //Query string for page
         searchParams.set("page", pageNumber);
         setSearchParams(searchParams);
+        handleMainProductLocationFocus();
     };
 
     return (
@@ -99,6 +101,7 @@ export default function PaginationProducts({
     isLoading,
     searchParams,
     setSearchParams,
+    handleMainProductLocationFocus,
 }: {
     products: Array<product> | null;
     totalPage: number;
@@ -106,6 +109,7 @@ export default function PaginationProducts({
     pageNumber: number;
     searchParams: URLSearchParams;
     setSearchParams: SetURLSearchParams;
+    handleMainProductLocationFocus: () => void;
 }) {
     const { t } = useTranslation();
     if (products) {
@@ -116,6 +120,9 @@ export default function PaginationProducts({
                     totalPage={totalPage}
                     searchParams={searchParams}
                     setSearchParams={setSearchParams}
+                    handleMainProductLocationFocus={
+                        handleMainProductLocationFocus
+                    }
                 />
             );
         } else {

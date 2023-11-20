@@ -6,18 +6,16 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import Header from "../components/header";
 import Footer from "../components/footer";
 
-import {
-    ContainedButton,
-    OutlinedButton,
-    TextButton,
-} from "../components/button.jsx";
 import ImageSwiper from "../components/imageSwiper.js";
 import ProductSwiper from "../components/productSwiper/productSwiper.js";
-import { Divider, Paper, Skeleton } from "@mui/material";
+import { Button, Divider, Paper, Skeleton } from "@mui/material";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import axiosClient from "../../axios-client.js";
 import useWindowSizeDimensions from "../hooks/useWindowResponsiveDimensions.js";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
+import { FaBoltLightning } from "react-icons/fa6";
+import { LiaLongArrowAltRightSolid } from "react-icons/lia";
+import { FaShippingFast } from "react-icons/fa";
 import {
     setProductCategory,
     setProductDiscount,
@@ -25,6 +23,9 @@ import {
     setProductNew,
     setProductTag,
 } from "../features/product/productSlice.js";
+import { colors } from "../../public/theme.js";
+import ProductDiscountSwiper from "../components/productSwiper/productDiscountSwiper.js";
+import { t } from "i18next";
 
 type product = {
     id: number;
@@ -49,24 +50,25 @@ function CategoryCardItem(props) {
         navigate(path);
     };
     return (
-        <div
-            className="flex flex-col items-center cursor-pointer min-w-fit align-center"
+        <Paper
+            className="flex flex-col items-center justify-center p-2 cursor-pointer min-w-fit align-center transition ease-in-out delay-150  hover:-translate-y-2 hover:scale-105"
+            elevation={1}
             onClick={handleCategoryClick}
         >
             <img
-                src="/assets/image_14.png"
-                className="w-12 h-12 rounded-[6rem]"
+                src="https://source.unsplash.com/random"
+                className="w-20 h-20 object-cover object-center"
             />
-            <div className="">
-                <p className="text-sm mt-2 font-medium text-black">
-                    {category.name}
-                </p>
-            </div>
-        </div>
+
+            <p className="text-sm mt-2 font-semibold text-black uppercase">
+                {category.name}
+            </p>
+        </Paper>
     );
 }
 
 function TagCardItem(props) {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { tag } = props;
 
@@ -81,12 +83,36 @@ function TagCardItem(props) {
         navigate(path);
     };
     return (
-        <div
-            className="flex flex-col items-center cursor-pointer"
-            onClick={handleTagClick}
+        // <Paper
+        //     className="flex flex-row items-center justify-start cursor-pointer bg-[length:205%_100%] bg-gradient-to-r from-chocolate-cosmos from-50% via-white via-50% to-white to-100%  transition-all delay-100 duration-500 ease-out bg-right-bottom hover:bg-left-bottom  group p-2"
+        //     onClick={handleTagClick}
+        // >
+        //     <div className="w-2 h-2 rounded-full mr-2 transition-all ease-out delay-200 bg-rich-black group-hover:bg-white" />
+        //     <p className=" font-semibold text-base transition-all ease-out delay-200 text-rich-black group-hover:text-white uppercase">
+        //         {tag.name}
+        //     </p>
+        // </Paper>
+        <Paper
+            className="bg-light-pink w-full h-48 relative flex"
+            elevation={0}
         >
-            <p className="text-sm mt-2 text-black font-medium">{tag.name}</p>
-        </div>
+            <div className="absolute left-10 top-10 w-1/2">
+                <p className="text-xl mt-2 font-bold text-black font-nunito">
+                    {tag.name}
+                </p>
+                <p className="text-base font-semibold line-clamp-2">
+                    {tag.description}
+                </p>
+                <Button
+                    variant="text"
+                    className="-ml-2 font-medium text-black normal-case text-base"
+                    onClick={handleTagClick}
+                    endIcon={<LiaLongArrowAltRightSolid />}
+                >
+                    {t("seeMores")}
+                </Button>
+            </div>
+        </Paper>
     );
 }
 function CategoryCard() {
@@ -139,18 +165,23 @@ function CategoryCard() {
         }
     };
     return (
-        <Paper elevation={2} className="flex flex-col flex-1 p-4">
-            <h5 className="font-medium my-0 text-base text-gray-100">
-                {t("category")}
-            </h5>
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 gap-4 mt-4">
+        <div className="flex flex-col flex-1 p-4 ">
+            <Divider className="mx-10 my-4 cursor-pointer">
+                <h5 className="font-bold my-0 text-lg text-black uppercase">
+                    {t("category")}
+                </h5>
+            </Divider>
+
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6  mt-4 gap-x-2 gap-y-4">
                 {categories
-                    ? categories.map((category) => (
-                          <CategoryCardItem
-                              category={category}
-                              key={category.id}
-                          />
-                      ))
+                    ? categories
+                          .slice(0, -2)
+                          .map((category) => (
+                              <CategoryCardItem
+                                  category={category}
+                                  key={category.id}
+                              />
+                          ))
                     : getDummy().map((value) => (
                           <div
                               key={value}
@@ -167,7 +198,7 @@ function CategoryCard() {
                           </div>
                       ))}
             </div>
-        </Paper>
+        </div>
     );
 }
 
@@ -218,13 +249,18 @@ function TagCard() {
         }
     };
     return (
-        <Paper elevation={2} className="flex flex-col flex-1 p-4">
-            <h5 className="font-medium my-0 text-base text-gray-100">
-                {t("tag")}
-            </h5>
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 gap-4 mt-4">
+        <div className="flex flex-col flex-1 p-4">
+            {/* <Divider className="mx-10 my-4 cursor-pointer">
+                <h5 className="font-bold my-0 text-lg text-black uppercase">
+                    {t("tag")}
+                </h5>
+            </Divider> */}
+
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2  gap-y-4 gap-x-2 mt-4">
                 {tags
-                    ? tags.map((tag) => <TagCardItem tag={tag} key={tag.id} />)
+                    ? tags
+                          .slice(0, 4)
+                          .map((tag) => <TagCardItem tag={tag} key={tag.id} />)
                     : getDummy().map((value) => (
                           <Skeleton
                               variant="text"
@@ -233,7 +269,7 @@ function TagCard() {
                           />
                       ))}
             </div>
-        </Paper>
+        </div>
     );
 }
 
@@ -301,7 +337,7 @@ function ProductSlideNewProductCard() {
             </Divider>
             <Paper
                 elevation={0}
-                className="flex flex-col flex-1 p-4 bg-transparent"
+                className="flex flex-col flex-1 p-4 bg-transparent z-0"
             >
                 <ProductSwiper products={products} />
             </Paper>
@@ -376,7 +412,7 @@ function ProductSlideMostLikedProductCard() {
             </Divider>
             <Paper
                 elevation={0}
-                className="flex flex-col flex-1 p-4 bg-transparent"
+                className="flex flex-col flex-1 p-4   z-0 overflow-visible bg-transparent"
             >
                 <ProductSwiper products={products} />
             </Paper>
@@ -438,24 +474,94 @@ function ProductSlideDiscountProductCard() {
     };
 
     return (
-        <div className="flex flex-col flex-1  p-4 h-fit">
-            <Divider
+        <div className="relative flex p-4 w-full h-[400px] bg-sale overflow-visible mb-36">
+            {/* <Divider
                 className="mx-10 my-4 cursor-pointer"
                 onClick={handleDiscountClick}
             >
                 <h4 className="text-2xl my-0 text-primary_main">
                     {t("discountDish")}
                 </h4>
-            </Divider>
+            </Divider> */}
+
             <Paper
                 elevation={0}
-                className="flex flex-col flex-1 p-4 bg-transparent"
+                className="absolute top-5 right-0 w-[70%] h-fit flex flex-col flex-1 bg-transparent"
             >
-                <ProductSwiper products={products} />
+                <div className="flex flex-row items-center mb-2">
+                    <FaBoltLightning className="w-8 h-8 text-red_main" />
+                    <h4 className="text-2xl text-white font-bold uppercase">
+                        Ăn thả ga, không lo về giá
+                    </h4>
+                </div>
+
+                <div className="px-6 py-4 bg-orange-web  z-0 rounded-xl flex flex-col">
+                    <ProductDiscountSwiper products={products} />
+                    <Button
+                        variant="text"
+                        className="-ml-2 font-medium text-black normal-case text-base self-center"
+                        onClick={() => {}}
+                        endIcon={<LiaLongArrowAltRightSolid />}
+                    >
+                        {t("seeMores")}
+                    </Button>
+                </div>
             </Paper>
         </div>
     );
 }
+
+// function IntroductionCard() {
+//     const { t } = useTranslation();
+//     return (
+//         <div className="flex flex-row mx-2 py-4 space-x-4">
+//             <Paper className="w-1/4 flex flex-row items-center justify-center space-x-2 bg-light-pink py-4">
+//                 <FaShippingFast className="w-10 h-10 text-gray_100" />
+//                 <div>
+//                     <h1 className="text-2xl font-semibold text-black">
+//                         {t("freeShipping")}
+//                     </h1>
+//                     <p className="text-lg font-medium text-black">
+//                         {t("freeShippingDescription")}
+//                     </p>
+//                 </div>
+//             </Paper>
+//             <Paper className="w-1/4 flex flex-row items-center justify-center space-x-2 bg-light-pink py-4">
+//                 <FaShippingFast className="w-10 h-10 text-gray_100" />
+//                 <div>
+//                     <h1 className="text-2xl font-semibold text-black">
+//                         {t("securePayment")}
+//                     </h1>
+//                     <p className="text-lg font-medium text-black">
+//                         {t("securePaymentDescription")}
+//                     </p>
+//                 </div>
+//             </Paper>
+//             <Paper className="w-1/4 flex flex-row items-center justify-center space-x-2 bg-light-pink py-4">
+//                 <FaShippingFast className="w-10 h-10 text-gray_100" />
+//                 <div>
+//                     <h1 className="text-2xl font-semibold text-black">
+//                         {t("100%Satisfaction")}
+//                     </h1>
+//                     <p className="text-lg font-medium text-black">
+//                         {t("100%SatisfactionDescription")}
+//                     </p>
+//                 </div>
+//             </Paper>
+//             <Paper className="w-1/4 flex flex-row items-center justify-center space-x-2 bg-light-pink py-4">
+//                 <FaShippingFast className="w-10 h-10 text-gray_100" />
+//                 <div>
+//                     <h1 className="text-2xl font-semibold text-black">
+//                         {t("24hSupport")}
+//                     </h1>
+//                     <p className="text-lg font-medium text-black">
+//                         {t("24hSupportDescription")}
+//                     </p>
+//                 </div>
+//             </Paper>
+//         </div>
+//     );
+// }
 
 export default function Home() {
     const { t } = useTranslation();
@@ -463,15 +569,16 @@ export default function Home() {
     return (
         <div className="flex flex-1 flex-col">
             <Header />
-            <div className="flex flex-col flex-1 w-full p-4 bg-background_main space-y-4">
+            <div className="w-full h-[28rem] max-w-full shadow z-0">
+                <ImageSwiper />
+            </div>
+            <div className="flex flex-col flex-1 w-full p-4 bg-background_main">
+                {/* <IntroductionCard /> */}
                 <CategoryCard />
                 <TagCard />
-                <div className="w-full h-[24rem] max-w-full shadow">
-                    <ImageSwiper />
-                </div>
+                <ProductSlideDiscountProductCard />
                 <ProductSlideNewProductCard />
                 <ProductSlideMostLikedProductCard />
-                <ProductSlideDiscountProductCard />
             </div>
             <Footer />
         </div>

@@ -10,18 +10,21 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
+import { Button } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 export default function ImageSwiper() {
+    const { t } = useTranslation();
+    const navigate = useNavigate();
     return (
         <Swiper
             // install Swiper modules
             modules={[Navigation, Pagination, Scrollbar, A11y, EffectCreative]}
             slidesPerView={1}
-            navigation
-            pagination={{ clickable: true }}
             onSwiper={(swiper) => console.log(swiper)}
             onSlideChange={() => console.log("slide change")}
             autoplay={{
-                delay: 5000,
+                delay: 2500,
             }}
             className="w-full h-full"
             effect={"creative"}
@@ -37,17 +40,54 @@ export default function ImageSwiper() {
             cssMode={true}
         >
             <SwiperSlide>
-                <img
-                    src="/assets/image_14.png"
-                    className="w-full h-full object-cover object-center"
-                />
+                <div className="relative w-full h-full bg-blue">
+                    <div className=" absolute w-full h-full top-0 left-0 object-cover object-center  bg-blue">
+                        <img
+                            src="/assets/image_14.png"
+                            className="w-full h-full object-cover object-center "
+                        />
+                    </div>
+                    <div className="absolute bottom-40 left-20">
+                        <h1 className="text-[98px] leading-[88px] m-0  text-black font-bold">
+                            MTFOOD
+                        </h1>
+                        <p className="text-lg text-black font-bold m-0">
+                            {t("introduction")}
+                        </p>
+                        <Button
+                            className="bg-orange-web text-white hover:bg-rich-black mt-6"
+                            onClick={() => navigate("/product")}
+                        >
+                            {t("product")}
+                        </Button>
+                    </div>
+                </div>
             </SwiperSlide>
             <SwiperSlide>
-                <img
-                    src="/assets/image_15.png"
-                    className="w-full h-full object-cover object-center"
-                />
+                <div className="relative w-full h-full bg-blue">
+                    <div className=" absolute w-full h-full top-0 left-0 object-cover object-center  ">
+                        <img
+                            src="/assets/image_15.png"
+                            className="w-full h-full object-cover object-center "
+                        />
+                    </div>
+                    <div className="absolute bottom-40 left-20">
+                        <h1 className="text-[98px] leading-[88px] m-0  text-white font-bold">
+                            MTFOOD
+                        </h1>
+                        <p className="text-lg text-white font-bold m-0">
+                            {t("introduction")}
+                        </p>
+                        <Button
+                            className="bg-orange-web text-white hover:bg-rich-black mt-6"
+                            onClick={() => navigate("/product")}
+                        >
+                            {t("product")}
+                        </Button>
+                    </div>
+                </div>
             </SwiperSlide>
+            {/* <SwiperSlide></SwiperSlide> */}
         </Swiper>
     );
 }

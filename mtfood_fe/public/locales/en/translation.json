@@ -289,5 +289,20 @@
     "Contact": "Contact",
     "CancelOrder" : "Cancel order",
     "rateNow": "Rate",
-    "payNow": "Pay"
+    "payNow": "Pay",
+    "chatMessage": "Chat message",
+    "typeMessage": "Type message",
+    "searchProduct": "Search for products, categories...",
+    "introduction": "Shop your favorite snacks and more",
+    "seeMores": "See more",
+    "freeShipping": "Free shipping",
+    "freeShippingDescription": "Free shipping for order above 500K",
+    "securePayment": "Secure payment",
+    "securePaymentDescription": "",
+    "100%Satisfaction": "",
+    "100%SatisfactionDescription": "",
+    "24hSupport": "Online support",
+    "24SupportDescription": "We support online 24 hours a day",
+    "up": "& Up",
+    "deleteAll": "Delete all"
 }
