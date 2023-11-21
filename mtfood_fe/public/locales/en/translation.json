@@ -304,5 +304,13 @@
     "24hSupport": "Online support",
     "24SupportDescription": "We support online 24 hours a day",
     "up": "& Up",
-    "deleteAll": "Delete all"
+    "deleteAll": "Delete all",
+    "pleaseSignin": "Please Sign in",
+    "pleaseSigninDialog": "You must sign in to continue",
+    "pleaseChooseProduct": "Please choose product to continue",
+    "likeProductSuccessfully": "Like product successfully",
+    "likeProductUnsuccessfully": "Something went wrong, please try again!",
+    "removeLikedProductSuccessfully": "Unlike product",
+    "addLikedProductSuccessfully": "Like product",
+    "errorMessage": "Something went wrong, please try again!"
 }

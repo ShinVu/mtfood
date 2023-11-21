@@ -6,6 +6,7 @@ import utc from "dayjs/plugin/utc";
 import { update } from "lodash";
 import { string } from "yup";
 import { addressType, userType } from "../../models/user.model";
+import { AlertColor } from "@mui/material";
 dayjs.extend(utc);
 
 const getLocalStorage = (key: string) => {
@@ -36,6 +37,12 @@ const initialState: initialStateType = {
         updateFlag: false,
     },
     currentAddress: null,
+    logInDialogState: false,
+    snackbarState: {
+        open: false,
+        message: undefined,
+        severity: undefined,
+    },
 };
 
 type initialStateType = {
@@ -57,6 +64,12 @@ type initialStateType = {
         updateFlag: boolean;
     };
     currentAddress: addressType | null;
+    logInDialogState: boolean;
+    snackbarState: {
+        open: boolean;
+        message: string | undefined;
+        severity: undefined | AlertColor;
+    };
 };
 export const authenticationSlice = createSlice({
     name: "authentication",
@@ -174,6 +187,26 @@ export const authenticationSlice = createSlice({
             const currentAddress = action.payload;
             state.currentAddress = currentAddress;
         },
+        handleLogInDialogOpen(state) {
+            state.logInDialogState = true;
+        },
+        handleLogInDialogClose(state) {
+            state.logInDialogState = false;
+        },
+        handleSnackbarDialogOpen(state, action) {
+            const { message, severity } = action.payload;
+            state.snackbarState = {
+                open: true,
+                message: message,
+                severity: severity,
+            };
+        },
+        handleSnackbarDialogClose(state) {
+            state.snackbarState = {
+                ...state.snackbarState,
+                open: false,
+            };
+        },
     },
 });
 
@@ -194,6 +227,10 @@ export const {
     setCurrentAddress,
     setAddressInitialDialogStateToInitial,
     setAddressInitialDialogState,
+    handleLogInDialogOpen,
+    handleLogInDialogClose,
+    handleSnackbarDialogOpen,
+    handleSnackbarDialogClose,
 } = authenticationSlice.actions;
 
 // Export reducer to create store in app/store.tsx

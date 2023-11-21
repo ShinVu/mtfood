@@ -59,10 +59,11 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/productByCategory', 'getProductByCategory');
     Route::get('/productByFilter', 'getProductByFilter');
     Route::get('/productSearch', 'getProductByKeyword');
-    Route::post('addSeenProduct', 'addSeenProduct');
-    Route::post('addLikedProduct', 'addLikedProduct');
-    Route::post('getSeenProduct', 'getSeenProduct');
-    Route::post('getLikedProduct', 'getLikedProduct');
+    Route::post('/addSeenProduct', 'addSeenProduct');
+    Route::post('/addLikedProduct', 'addLikedProduct');
+    Route::post('/getSeenProduct', 'getSeenProduct');
+    Route::post('/getProductLikeStatus', 'getProductLikeStatus');
+    Route::post('/getLikedProduct', 'getLikedProduct');
 });
 
 Route::controller(ProfileController::class)->group(function () {

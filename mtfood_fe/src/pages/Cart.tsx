@@ -17,6 +17,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { TextField } from "@mui/material";
 import { BiSolidDiscount } from "react-icons/bi";
+import DeleteIcon from "@mui/icons-material/Delete";
 //Import color
 import { colors } from "../../public/theme.js";
 //Import components
@@ -45,36 +46,18 @@ import {
 } from "../features/product/productSlice.js";
 import usePriceCart from "../hooks/usePrice.js";
 import usePriceCheckout from "../hooks/usePriceCheckout.js";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import {
+    handleLogInDialogOpen,
+    handleSnackbarDialogOpen,
+} from "../features/authentication/authenticationSlice.js";
+import axiosClient from "../../axios-client.js";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
         border: 0,
     },
 }));
-
-const products = [
-    {
-        id: 1,
-        name: "Khô bò",
-        basePrice: "đ1.000.000",
-        quantity: "12",
-        price: "đ500.000",
-    },
-    {
-        id: 1,
-        name: "Khô bò",
-        basePrice: "đ1.000.000",
-        quantity: "12",
-        price: "đ500.000",
-    },
-    {
-        id: 1,
-        name: "Khô bò",
-        basePrice: "đ1.000.000",
-        quantity: "12",
-        price: "đ500.000",
-    },
-];
 
 function ProductCartItemCard({ product }: { product: productCart }) {
     const navigate = useNavigate();
@@ -83,7 +66,9 @@ function ProductCartItemCard({ product }: { product: productCart }) {
     const [quantity, setQuantity] = useState<number>(
         product.quantityForProduct
     );
+    const [likeProduct, setLikeProduct] = useState<boolean>(false);
     //Redux
+    const { user, token } = useAppSelector((state) => state.authentication);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -116,6 +101,35 @@ function ProductCartItemCard({ product }: { product: productCart }) {
     const checkChange = () => {
         const productCart = { ...product, check: !product.check };
         dispatch(addProductToCart(productCart));
+    };
+
+    const handleLikeProduct = () => {
+        if (token) {
+            const payload = {
+                productId: product.id,
+                customerId: user.id,
+            };
+
+            axiosClient
+                .post("/addLikedProduct", payload)
+                .then(({ data }) => {
+                    dispatch(
+                        handleSnackbarDialogOpen({
+                            message: data.message,
+                            severity: "success",
+                        })
+                    );
+                    setLikeProduct(!likeProduct);
+                })
+                .catch(({ response }) =>
+                    handleSnackbarDialogOpen({
+                        message: response.data.message,
+                        severity: "error",
+                    })
+                );
+        } else {
+            dispatch(handleLogInDialogOpen());
+        }
     };
     return (
         <StyledTableRow>
@@ -220,15 +234,28 @@ function ProductCartItemCard({ product }: { product: productCart }) {
                 </div>
             </TableCell>
             <TableCell align="center">
-                <FavoriteBorderIcon sx={{ fontSize: 24 }} />
+                {likeProduct ? (
+                    <IconButton aria-label="like" onClick={handleLikeProduct}>
+                        <FavoriteIcon
+                            sx={{
+                                color: "#2e7d32",
+                            }}
+                        />
+                    </IconButton>
+                ) : (
+                    <IconButton aria-label="like" onClick={handleLikeProduct}>
+                        <FavoriteBorderIcon
+                            sx={{
+                                color: colors.primary_main,
+                            }}
+                        />
+                    </IconButton>
+                )}
             </TableCell>
             <TableCell align="center">
-                <div
-                    className="flex justify-center cursor-pointer"
-                    onClick={deleteProduct}
-                >
-                    <RiDeleteBin6Line className="w-6 h-6" />
-                </div>
+                <IconButton aria-label="delete" onClick={deleteProduct}>
+                    <DeleteIcon />
+                </IconButton>
             </TableCell>
         </StyledTableRow>
     );
@@ -244,10 +271,7 @@ function ProductCartItems({
     const navigate = useNavigate();
     const { t } = useTranslation();
     //Redux
-    const dispatch = useAppDispatch();
-    const handleAllChecked = () => {
-        dispatch(setAllProductCheckedCart());
-    };
+
     return (
         <div className="flex flex-1 bg-white">
             <Table>
@@ -512,7 +536,22 @@ function OrderProceedCard({
     const handleAllRemoved = () => {
         dispatch(removeAllProductFromCart());
     };
-
+    const { token } = useAppSelector((state) => state.authentication);
+    //Cart prices
+    const priceCart = usePriceCart();
+    const handleNavigateMustLogIn = (navigateRoute: string) => {
+        if (!token) {
+            dispatch(handleLogInDialogOpen());
+        } else if (priceCart?.totalPrice === 0) {
+            const payload = {
+                message: "pleaseChooseProduct",
+                severity: "error",
+            };
+            dispatch(handleSnackbarDialogOpen(payload));
+        } else {
+            navigate(navigateRoute);
+        }
+    };
     return (
         <div className="flex flex-1 flex-col bg-white p-4">
             <div className="flex flex-1 justify-end items-center space-x-24 px-4">
@@ -545,11 +584,6 @@ function OrderProceedCard({
                             {t("delete")}
                         </span>
                     </TextButton>
-                    <TextButton>
-                        <span className="my-0 text-sm font-medium text-blue normal-case ">
-                            {t("addFavorite")}
-                        </span>
-                    </TextButton>
                 </div>
 
                 <div className="flex w-fit px-4 items-center space-x-48">
@@ -557,7 +591,7 @@ function OrderProceedCard({
                     <div>
                         <ContainedButton
                             className="h-fit bg-primary_main"
-                            onClick={() => navigate("/checkout")}
+                            onClick={() => handleNavigateMustLogIn("/checkout")}
                         >
                             <span>{t("buy")}</span>
                         </ContainedButton>

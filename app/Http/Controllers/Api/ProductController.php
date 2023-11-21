@@ -18,6 +18,7 @@ use App\Http\Requests\GetProductNewRequest;
 use App\Http\Requests\GetProductReview;
 use App\Http\Requests\getSeenProductRequest;
 use App\Http\Requests\GetTagRequest;
+use App\Http\Requests\productLikeStatusRequest;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Order;
@@ -566,6 +567,33 @@ class ProductController extends Controller
 
 
             return response(['message' => 'getUserLikeProductSuccessfully', 'result' => ['product' => $products, 'totalPage' => $totalPageProduct]], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+    public function getProductLikeStatus(productLikeStatusRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            //Customer collection that matches id
+            $user = Customer::where('id', $data['customerId']);
+            $token = $request->bearerToken();
+
+            //Check if customer id exists
+            if (!$user->exists()) {
+                return response(['message' => 'userInvalid', 'result' => []], 422);
+            }
+
+            //Check request authorization
+            if ($token != $user->first()['remember_token']) {
+                return response(['message' => 'invalidAccess', 'result' => []], 401);
+            }
+
+            //Add seen product
+            $userLikeProduct = UserLikeProduct::where('customer_id', $data['customerId'])->where('product_id', $data['productId']);
+            $userLikeStatus = $userLikeProduct->exists();
+            return response(['message' => 'getProductLikeStatus', 'result' => ['status' => $userLikeStatus]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
         }

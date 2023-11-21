@@ -52,7 +52,11 @@ import { addProductToCart } from "../features/product/productSlice.js";
 import usePriceCart from "../hooks/usePrice.js";
 import AddressDialog from "../features/profile/addressDialog.js";
 import { current } from "@reduxjs/toolkit";
-import { setAddress } from "../features/authentication/authenticationSlice.js";
+import {
+    handleSnackbarDialogClose,
+    handleSnackbarDialogOpen,
+    setAddress,
+} from "../features/authentication/authenticationSlice.js";
 import { debounce } from "lodash";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
@@ -115,6 +119,29 @@ function ProductMainCard({
         }
     }, [addresses]);
 
+    useEffect(() => {
+        const fetchLikeStatus = () => {
+            if (user && product) {
+                const payload = {
+                    customerId: user.id,
+                    productId: product.id,
+                };
+                axiosClient
+                    .post("/getProductLikeStatus", payload)
+                    .then(({ data }) => {
+                        setLikedProduct(data.result.status);
+                    })
+                    .catch(({ response }) =>
+                        handleSnackbarDialogOpen({
+                            message: response.data.message,
+                            severity: "error",
+                        })
+                    );
+            }
+        };
+
+        fetchLikeStatus();
+    }, [user, product]);
     //Add to user_see_product
     useEffect(() => {
         const addUserSeeProduct = () => {
@@ -125,12 +152,8 @@ function ProductMainCard({
                 };
                 axiosClient
                     .post("/addSeenProduct", payload)
-                    .then(({ data }) => {
-                        console.log(data);
-                    })
-                    .catch(({ response }) => {
-                        console.log(response);
-                    });
+                    .then(({ data }) => {})
+                    .catch(({ response }) => {});
             }
         };
 
@@ -140,8 +163,8 @@ function ProductMainCard({
     //Add like product
 
     const handleLikeProduct = useCallback(
-        debounce((likeProduct) => {
-            if (user && user.id && product && product.id) {
+        debounce((user, product, likeProduct) => {
+            if (user && product) {
                 const payload = {
                     customerId: user.id,
                     productId: product.id,
@@ -149,13 +172,23 @@ function ProductMainCard({
                 axiosClient
                     .post("/addLikedProduct", payload)
                     .then(({ data }) => {
-                        console.log(data);
+                        dispatch(
+                            handleSnackbarDialogOpen({
+                                message: data.message,
+                                severity: "success",
+                            })
+                        );
+                        setLikedProduct(!likeProduct);
                     })
                     .catch(({ response }) => {
-                        console.log(response);
+                        dispatch(
+                            handleSnackbarDialogOpen({
+                                message: response.data.message,
+                                severity: "error",
+                            })
+                        );
                     });
             }
-            setLikedProduct(!likeProduct);
         }, 300),
         []
     );
@@ -255,12 +288,16 @@ function ProductMainCard({
                                         sx={{ textTransform: "none" }}
                                         className="bg-transparent"
                                         onClick={() =>
-                                            handleLikeProduct(likeProduct)
+                                            handleLikeProduct(
+                                                user,
+                                                product,
+                                                likeProduct
+                                            )
                                         }
                                         startIcon={
                                             <FavoriteIcon
                                                 sx={{
-                                                    color: colors.primary_main,
+                                                    color: "#2e7d32",
                                                 }}
                                             />
                                         }
@@ -276,7 +313,11 @@ function ProductMainCard({
                                         sx={{ textTransform: "none" }}
                                         className="bg-transparent"
                                         onClick={() =>
-                                            handleLikeProduct(likeProduct)
+                                            handleLikeProduct(
+                                                user,
+                                                product,
+                                                likeProduct
+                                            )
                                         }
                                         startIcon={
                                             <FavoriteBorderIcon

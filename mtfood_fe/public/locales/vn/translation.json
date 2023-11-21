@@ -306,5 +306,13 @@
     "24hSupport": "Hỗ trợ Online",
     "24SupportDescription": "Chúng tôi hỗ trợ online 24 giờ mỗi ngày",
     "up": "trở lên",
-    "deleteAll": "Xóa tất cả"
+    "deleteAll": "Xóa tất cả",
+    "pleaseSignin": "Xin vui lòng đăng nhập",
+    "pleaseSigninDialog": "Bạn cần phải đăng nhập để có thể tiếp tục.",
+    "pleaseChooseProduct": "Xin vui lòng chọn sản phẩm cần mua",
+    "likeProductSuccessfully": "Thích sản phẩm thành công",
+    "likeProductUnsuccessfully": "Thích sản phẩm không thành công",
+    "removeLikedProductSuccessfully": "Bỏ thích sản phẩm thành công",
+    "addLikedProductSuccessfully": "Thich sản phẩm thành công",
+    "errorMessage": "Có lỗi xảy ra, xin vui lòng thử lại sau!"
 }
