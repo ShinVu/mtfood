@@ -37,12 +37,12 @@
     </a>
     <div class="dropdown" style="margin-right: 10px;">
         <button class="btn dropdown-toggle" style="background: none;color: white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span style="font-size: 16px;">Xin chào</span>
-            <img src="" onerror="this.src='https://123code.net/images/preloader.png';" style="width: 40px;height: 40px;border-radius: 50%" alt="">
+            <span style="font-size: 16px;">Xin chào {{ get_data_user('web','name') }}</span>
+            <img src="{{ pare_url_file(get_data_user('web','avatar')) }}" onerror="this.src='https://123code.net/images/preloader.png';" style="width: 40px;height: 40px;border-radius: 50%" alt="">
         </button>
         <div class="dropdown-menu" style="left: unset;right: 10px" aria-labelledby="dropdownMenu2">
-            <a href="{{ route('get_admin.home') }}" class="dropdown-item" title="Cập nhật thông tin">Cập nhật thông tin</a>
-            <a href="{{ route('get_admin.home') }}" title="Đăng xuất" class="dropdown-item">Đăng xuất</a>
+{{--            <a href="{{ route('get_admin.home') }}" class="dropdown-item" title="Cập nhật thông tin">Cập nhật thông tin</a>--}}
+            <a href="{{ route('get_admin.logout') }}" title="Đăng xuất" class="dropdown-item">Đăng xuất</a>
         </div>
     </div>
 </nav>

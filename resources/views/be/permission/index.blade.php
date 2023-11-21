@@ -36,7 +36,7 @@
             </table>
         </div>
         <div>
-            {!! $permissions->appends($query ?? [])->links() !!}
+            {!! $permissions->appends($query ?? [])->links('vendor.pagination.bootstrap-4') !!}
         </div>
     </div>
 @stop

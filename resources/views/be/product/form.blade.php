@@ -76,13 +76,13 @@
                     </a>
                 @endforeach
             @endif
-            <div class="form-group">
-                <label for="exampleInputEmail1">Album ảnh</label>
-                <div class="file-loading">
-                    <input id="images" type="file" name="file[]" multiple class="file"
-                           data-overwrite-initial="false" data-min-file-count="0">
-                </div>
-            </div>
+{{--            <div class="form-group">--}}
+{{--                <label for="exampleInputEmail1">Album ảnh</label>--}}
+{{--                <div class="file-loading">--}}
+{{--                    <input id="images" type="file" name="file[]" multiple class="file"--}}
+{{--                           data-overwrite-initial="false" data-min-file-count="0">--}}
+{{--                </div>--}}
+{{--            </div>--}}
             <div id="wrap-row-menu">
                 <h5>Giá sỉ</h5>
                 @if(isset($productsWholesale) && $productsWholesale && !$productsWholesale->IsEmpty())
@@ -165,70 +165,6 @@
             <div class="row">
                 <div class="form-group">
                     <a id="copy_menu" class="col-sm-12" href="javascript:void(0)"><i class="fa fa-plus"></i> Thêm menu</a>
-                </div>
-            </div>
-
-            <div id="wrap-row-option">
-                <h5>Option</h5>
-                @if(isset($productValues) && $productValues && !$productValues->IsEmpty())
-                    @foreach($productValues as $key => $value)
-                        <div class="row row-menu {{ $key == 0 ? 'row-option-temple' : '' }}">
-                            <div class="col-sm-3">
-                                <div class="form-group mlr-10">
-                                    <select name="options[productOptionId][]" id="" class="form-control">
-                                        @foreach($productOptions ?? [] as $item)
-                                            <option value="{{ $item->id }}" {{ $value->product_option_id == $item->id ? "selected" : "" }}>{{ $item->option_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group mlr-10">
-                                    <input type="text" class="form-control" name="options[value][]"
-                                           value="{{ $value->name_value }}"
-                                           placeholder="Giá trị"/>
-                                </div>
-                            </div>
-                            <div class="col-md-2 action-row-menu hide">
-                                <div class="form-group">
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-default btn-remove"><i class="fa fa-trash"></i>  </a>
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-default btn-move-up"><i class="fa fa-arrow-up"></i></a>
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-default btn-move-down"><i class="fa fa-arrow-down"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                @else
-                    <div class="row row-menu row-option-temple">
-                        <div class="col-sm-3">
-                            <div class="form-group mlr-10">
-                                <select name="options[productOptionId][]" id="" class="form-control">
-                                    @foreach($productOptions ?? [] as $item)
-                                        <option value="{{ $item->id }}">{{ $item->option_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group mlr-10">
-                                <input type="text" class="form-control" name="options[value][]"
-                                       value=""
-                                       placeholder="Giá trị"/>
-                            </div>
-                        </div>
-                        <div class="col-md-2 action-row-menu hide">
-                            <div class="form-group">
-                                <a href="javascript:void(0)" class="btn btn-sm btn-default btn-remove"><i class="fa fa-trash"></i>  </a>
-                                <a href="javascript:void(0)" class="btn btn-sm btn-default btn-move-up"><i class="fa fa-arrow-up"></i></a>
-                                <a href="javascript:void(0)" class="btn btn-sm btn-default btn-move-down"><i class="fa fa-arrow-down"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-            </div>
-            <div class="row">
-                <div class="form-group">
-                    <a id="copy_option" class="col-sm-12" href="javascript:void(0)"><i class="fa fa-plus"></i> Thêm option</a>
                 </div>
             </div>
 

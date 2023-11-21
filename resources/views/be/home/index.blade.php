@@ -16,26 +16,26 @@
             <div class="col-sm-4">
                 <div class="row">
                     <div class="col-sm-6 mb-4">
-                        <h6 class="text-center">Lượt truy cập</h6>
+                        <h6 class="text-center">Tổng số sản phẩm</h6>
                         <div class="text-center">
                             <p style="width: 120px;height: 120px;border-radius: 50%;background-color: #f2f2f2;display: flex;justify-content: center;align-items: center;margin: 0 auto">
-                                <span style="color: #000">100</span>
+                                <span style="color: #000">{{ $totalProduct ?? 0 }}</span>
                             </p>
                         </div>
                     </div>
                     <div class="col-sm-6 mb-4">
-                        <h6 class="text-center">Số tin nhắn</h6>
+                        <h6 class="text-center">Số đơn hàng</h6>
                         <div class="text-center">
                             <p style="width: 120px;height: 120px;border-radius: 50%;background-color: #f2f2f2;display: flex;justify-content: center;align-items: center;margin: 0 auto">
-                                <span style="color: #000">100</span>
+                                <span style="color: #000">{{ $totalOrders ?? 0 }}</span>
                             </p>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <h6 class="text-center">Số đơn hàng</h6>
+                        <h6 class="text-center">Số lượng chat</h6>
                         <div class="text-center">
                             <p style="width: 120px;height: 120px;border-radius: 50%;background-color: #f2f2f2;display: flex;justify-content: center;align-items: center;margin: 0 auto">
-                                <span style="color: #000">100</span>
+                                <span style="color: #000">{{ $totalChat ?? 0 }}</span>
                             </p>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                         <h6 class="text-center">Số khách hàng</h6>
                         <div class="text-center">
                             <p style="width: 120px;height: 120px;border-radius: 50%;background-color: #f2f2f2;display: flex;justify-content: center;align-items: center;margin: 0 auto">
-                                <span style="color: #000">100</span>
+                                <span style="color: #000">{{ $totalUser ?? 0  }}</span>
                             </p>
                         </div>
                     </div>

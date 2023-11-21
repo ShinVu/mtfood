@@ -25,7 +25,6 @@
                     <th>#</th>
                     <th>Avatar</th>
                     <th>Tên danh mục</th>
-                    <th>Slug</th>
                     <th>Mô tả</th>
                     <th>Ngày tạo</th>
                     <th>Thao tác</th>
@@ -39,7 +38,6 @@
                             <img src="{{ pare_url_file($item->image_url) }}" style="width: 60px;height: 60px; border-radius: 10px" alt="">
                         </td>
                         <td>{{ $item->name }}</td>
-                        <td>{{ $item->slug }}</td>
                         <td>{{ $item->description }}</td>
                         <td>{{ $item->created_at }}</td>
                         <td>
