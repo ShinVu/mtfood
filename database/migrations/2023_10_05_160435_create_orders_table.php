@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('delivery_method'); //Delivery method
             $table->longText('notes'); //order notes
             $table->string('order_code'); //order code
-            $table->enum('status', ['created', 'waiting_payment', 'waiting_confirm_payment', 'waiting_confirm', 'packing', 'waiting_shipment', 'shipping', 'delivered', 'completed', 'cancel_waiting_refund', 'canceled_refund', 'canceled', 'return_wating_refund', 'returned']); //Order states
+            $table->enum('status', ['created', 'waiting_payment', 'waiting_confirm_payment', 'waiting_confirm', 'packing', 'waiting_shipment', 'shipping', 'delivered', 'completed', 'cancel_waiting_refund', 'canceled_refund', 'canceled', 'return_waiting_refund', 'returned']); //Order states
             $table->dateTime('confirmed_at')->nullable(); // when order is confirmed
             $table->dateTime('shipping_at')->nullable(); //when order is transfer to shipping party
             $table->dateTime('delivered_at')->nullable(); //when order is delivered

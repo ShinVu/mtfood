@@ -253,7 +253,7 @@
     "orderCanceledWaitingRefund": "Order is cancel. We will contact you for refunding soon",
     "orderCanceledRefund": "Order is canceled and refunded",
     "orderCanceled": "Order is canceled",
-    "orderReturenWaitingRefund": "Order is being returned. We will contact you for refunding soon",
+    "orderReturnWaitingRefund": "Order is being returned. We will contact you for refunding soon",
     "orderReturn": "Order is returned",
     "created": "Created",
     "waiting_payment" : "Waiting Payment",

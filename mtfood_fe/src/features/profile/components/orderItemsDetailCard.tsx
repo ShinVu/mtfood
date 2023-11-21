@@ -75,18 +75,28 @@ export default function OrderItemsDetailCard({
                                 </div>
                             </TableCell>
                             <TableCell align="right">
-                                {changePriceFormat(orderDetail.unit_discount)}
+                                <p className="font-medium text-base text-black">
+                                    {changePriceFormat(
+                                        orderDetail.unit_discount
+                                    )}
+                                    đ
+                                </p>
                             </TableCell>
                             <TableCell align="right">
-                                {orderDetail.quantity}
+                                <p className="font-regular text-base text-black">
+                                    {orderDetail.quantity}
+                                </p>
                             </TableCell>
                             <TableCell align="right">
-                                {changePriceFormat(
-                                    getOrderItemSubTotal(
-                                        orderDetail.unit_discount,
-                                        orderDetail.quantity
-                                    )
-                                )}
+                                <p className="font-medium text-base text-red_main">
+                                    {changePriceFormat(
+                                        getOrderItemSubTotal(
+                                            orderDetail.unit_discount,
+                                            orderDetail.quantity
+                                        )
+                                    )}
+                                    đ
+                                </p>
                             </TableCell>
                         </StyledTableRow>
                     ))}

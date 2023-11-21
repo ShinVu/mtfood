@@ -32,7 +32,7 @@ import {
     order_states,
 } from "../features/order/components/message..js";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { orderType } from "../models/order.model.js";
 import axiosClient from "../../axios-client.js";
 import { setAddress } from "../features/authentication/authenticationSlice.js";
@@ -61,7 +61,10 @@ function OrderSummary({ order }: { order: orderType }) {
                                 </span>
                             </TableCell>
                             <TableCell align="right">
-                                {changePriceFormat(billing.subTotal)}
+                                <p className="text-base font-medium text-black">
+                                    {" "}
+                                    {changePriceFormat(billing.subTotal)}đ
+                                </p>
                             </TableCell>
                         </StyledTableRow>
                         <StyledTableRow>
@@ -71,7 +74,9 @@ function OrderSummary({ order }: { order: orderType }) {
                                 </span>
                             </TableCell>
                             <TableCell align="right">
-                                {changePriceFormat(billing.shippingFee)}
+                                <p className="text-base font-medium text-black">
+                                    {changePriceFormat(billing.shippingFee)}đ
+                                </p>
                             </TableCell>
                         </StyledTableRow>
                         <StyledTableRow>
@@ -81,7 +86,12 @@ function OrderSummary({ order }: { order: orderType }) {
                                 </span>
                             </TableCell>
                             <TableCell align="right">
-                                {changePriceFormat(billing.shippingDiscount)}
+                                <p className="text-base font-medium text-black">
+                                    {changePriceFormat(
+                                        billing.shippingDiscount
+                                    )}
+                                    đ
+                                </p>
                             </TableCell>
                         </StyledTableRow>
                         <StyledTableRow>
@@ -91,7 +101,11 @@ function OrderSummary({ order }: { order: orderType }) {
                                 </span>
                             </TableCell>
                             <TableCell align="right">
-                                {changePriceFormat(billing.voucherDiscount)}
+                                <p className="text-base font-medium text-black">
+                                    {" "}
+                                    {changePriceFormat(billing.voucherDiscount)}
+                                    đ
+                                </p>
                             </TableCell>
                         </StyledTableRow>
                         <StyledTableRow>
@@ -102,7 +116,7 @@ function OrderSummary({ order }: { order: orderType }) {
                             </TableCell>
                             <TableCell align="right">
                                 <span className="text-2xl font-bold text-red_main">
-                                    {changePriceFormat(billing.total)}
+                                    {changePriceFormat(billing.total)}đ
                                 </span>
                             </TableCell>
                         </StyledTableRow>
@@ -179,6 +193,7 @@ function MapToButton({ order }: { order: orderType }) {
 }
 export default function OrderDetail() {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const { user, currentAddress, addresses } = useAppSelector(
         (state) => state.authentication
     );
@@ -236,7 +251,10 @@ export default function OrderDetail() {
                     <div className="flex flex-col space-y-4 flex-1">
                         <Paper elevation={2} className="p-4">
                             <div className="flex flex-row w-full justify-between ">
-                                <div className="flex flex-row items-center">
+                                <div
+                                    className="flex flex-row items-center cursor-pointer"
+                                    onClick={() => navigate(-1)}
+                                >
                                     <KeyboardArrowLeftIcon />
                                     <p className="text-gray-100 text-base font-normal my-0">
                                         {t("back")}

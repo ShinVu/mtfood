@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Models\ChatMessage;
 use App\Models\ChatSession;
 use App\Models\ProductHaveTag;
+use App\Models\ProductImage;
 use App\Models\ProductWholesalePricing;
 use Database\Factories\OrderDiscountFactory;
 use Illuminate\Database\Seeder;
@@ -21,30 +22,31 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            // SqlFileSeeder::class,  //Seeder to import locations file, only work if config {1. Go to PhpMyadmin, 2. Query: SET GLOBAL max_allowed_packet=1073741824;}
-            // EmployeeSeeder::class,
-            // ShiftSeeder::class,
-            // ParticipationSeeder::class,
-            // CustomerSeeder::class,
-            // ProductCategorySeeder::class,
-            // ProductSeeder::class,
-            // ProductDiscountSeeder::class,
-            // ProductPricingSeeder::class,
-            // ProductWholesalePricingSeeder::class,
-            // ProductBatchSeeder::class,
-            // ProductTagSeeder::class,
-            // SupplierSeeder::class,
-            // ImportOrderSeeder::class,
-            // ImportOrderDetailSeeder::class,
-            // ChatSessionSeeder::class,
-            // ChatSessionParticipationSeeder::class,
-            // ChatMessageSeeder::class,
-            // ProductHaveTagSeeder::class,
-            // DeliveryAddressSeeder::class,
-            // OrderDiscountSeeder::class,
+            SqlFileSeeder::class,  //Seeder to import locations file, only work if config {1. Go to PhpMyadmin, 2. Query: SET GLOBAL max_allowed_packet=1073741824;}
+            EmployeeSeeder::class,
+            ShiftSeeder::class,
+            ParticipationSeeder::class,
+            CustomerSeeder::class,
+            ProductCategorySeeder::class,
+            ProductSeeder::class,
+            ProductDiscountSeeder::class,
+            ProductPricingSeeder::class,
+            ProductWholesalePricingSeeder::class,
+            ProductBatchSeeder::class,
+            ProductTagSeeder::class,
+            SupplierSeeder::class,
+            ImportOrderSeeder::class,
+            ImportOrderDetailSeeder::class,
+            ChatSessionSeeder::class,
+            ChatSessionParticipationSeeder::class,
+            ChatMessageSeeder::class,
+            ProductHaveTagSeeder::class,
+            DeliveryAddressSeeder::class,
+            OrderDiscountSeeder::class,
             OrderSeeder::class,
             OrderDetailSeeder::class,
-            // ReviewSeeder::class
+            ReviewSeeder::class,
+            ProductImageSeeder::class
         ]);
     }
 }

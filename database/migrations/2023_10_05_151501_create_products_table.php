@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id(); //product primary key
             $table->string('name'); //product name
-            $table->string('image_url'); //product image url
+            $table->string('image_url', 2048); //product image url
             $table->longText('description'); //product description
             $table->boolean('status')->default(1); //product status: if product is available or not
             $table->unsignedDecimal('price', $precision = 19, $scale = 4); //current price of product
