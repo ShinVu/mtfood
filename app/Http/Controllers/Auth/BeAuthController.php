@@ -20,7 +20,6 @@ class BeAuthController extends Controller
             'email'    => $request->email,
             'password' => $request->password,
         ];
-
         if (Auth::attempt($credentials)) {
             return redirect()->route('get_admin.home');
         }

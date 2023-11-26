@@ -26,6 +26,7 @@ import {
 import { colors } from "../../public/theme.js";
 import ProductDiscountSwiper from "../components/productSwiper/productDiscountSwiper.js";
 import { t } from "i18next";
+import MyMap from "../components/map.js";
 
 type product = {
     id: number;
@@ -573,13 +574,13 @@ export default function Home() {
                 <ImageSwiper />
             </div>
             <div className="flex flex-col flex-1 w-full p-4 bg-background_main">
-                {/* <IntroductionCard /> */}
                 <CategoryCard />
                 <TagCard />
                 <ProductSlideDiscountProductCard />
                 <ProductSlideNewProductCard />
                 <ProductSlideMostLikedProductCard />
             </div>
+
             <Footer />
         </div>
     );

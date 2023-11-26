@@ -34,6 +34,7 @@ import {
     addAddress,
     updateAddress,
 } from "../../authentication/authenticationSlice";
+import MyMap from "../../../components/map";
 
 export default function AddAddressDialog(props) {
     //Redux
@@ -337,6 +338,9 @@ export default function AddAddressDialog(props) {
                             placeholder={t("addressField")}
                             {...register("address")}
                         />
+                    </div>
+                    <div className="h-96 w-full">
+                        <MyMap />
                     </div>
                     <div className="flex flex-1 flex-col">
                         <h1 className="font-medium text-sm text-black">
