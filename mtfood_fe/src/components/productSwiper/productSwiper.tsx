@@ -41,7 +41,7 @@ function ProductSwiperCard(props: { product: any; className?: string }) {
                     component="img"
                     image={product.image_url}
                     alt="green iguana"
-                    className="w-full h-56 object-cover object-center"
+                    className="w-full aspect-square object-cover object-center"
                     loading="lazy"
                 />
                 <CardContent className="p-3 w-full">
@@ -161,8 +161,8 @@ export default function ProductSwiper(props: {
                               />
                           </SwiperSlide>
                       ))
-                    : getDummy().map((value) => (
-                          <SwiperSlide key={value} className="py-8">
+                    : getDummy().map((value, index) => (
+                          <SwiperSlide key={index} className="py-8">
                               <ProductSwiperSkeleton />
                           </SwiperSlide>
                       ))}

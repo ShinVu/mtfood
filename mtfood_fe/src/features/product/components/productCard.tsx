@@ -21,7 +21,7 @@ export default function ProductCard(props: {
                     component="img"
                     image={product.image_url}
                     alt="green iguana"
-                    className="w-full h-44 object-cover object-center"
+                    className="w-full aspect-square object-cover object-center"
                     loading="lazy"
                 />
                 <CardContent className="p-3 w-full">

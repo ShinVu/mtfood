@@ -41,7 +41,7 @@ function ProductSwiperCard(props: { product: any; className?: string }) {
                     component="img"
                     image={product.image_url}
                     alt="green iguana"
-                    className="w-full h-56 object-cover object-center"
+                    className="w-full  object-cover object-center"
                     loading="lazy"
                 />
                 <CardContent className="p-3 w-full">
@@ -148,7 +148,7 @@ export default function ProductDiscountSwiper(props: {
                 cssMode={true}
                 className="pb-4"
             >
-                {products.length > 0
+                {products && products.length > 0
                     ? products.map((product: any) => (
                           <SwiperSlide
                               key={product.id}
@@ -156,13 +156,13 @@ export default function ProductDiscountSwiper(props: {
                           >
                               <ProductSwiperCard
                                   product={product}
-                                  className="h-fit transition ease-in-out delay-150  hover:-translate-y-2 hover:scale-105 overflow-visible"
+                                  className="h-auto transition ease-in-out delay-150  hover:-translate-y-2 hover:scale-105 overflow-visible"
                                   key={product.id}
                               />
                           </SwiperSlide>
                       ))
-                    : getDummy().map((value) => (
-                          <SwiperSlide key={value} className="py-8">
+                    : getDummy().map((value, index) => (
+                          <SwiperSlide key={index} className="py-8">
                               <ProductSwiperSkeleton />
                           </SwiperSlide>
                       ))}

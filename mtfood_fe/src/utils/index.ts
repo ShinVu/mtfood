@@ -76,13 +76,13 @@ function getItemsPerPage() {
             itemsPerRow = 3;
             break;
         case "lg":
-            itemsPerRow = 4;
+            itemsPerRow = 3;
             break;
         case "xl":
-            itemsPerRow = 6;
+            itemsPerRow = 5;
             break;
         case "2xl":
-            itemsPerRow = 6;
+            itemsPerRow = 5;
             break;
         default:
             itemsPerRow = 2;
@@ -142,17 +142,22 @@ function getOrderBillingValue(order: orderType) {
     return billing;
 }
 
-function timeChatMessageFormat(time: string) {
+function timeChatMessageFormat(time: number) {
     return moment.unix(time).format("kk:mm");
 }
 
-function timeChatMessageHeaderFormat(time: string) {
+function timeChatMessageHeaderFormat(time: number) {
     return moment.unix(time).format("kk:mm, DD/MM/YYYY");
 }
 
-function compareTimeDiffDay(day1: string, day2: string) {
+function compareTimeDiffDay(day1: number, day2: number) {
     return moment.unix(day1).diff(moment.unix(day2), "days") > 0;
 }
+
+function timeDiffByMinute(time1: number, time2: number) {
+    return (time2 - time1) / 60;
+}
+
 export {
     matchIsNumeric,
     getSizeDialog,
@@ -166,4 +171,5 @@ export {
     timeChatMessageFormat,
     compareTimeDiffDay,
     timeChatMessageHeaderFormat,
+    timeDiffByMinute,
 };

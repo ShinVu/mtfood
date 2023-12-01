@@ -1,4 +1,12 @@
-import { Avatar, Divider, Fab, Paper, Popper, TextField } from "@mui/material";
+import {
+    Avatar,
+    Button,
+    Divider,
+    Fab,
+    Paper,
+    Popper,
+    TextField,
+} from "@mui/material";
 
 import ChatIcon from "@mui/icons-material/Chat";
 import { colors } from "../../public/theme";
@@ -12,6 +20,7 @@ import {
     timeChatMessageFormat,
     timeChatMessageHeaderFormat,
 } from "../utils";
+import { socket } from "../socket/socket";
 
 type message = {
     id: number;
@@ -45,7 +54,7 @@ const messages: message[] = [
         time: "1700054912",
     },
     {
-        id: 3,
+        id: 4,
         type: "customer",
         userId: 7,
         message: "Lorem Ipsum ",
@@ -130,51 +139,69 @@ function ChatMessage({
 function ChatInput() {
     const { t } = useTranslation();
     return (
-        <Paper className="flex flex-row justify-between items-center p-3 ">
-            <Avatar />
+        <Paper className="flex flex-row justify-between items-center p-4 ">
+            <Avatar className="mr-4" />
             <TextField
                 type="text"
                 id="messageInput"
                 placeholder={t("typeMessage")}
+                className="flex flex-1"
             />
-            <AttachFileIcon />
+            <AttachFileIcon className="mx-4" />
             <SendIcon sx={{ color: colors.blue }} />
         </Paper>
     );
 }
-export default function Chat() {
+export default function Chat({
+    active,
+    handleChatOpen,
+    handleClose,
+}: {
+    active: string;
+    handleChatOpen: () => void;
+    handleClose: () => void;
+}) {
     const { t } = useTranslation();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(anchorEl ? null : event.currentTarget);
+        //Set active current chat
+        if (active === "chat") {
+            handleClose();
+            setAnchorEl(null);
+        } else {
+            handleChatOpen();
+            setAnchorEl(event.currentTarget);
+        }
     };
 
     const open = Boolean(anchorEl);
-    const id = open ? "simple-popper" : undefined;
+    const id = open ? "chat" : undefined;
 
     //Redux
     const { user } = useAppSelector((state) => state.authentication);
     return (
         <>
-            <Fab
+            <div
                 aria-describedby={id}
-                className="fixed top-[75vh] right-8 bg-primary_main hover:bg-primary_main"
-                size="medium"
+                className="h-12 flex flex-col items-center text-white font-bold mt-2 text-xs p-0 space-y-1  cursor-pointer"
                 onClick={handleClick}
             >
                 <ChatIcon sx={{ color: colors.white }} />
-            </Fab>
+                {t("chat")}
+            </div>
             <Popper
                 id={id}
                 open={open}
                 anchorEl={anchorEl}
                 placement="left-end"
-                className="mr-4"
+                className={`z-50 flex justify-end items-end +
+                ${active === "chat" ? "visible" : "hidden"}`}
+                keepMounted
             >
                 <Paper
                     elevation={5}
-                    className="flex flex-col w-80 xl:w-[400px] h-[500px] z-[9999] bg-white rounded-md"
+                    className="flex flex-col w-1/2 lg:w-2/5 xl:w-2/6 2xl:w-2/6 h-[80vh] z-[9999] bg-white rounded-md mr-4"
                 >
                     <div className="flex  bg-primary_main text-white rounded-t-md p-3">
                         {t("chatMessage")}

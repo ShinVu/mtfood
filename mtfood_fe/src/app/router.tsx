@@ -24,6 +24,8 @@ import ForgetVerify from "../pages/forget_verify";
 import ForgetNewPassword from "../pages/forget_password";
 import Dashboard from "../pages/Dashboard";
 import LoginRedirect from "../pages/LoginRedirect";
+import AddProduct from "../pages/addProductTestingFile";
+import AddCategory from "../pages/addCategoryTestingFile";
 
 const router = createBrowserRouter([
     {
@@ -119,6 +121,14 @@ const router = createBrowserRouter([
             {
                 path: "product",
                 element: <Product />,
+            },
+            {
+                path: "addProductTesting",
+                element: <AddProduct />,
+            },
+            {
+                path: "addCategoryTesting",
+                element: <AddCategory />,
             },
         ],
     },

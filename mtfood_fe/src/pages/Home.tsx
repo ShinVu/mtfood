@@ -52,15 +52,17 @@ function CategoryCardItem(props) {
     };
     return (
         <Paper
-            className="flex flex-col items-center justify-center p-2 cursor-pointer min-w-fit align-center transition ease-in-out delay-150  hover:-translate-y-2 hover:scale-105"
+            className="flex flex-col items-center justify-center p-2 cursor-pointer min-w-fit align-center transition ease-in-out delay-150  hover:-translate-y-2 hover:scale-105 "
             elevation={1}
             onClick={handleCategoryClick}
+            key={category.id}
         >
-            <img
-                src="https://source.unsplash.com/random"
-                className="w-20 h-20 object-cover object-center"
-            />
-
+            {category.image_url && (
+                <img
+                    src={category.image_url}
+                    className="w-20 h-20 object-cover object-center"
+                />
+            )}
             <p className="text-sm mt-2 font-semibold text-black uppercase">
                 {category.name}
             </p>
@@ -175,17 +177,15 @@ function CategoryCard() {
 
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6  mt-4 gap-x-2 gap-y-4">
                 {categories
-                    ? categories
-                          .slice(0, -2)
-                          .map((category) => (
-                              <CategoryCardItem
-                                  category={category}
-                                  key={category.id}
-                              />
-                          ))
-                    : getDummy().map((value) => (
+                    ? categories.map((category: any) => (
+                          <CategoryCardItem
+                              category={category}
+                              key={category.id}
+                          />
+                      ))
+                    : getDummy().map((value, index) => (
                           <div
-                              key={value}
+                              key={index}
                               className="flex flex-col items-center"
                           >
                               <Skeleton
@@ -262,11 +262,11 @@ function TagCard() {
                     ? tags
                           .slice(0, 4)
                           .map((tag) => <TagCardItem tag={tag} key={tag.id} />)
-                    : getDummy().map((value) => (
+                    : getDummy().map((value, index) => (
                           <Skeleton
                               variant="text"
                               className="text-lg w-3/4"
-                              key={value}
+                              key={index}
                           />
                       ))}
             </div>
