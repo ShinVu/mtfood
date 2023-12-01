@@ -316,5 +316,6 @@
     "addLikedProductSuccessfully": "Thich sản phẩm thành công",
     "errorMessage": "Có lỗi xảy ra, xin vui lòng thử lại sau!",
     "assistant": "Trợ lý",
-    "chat": "Tin mới"
+    "chat": "Tin mới",
+    "viewProduct": "Xem sản phẩm"
 }

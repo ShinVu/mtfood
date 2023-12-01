@@ -314,5 +314,6 @@
     "addLikedProductSuccessfully": "Like product",
     "errorMessage": "Something went wrong, please try again!",
     "assistant": "Assistant",
-    "chat": "Chat"
+    "chat": "Chat",
+    "viewProduct": "View product"
 }

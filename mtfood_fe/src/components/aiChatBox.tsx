@@ -59,7 +59,15 @@ function ChatMessageTimeHeader({
 }
 
 function ShowSearch() {
-    return <div className="flex w-[50%] h-24 rounded bg-black ml-10"></div>;
+    const { t } = useTranslation();
+    return (
+        <div className="flex min-w-[50%] w-fit h-24 rounded  ml-10 p-2 items-center border-[1px] border-[#EBEBF0] hover:bg-[#27270C12] cursor-pointer">
+            <img src="./assets/momo.png" />
+            <img src="./assets/momo.png" />
+            <img src="./assets/momo.png" />
+            <p className="font-semibold text-sm ml-2">{t("viewProduct")}</p>
+        </div>
+    );
 }
 function ChatMessage({
     message,
@@ -330,7 +338,7 @@ export default function AIChat({
                 open={open}
                 anchorEl={anchorEl}
                 placement="left-end"
-                className={`z-50 flex w-full justify-end items-end +
+                className={`z-50 flex w-full justify-end items-end 
                     ${active === "aichat" ? "visible" : "hidden"}`}
                 keepMounted
             >
