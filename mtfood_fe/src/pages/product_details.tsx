@@ -572,7 +572,7 @@ function ProductDescriptionCard({ product }: { product: product | null }) {
                 {t("productDescriptions")}
             </h1>
             {product?.description ? (
-                <p className="text-black text-base text-justify mt-2">
+                <p className="text-black text-base text-justify mt-2 whitespace-pre-wrap leading-10">
                     {product.description}
                 </p>
             ) : (

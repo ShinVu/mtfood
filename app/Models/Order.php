@@ -54,6 +54,10 @@ class Order extends Model
         'order_discount_id'
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
+    ];
     /**
      * Get the order details for the order.
      */

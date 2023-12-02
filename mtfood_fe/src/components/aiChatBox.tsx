@@ -33,7 +33,11 @@ import {
     setUserUtteredMessage,
 } from "../features/chat/chatSlice";
 import { botUttererMessage, userUtteredMessage } from "../models/chat.model";
-
+import { product } from "../models/product.model";
+import axiosClient from "../../axios-client";
+import { ProductCard } from "../features/product";
+import CloseIcon from "@mui/icons-material/Close";
+import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
 function ChatMessageTimeHeader({
     message,
     index,
@@ -58,13 +62,48 @@ function ChatMessageTimeHeader({
     }
 }
 
-function ShowSearch() {
+function ShowSearch({
+    handleFullscreenClick,
+    products,
+}: {
+    handleFullscreenClick: () => void;
+    products: Array<product>;
+}) {
     const { t } = useTranslation();
     return (
-        <div className="flex min-w-[50%] w-fit h-24 rounded  ml-10 p-2 items-center border-[1px] border-[#EBEBF0] hover:bg-[#27270C12] cursor-pointer">
-            <img src="./assets/momo.png" />
-            <img src="./assets/momo.png" />
-            <img src="./assets/momo.png" />
+        <div
+            className="flex w-fit max-w-1/2 h-24 rounded  ml-10 p-2 items-center border-[1px] border-[#EBEBF0] hover:bg-[#27270C12] cursor-pointer space-x-2"
+            onClick={handleFullscreenClick}
+        >
+            {products.length > 2
+                ? products
+                      .slice(0, 2)
+                      .map((product: product) => (
+                          <img
+                              src={product.image_url}
+                              alt={product.name}
+                              className="w-16 h-16"
+                              loading="lazy"
+                          />
+                      ))
+                : products.map((product: product) => (
+                      <img src={product.image_url} />
+                  ))}
+            {products.length > 2 && (
+                <div className="relative w-16 h-16 bg-black">
+                    <img
+                        src={products[2].image_url}
+                        alt={products[2].name}
+                        className="w-16 h-16"
+                        loading="lazy"
+                    />
+                    <div className="absolute top-0 left-0 bg-[#00000040] w-full h-full">
+                        <div className="flex w-full h-full items-center justify-center text-white">
+                            +2
+                        </div>
+                    </div>
+                </div>
+            )}
             <p className="font-semibold text-sm ml-2">{t("viewProduct")}</p>
         </div>
     );
@@ -72,9 +111,11 @@ function ShowSearch() {
 function ChatMessage({
     message,
     previousMessage,
+    handleFullscreenClick,
 }: {
     message: userUtteredMessage | botUttererMessage;
     previousMessage?: userUtteredMessage | botUttererMessage;
+    handleFullscreenClick: () => void;
 }) {
     if (message.type === "user") {
         return (
@@ -101,6 +142,33 @@ function ChatMessage({
             </div>
         );
     } else {
+        const [products, setProduct] = useState<Array<product> | null>(null);
+        useEffect(() => {
+            const getProductByIds = () => {
+                const payload = { productIds: message.products };
+                axiosClient
+                    .get("/productByIds", {
+                        params: {
+                            ...payload,
+                        },
+                    })
+                    .then(({ data }: { data: any }) => {
+                        const products = data.result.product;
+                        if (products) {
+                            setProduct(products);
+                        }
+                    })
+                    .catch(({ response }: { response: any }) => {
+                        console.log(response);
+                    });
+            };
+
+            if ("products" in message) {
+                if (!products) {
+                    getProductByIds();
+                }
+            }
+        }, []);
         return (
             <div className="flex flex-col w-full p-2 space-y-2">
                 <div className="flex flex-row justify-start">
@@ -133,7 +201,12 @@ function ChatMessage({
                         </Tooltip>
                     </div>
                 </div>
-                <ShowSearch />
+                {products && (
+                    <ShowSearch
+                        handleFullscreenClick={handleFullscreenClick}
+                        products={products}
+                    />
+                )}
             </div>
         );
     }
@@ -242,7 +315,14 @@ export default function AIChat({
     const { t } = useTranslation();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [loading, setLoading] = useState<boolean>(false);
-
+    const [fullscreen, setFullScreen] = useState<boolean>(false);
+    const [keyword, setKeyword] = useState<{
+        keyword: string;
+        type: string;
+    } | null>(null);
+    const [productByKeyword, setProductByKeyword] = useState<product[] | null>(
+        null
+    );
     const handleLoading = () => {
         setLoading(true);
     };
@@ -260,6 +340,11 @@ export default function AIChat({
     const id = open ? "ai-chat" : undefined;
     const chatRef = useRef(null);
 
+    const handleFullScreenClick = () => {
+        if (!fullscreen) {
+            setFullScreen(true);
+        }
+    };
     //Redux
     const { user } = useAppSelector((state) => state.authentication);
     const { messages } = useAppSelector((state) => state.chat);
@@ -279,11 +364,20 @@ export default function AIChat({
             const response: string = value.text;
             try {
                 const responseData = JSON.parse(response);
+
                 const newMessage: botUttererMessage = {
                     message: responseData.message,
                     timestamp: new Date().getTime() / 1000,
                     type: "bot",
                 };
+                if ("products" in responseData) {
+                    newMessage.products = responseData.products;
+                    setKeyword({
+                        keyword: responseData.product_keyword,
+                        type: "product",
+                    });
+                }
+
                 dispatch(setBotUtteredMessage(newMessage));
                 setLoading(false);
             } catch (e) {
@@ -318,6 +412,27 @@ export default function AIChat({
         };
         handleScrollToBottom();
     }, [messages]);
+
+    useEffect(() => {
+        if (fullscreen && keyword) {
+            const payload = {
+                sort: "common",
+                offset: 0,
+                limit: 12,
+                keyword: keyword.keyword,
+            };
+            axiosClient
+                .get("/productByFilter", {
+                    params: {
+                        ...payload,
+                    },
+                })
+                .then(({ data }: { data: any }) => {
+                    setProductByKeyword(data.result.product);
+                })
+                .catch(({ response }) => console.log(response));
+        }
+    }, [keyword, fullscreen]);
     return (
         <>
             <div
@@ -338,13 +453,13 @@ export default function AIChat({
                 open={open}
                 anchorEl={anchorEl}
                 placement="left-end"
-                className={`z-50 flex w-full justify-end items-end 
+                className={`z-40 fixed flex w-1/2 lg:w-2/5 xl:w-2/6 2xl:w-2/6 h-[70vh] justify-end items-end
                     ${active === "aichat" ? "visible" : "hidden"}`}
                 keepMounted
             >
                 <Paper
                     elevation={5}
-                    className="flex flex-col w-1/2 lg:w-2/5 xl:w-2/6 2xl:w-2/6 h-[70vh] z-[9999] bg-white rounded-md mr-4"
+                    className="flex flex-col w-full h-full bg-white rounded-md m-4"
                 >
                     <div className="flex  bg-primary_main text-white rounded-t-md p-3">
                         {t("chatMessage")}
@@ -372,6 +487,9 @@ export default function AIChat({
                                             index > 0
                                                 ? messages[index - 1]
                                                 : undefined
+                                        }
+                                        handleFullscreenClick={
+                                            handleFullScreenClick
                                         }
                                     />
                                 </div>
@@ -407,6 +525,111 @@ export default function AIChat({
                     />
                 </Paper>
             </Popper>
+            {fullscreen && (
+                <div className="flex flex-col w-screen h-screen fixed top-0 left-0 right-0 bottom-0 bg-[#f5f6f7] overflow-hidden">
+                    <div className="flex w-full h-fit bg-white flex-row items-center justify-between px-8 py-2">
+                        <div className="flex flex-row space-x-3 items-center">
+                            <img
+                                src="/assets/chatbot.png"
+                                alt="avatar"
+                                className="w-12 h-12"
+                            />
+                            <p className="text-xl font-bold">Trợ lý AI</p>
+                        </div>
+                        <div className="flex flex-row space-x-8 items-center">
+                            <CloseFullscreenIcon className="w-6 h-6" />
+                            <CloseIcon className="w-7 h-7" />
+                        </div>
+                    </div>
+                    <div className="flex flex-row w-full h-full p-4">
+                        <div className="flex flex-col w-1/2 h-full space-y-2">
+                            <Paper className="bg-white flex h-full w-full flex-col space-y-1  overflow-auto scroll-auto">
+                                {messages.map(
+                                    (
+                                        message:
+                                            | userUtteredMessage
+                                            | botUttererMessage,
+                                        index: number
+                                    ) => (
+                                        <div
+                                            className="flex flex-col"
+                                            key={index}
+                                        >
+                                            <ChatMessageTimeHeader
+                                                message={message}
+                                                index={index}
+                                                previousMessage={
+                                                    index > 0
+                                                        ? messages[index - 1]
+                                                        : undefined
+                                                }
+                                            />
+                                            <ChatMessage
+                                                message={message}
+                                                previousMessage={
+                                                    index > 0
+                                                        ? messages[index - 1]
+                                                        : undefined
+                                                }
+                                                handleFullscreenClick={
+                                                    handleFullScreenClick
+                                                }
+                                            />
+                                        </div>
+                                    )
+                                )}
+                                {loading && (
+                                    <div className="flex w-full justify-start flex-row p-2 overflow-hidden">
+                                        <img
+                                            src="/assets/chatbot.png"
+                                            alt="avatar"
+                                            className="w-8 h-8"
+                                        />
+                                        <div className="flex flex-col self-start   max-w-[75%] bg-[#f5f6f7] rounded p-2 ml-2">
+                                            <p className="text-blue font-bold text-sm p-0">
+                                                Trợ lý AI
+                                            </p>
+
+                                            <div className="flex flex-row space-x-1 animate-pulse items-center  mt-1">
+                                                <div className="w-1 h-1 bg-[#808080] rounded-full"></div>
+                                                <div className="w-1 h-1 bg-[#808080] rounded-full"></div>
+                                                <div className="w-1 h-1 bg-[#808080] rounded-full"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                <div ref={chatRef} />
+                            </Paper>
+
+                            <ChatInput
+                                loading={loading}
+                                handleLoading={handleLoading}
+                            />
+                        </div>
+
+                        <div className="w-1/2 h-full p-4 flex flex-col overflow-hidden">
+                            {keyword && (
+                                <p className="font-bold text-2xl">
+                                    {t("searchFor")} "{keyword.keyword}"
+                                </p>
+                            )}
+                            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 w-full h-full mt-5 overflow-auto scroll-auto">
+                                {productByKeyword &&
+                                productByKeyword.length > 0 ? (
+                                    productByKeyword.map((product: product) => (
+                                        <ProductCard
+                                            product={product}
+                                            className="h-fit w-full min-w-fit"
+                                        />
+                                    ))
+                                ) : (
+                                    <></>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

@@ -18,7 +18,8 @@ class ProductImageFactory extends Factory
     {
         return [
             'image_url' => 'https://source.unsplash.com/random',
-            'product_id' => \App\Models\Product::all()->random()->id
+            'product_id' => \App\Models\Product::all()->random()->id,
+            'default' => 0
         ];
     }
 }

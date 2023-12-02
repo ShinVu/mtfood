@@ -317,5 +317,6 @@
     "errorMessage": "Có lỗi xảy ra, xin vui lòng thử lại sau!",
     "assistant": "Trợ lý",
     "chat": "Tin mới",
-    "viewProduct": "Xem sản phẩm"
+    "viewProduct": "Xem sản phẩm",
+    "searchFor": "Kết quả tìm kiếm cho"
 }

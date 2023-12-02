@@ -315,5 +315,6 @@
     "errorMessage": "Something went wrong, please try again!",
     "assistant": "Assistant",
     "chat": "Chat",
-    "viewProduct": "View product"
+    "viewProduct": "View product",
+    "searchFor": "Search result for"
 }

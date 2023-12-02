@@ -16,4 +16,5 @@ export type botUttererMessage = {
     message: string;
     timestamp: number;
     type: "bot";
+    products?: Array<number>;
 };

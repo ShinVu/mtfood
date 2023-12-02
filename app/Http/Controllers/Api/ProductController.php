@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\addLikedProductRequest;
 use App\Http\Requests\addSeenProductRequest;
+use App\Http\Requests\CreateCategoryRequest;
+use App\Http\Requests\CreateProductRequest;
 use App\Http\Requests\GetCategoryRequest;
 use App\Http\Requests\getLikeProductRequest;
 use App\Http\Requests\getProductByCategoryRequest;
 use App\Http\Requests\getProductByFilterRequest;
+use App\Http\Requests\getProductByIdsRequest;
 use App\Http\Requests\getProductByKeywordRequest;
 use App\Http\Requests\GetProductDetailRequest;
 use App\Http\Requests\GetProductDiscountRequest;
@@ -24,8 +28,10 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
+use App\Models\ProductBatch;
 use App\Models\ProductDiscount;
 use App\Models\ProductHaveTag;
+use App\Models\ProductImage;
 use App\Models\ProductTag;
 use App\Models\Review;
 use App\Models\UserLikeProduct;
@@ -35,6 +41,8 @@ use Exception;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -49,7 +57,7 @@ class ProductController extends Controller
             $highestDiscount = ProductDiscount::select('product_id', DB::raw('MAX(discount_amount) as max_discount_amount'))
                 ->where('is_active', true)
                 ->groupBy('product_id');
-            $productNew = Product::leftJoinSub($highestDiscount, 'highest_discount', function (JoinClause $join) {
+            $productNew = Product::where('products.status', true)->leftJoinSub($highestDiscount, 'highest_discount', function (JoinClause $join) {
                 $join->on('products.id', '=', 'highest_discount.product_id');
             })
                 ->orderBy('products.updated_at', 'desc')
@@ -57,6 +65,14 @@ class ProductController extends Controller
                 ->selectRaw('products.id,products.name,products.image_url,products.price,highest_discount.max_discount_amount, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
                 ->get();
 
+            //Append media path
+            $productPath = 'storage/product/';
+            foreach ($productNew as $product) {
+                if ($imageName = $product->image_url) {
+                    $fullPath = $productPath . $product->id . "/" . $imageName;
+                    $product->image_url = asset($fullPath);
+                }
+            }
             return response(['message' => 'getProductNewSuccessfully', 'result' => ['product' => $productNew]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
@@ -73,12 +89,21 @@ class ProductController extends Controller
                 ->where('is_active', true)
                 ->groupBy('product_id')
                 ->orderBy('max_discount_amount', 'desc');
-            $productDiscount = Product::joinSub($highestDiscount, 'highest_discount', function (JoinClause $join) {
+            $productDiscount = Product::where('status', 1)->joinSub($highestDiscount, 'highest_discount', function (JoinClause $join) {
                 $join->on('products.id', '=', 'highest_discount.product_id');
             })
                 ->skip(0)->take($limit)
                 ->selectRaw('products.id,products.name,products.image_url,products.price,highest_discount.max_discount_amount, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
                 ->get();
+
+            //Append media path
+            $productPath = 'storage/product/';
+            foreach ($productDiscount as $product) {
+                if ($imageName = $product->image_url) {
+                    $fullPath = $productPath . $product->id . "/" . $imageName;
+                    $product->image_url = asset($fullPath);
+                }
+            }
             return response(['message' => 'getProductNewSuccessfully', 'result' => ['product' => $productDiscount]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
@@ -95,7 +120,7 @@ class ProductController extends Controller
             $highestDiscount = ProductDiscount::select('product_id', DB::raw('MAX(discount_amount) as max_discount_amount'))
                 ->where('is_active', true)
                 ->groupBy('product_id');
-            $productMostLiked = Product::leftJoinSub($highestDiscount, 'highest_discount', function (JoinClause $join) {
+            $productMostLiked = Product::where('status', 1)->leftJoinSub($highestDiscount, 'highest_discount', function (JoinClause $join) {
                 $join->on('products.id', '=', 'highest_discount.product_id');
             })
                 ->orderBy('products.nums_of_like', 'desc')
@@ -103,6 +128,14 @@ class ProductController extends Controller
                 ->selectRaw('products.id,products.name,products.image_url,products.price,highest_discount.max_discount_amount, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
                 ->get();
 
+            //Append media path
+            $productPath = 'storage/product/';
+            foreach ($productMostLiked as $product) {
+                if ($imageName = $product->image_url) {
+                    $fullPath = $productPath . $product->id . "/" . $imageName;
+                    $product->image_url = asset($fullPath);
+                }
+            }
             return response(['message' => 'getProductNewSuccessfully', 'result' => ['product' => $productMostLiked]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
@@ -137,6 +170,14 @@ class ProductController extends Controller
                 ->selectRaw('*, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
                 ->first();
 
+            //Append media path
+            $productPath = 'storage/product/';
+
+            if ($imageName = $product->image_url) {
+                $fullPath = $productPath . $product->id . "/" . $imageName;
+                $product->image_url = asset($fullPath);
+            }
+
             return response(['message' => 'getProductSuccessfully', 'result' => ['product' => $product, 'likeState' => $likeState]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
@@ -147,8 +188,48 @@ class ProductController extends Controller
     {
         try {
             /** @var \App\Models\Category $category */
-            $category = Category::all(['id', 'name']);
-            return response(['message' => 'getCategorySuccessfully', 'result' => ['category' => $category]], 200);
+            $categories = Category::all(['id', 'name', 'image_url']);
+            $catPath = "storage/category/";
+            foreach ($categories as $category) {
+                if ($imageName = $category->image_url) {
+                    $fullPath = $catPath . $category->id . "/" . $imageName;
+                    $category->image_url = asset($fullPath);;
+                }
+            }
+            return response(['message' => 'getCategorySuccessfully', 'result' => ['category' => $categories]], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+    public function createCategory(CreateCategoryRequest $request)
+    {
+        try {
+            /** @var \App\Models\Category $category */
+            $data = $request->validated();
+            $file = null;
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                if (!$file->isValid()) {
+                    return response(['message' => 'invalidFileUpload', 'result' => []], 400);
+                }
+            }
+
+            $newCategory = Category::create([
+                'name' => $data['name'],
+                'description' => $data['description'],
+                'image_url' => null
+            ]);
+
+
+            if ($file) {
+                $catPath = "public/category/" . $newCategory->id . "/";
+                $newFilename = uniqid() . "_" . time() . "." . $file->getClientOriginalExtension();
+                Storage::disk('local')->put($catPath . $newFilename, file_get_contents($file));
+                $newCategory->image_url = $newFilename;
+                $newCategory->save();
+            }
+            return response(['message' => 'createCategorySuccessfully', 'result' => ['category' => $newCategory]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
         }
@@ -178,13 +259,21 @@ class ProductController extends Controller
             $highestDiscount = ProductDiscount::select('product_id', DB::raw('MAX(discount_amount) as max_discount_amount'))
                 ->where('is_active', true)
                 ->groupBy('product_id');
-            $products = Product::where('category_id', $categoryId)->leftJoinSub($highestDiscount, 'highest_discount', function (JoinClause $join) {
+            $products = Product::where('status', 1)->where('category_id', $categoryId)->leftJoinSub($highestDiscount, 'highest_discount', function (JoinClause $join) {
                 $join->on('products.id', '=', 'highest_discount.product_id');
             })
                 ->skip(0)->take($limit)
                 ->selectRaw('products.id,products.name,products.image_url,products.price,highest_discount.max_discount_amount, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
                 ->get();
 
+            //Append media path
+            $productPath = 'storage/product/';
+            foreach ($products as $product) {
+                if ($imageName = $product->image_url) {
+                    $fullPath = $productPath . $product->id . "/" . $imageName;
+                    $product->image_url = asset($fullPath);
+                }
+            }
             return response(['message' => 'getProductByCategorySuccessfully', 'result' => ['products' => $products]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
@@ -281,7 +370,7 @@ class ProductController extends Controller
 
             /** @var \App\Models\Product $products */
 
-            $products = Product::query();
+            $products = Product::query()->where('status', 1);
 
             //Get products discount
             $highestDiscount = ProductDiscount::select('product_discounts.product_id', DB::raw('MAX(discount_amount) as max_discount_amount'))
@@ -377,9 +466,100 @@ class ProductController extends Controller
                 $totalPageProduct = ceil($products->count() / (int)$data['limit']);
                 $products = $products->skip((int)$data['offset'])->take((int)$data['limit']);
             }
-            // Get product
+
             $products = $products->get();
+
+            //Append media path
+            $productPath = 'storage/product/';
+            foreach ($products as $product) {
+                if ($imageName = $product->image_url) {
+                    $fullPath = $productPath . $product->id . "/" . $imageName;
+                    $product->image_url = asset($fullPath);
+                }
+            }
             return response(['message' => 'getProductSuccessfully', 'result' => ['product' => $products, 'totalPage' => $totalPageProduct]], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+    public function getProductByIds(getProductByIdsRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $productIds = ($data['productIds']);
+            /** @var \App\Models\Product $products */;
+            $products = Product::query()->where('status', 1)->whereIn('id', $productIds);
+
+            //Get product
+            $products = $products->get(['id', 'image_url']);
+
+            //Append media path
+            $productPath = 'storage/product/';
+            foreach ($products as $product) {
+                if ($imageName = $product->image_url) {
+                    $fullPath = $productPath . $product->id . "/" . $imageName;
+                    $product->image_url = asset($fullPath);
+                }
+            }
+            return response(['message' => 'getProductSuccessfully', 'result' => ['product' => $products]], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+    public function createProduct(CreateProductRequest $request)
+    {
+        try {
+            /** @var \App\Models\Category $category */
+            $data = $request->validated();
+            $files = null;
+            if ($request->hasFile('images')) {
+                $files = $request->file('images');
+                foreach ($files as $file) {
+                    if (!$file->isValid()) {
+                        return response(['message' => 'invalidFileUpload', 'result' => []], 400);
+                    }
+                }
+            }
+
+            $newProduct = Product::create([
+                'name' => $data['name'],
+                'description' => $data['description'],
+                'price' => $data['price'],
+                'unit' => 'VND',
+                'exp_date' => $data['exp_date'],
+                'directionForPreservation' => $data['directionForPreservation'],
+                'directionForUse' => $data['directionForUse'],
+                'weight' => $data['weight'],
+                'pack' => $data['pack'],
+                'ingredient' => $data['ingredient'],
+                'is_wholesale' => $data['is_wholesale'],
+                'category_id' => $data['category'],
+
+            ]);
+            $productId = $newProduct->id;
+            $productPath = "public/product/" . $productId . "/";
+
+            if ($request->hasFile('images')) {
+                foreach ($files as $key => $file) {
+                    $newFilename = uniqid() . "_" . time() . "." . $file->getClientOriginalExtension();
+                    Storage::disk('local')->put($productPath . $newFilename, file_get_contents($file));
+                    if ($key == 0) {
+                        $newProduct->image_url = $newFilename;
+                        $newProduct->save();
+                    }
+                    ProductImage::create([
+                        'product_id' => $productId,
+                        'default' => 0,
+                        'image_url' => $newFilename
+                    ]);
+                }
+            }
+
+
+
+            return response(['message' => 'createProductSuccessfully', 'result' => ['product' => $newProduct]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
         }

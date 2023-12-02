@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id(); //product_images primary key
             $table->string('image_url', 2048); //product image url
             $table->unsignedBigInteger('product_id'); //FK to id on products
+            $table->boolean('default'); //if image is default
             $table->timestamps(); //created at, update at
             //CONSTRAINT
             $table->foreign('product_id')->references('id')->on('products')->restrictOnDelete()->restrictOnDelete();

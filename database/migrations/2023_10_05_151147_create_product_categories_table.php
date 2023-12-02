@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name'); //category name
             $table->longText('description'); //category description
             $table->unsignedBigInteger('parent_product_category_id')->nullable(); //FK to id on table categories
+            $table->string('image_url', 2048)->nullable(); //image url of cat
             $table->timestamps(); //created at, update at
             //CONSTRAINT
             $table->foreign('parent_product_category_id')->references('id')->on('categories')->cascadeOnUpdate()->nullOnDelete();
@@ -27,8 +28,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-         //DROP CONSTRAINTS
-         Schema::table('categories', function (Blueprint $table) {
+        //DROP CONSTRAINTS
+        Schema::table('categories', function (Blueprint $table) {
             $table->dropForeign(['parent_product_category_id']);
         });
         Schema::dropIfExists('categories');

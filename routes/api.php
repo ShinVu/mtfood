@@ -58,12 +58,15 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/productReviews', 'getProductReview');
     Route::get('/productByCategory', 'getProductByCategory');
     Route::get('/productByFilter', 'getProductByFilter');
+    Route::get('/productByIds', 'getProductByIds');
     Route::get('/productSearch', 'getProductByKeyword');
     Route::post('/addSeenProduct', 'addSeenProduct');
     Route::post('/addLikedProduct', 'addLikedProduct');
     Route::post('/getSeenProduct', 'getSeenProduct');
     Route::post('/getProductLikeStatus', 'getProductLikeStatus');
     Route::post('/getLikedProduct', 'getLikedProduct');
+    Route::post('/createCategory', 'createCategory');
+    Route::post('/createProduct', 'createProduct');
 });
 
 Route::controller(ProfileController::class)->group(function () {
