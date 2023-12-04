@@ -29,9 +29,7 @@ export default function AddProduct() {
                     const category = data.result.category;
                     setCategories(category);
                 })
-                .catch(({ response }) => {
-                    console.log(response);
-                });
+                .catch();
         };
 
         fetchCategory();

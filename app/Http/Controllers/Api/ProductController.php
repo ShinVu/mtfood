@@ -167,8 +167,8 @@ class ProductController extends Controller
                 ->leftJoinSub($highestDiscount, 'highest_discount', function (JoinClause $join) {
                     $join->on('products.id', '=', 'highest_discount.product_id');
                 })
-                ->selectRaw('*, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
-                ->first();
+                ->selectRaw('*, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount');
+            $product = $product->with(['productImage'])->first();
 
             //Append media path
             $productPath = 'storage/product/';
@@ -176,6 +176,13 @@ class ProductController extends Controller
             if ($imageName = $product->image_url) {
                 $fullPath = $productPath . $product->id . "/" . $imageName;
                 $product->image_url = asset($fullPath);
+            }
+
+            if ($images = $product->productImage) {
+                foreach ($images as $image) {
+                    $fullPath = $productPath . $product->id . "/" . $image['image_url'];
+                    $image->image_url = asset($fullPath);
+                }
             }
 
             return response(['message' => 'getProductSuccessfully', 'result' => ['product' => $product, 'likeState' => $likeState]], 200);

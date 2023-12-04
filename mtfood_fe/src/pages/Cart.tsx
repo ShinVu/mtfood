@@ -131,6 +131,7 @@ function ProductCartItemCard({ product }: { product: productCart }) {
             dispatch(handleLogInDialogOpen());
         }
     };
+
     return (
         <StyledTableRow>
             <TableCell align="left">
@@ -145,7 +146,12 @@ function ProductCartItemCard({ product }: { product: productCart }) {
                             navigate(`/product/details/${product.id}`)
                         }
                     >
-                        <img src="/assets/image_14.png" className="w-24 h-24" />
+                        <img
+                            src={product.image_url}
+                            alt={product.name}
+                            className="w-24 h-24"
+                            loading="lazy"
+                        />
                         <p className="text-base self-start">{product.name}</p>
                     </div>
                 </div>
@@ -268,10 +274,12 @@ function ProductCartItems({
     products: productCart;
     cartChecked: boolean;
 }) {
-    const navigate = useNavigate();
     const { t } = useTranslation();
+    const dispatch = useAppDispatch();
     //Redux
-
+    const handleAllChecked = () => {
+        dispatch(setAllProductCheckedCart());
+    };
     return (
         <div className="flex flex-1 bg-white">
             <Table>

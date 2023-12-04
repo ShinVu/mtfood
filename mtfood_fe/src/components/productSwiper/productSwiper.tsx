@@ -48,7 +48,7 @@ function ProductSwiperCard(props: { product: product; className?: string }) {
                 <CardMedia
                     component="img"
                     image={product.image_url}
-                    alt="green iguana"
+                    alt={product.name}
                     className="w-full aspect-square object-cover object-center"
                     loading="lazy"
                 />

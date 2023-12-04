@@ -33,12 +33,14 @@ export default function LanguagePopper() {
                         <img
                             src="/assets/vietnamese_flag.png"
                             className="h-auto w-6"
+                            alt="vn"
                         />
                     )}
                     {i18n.language === "en" && (
                         <img
                             src="/assets/english_flag.png"
                             className="h-auto w-6"
+                            alt="en"
                         />
                     )}
                 </div>
@@ -60,6 +62,7 @@ export default function LanguagePopper() {
                         <img
                             src="/assets/vietnamese_flag.png"
                             className="h-auto w-6"
+                            alt="vn"
                         />
                         <span className="flex flex-col">
                             <span className="font-medium text-xs capitalize my-0 mx-1 text-black">
@@ -75,6 +78,7 @@ export default function LanguagePopper() {
                         <img
                             src="/assets/english_flag.png"
                             className="h-auto w-6"
+                            alt="en"
                         />
                         <span className="flex flex-col">
                             <span className="font-medium text-xs capitalize my-0 mx-1 text-black">

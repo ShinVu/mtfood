@@ -38,7 +38,7 @@ register();
 import moment from "moment";
 import "moment/dist/locale/vi";
 import { colors } from "../../public/theme.ts";
-console.log(moment.locale("vi"));
+moment.locale("vi");
 
 const { palette } = createTheme();
 const { augmentColor } = palette;

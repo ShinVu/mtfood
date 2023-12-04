@@ -78,10 +78,7 @@ export default function UserAddress() {
                     const addresses = data.result.address;
                     dispatch(setAddress(addresses));
                 })
-                .catch(({ response }) => {
-                    const responseData = response.data;
-                    console.log(responseData);
-                });
+                .catch();
         };
         if (!addresses) {
             fetchAddress();

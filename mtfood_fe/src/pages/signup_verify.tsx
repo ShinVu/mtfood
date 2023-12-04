@@ -78,7 +78,6 @@ export default function SignUpVerify() {
     const { id, email } = useAppSelector(
         (state) => state.authentication.signup
     );
-    console.log(id);
     //onSubmit
     const handleSubmit = () => {
         if (otp.length !== 6) {

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import Header from "../components/header";
 import Footer from "../components/footer";
-import { useNavigate, useParams } from "react-router-dom";
+import { createSearchParams, useNavigate, useParams } from "react-router-dom";
 
 //Import MUI
 import Rating from "@mui/material/Rating";
@@ -58,6 +58,7 @@ import {
     setAddress,
 } from "../features/authentication/authenticationSlice.js";
 import { debounce } from "lodash";
+import ProductImageSwiper from "../components/productImageSwiper.js";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
@@ -238,11 +239,13 @@ function ProductMainCard({
     };
     return (
         <div className="flex p-4 flex-row bg-white pl-6">
-            <div className="flex mr-10 w-fit h-fit">
+            <div className="flex flex-col items-center mr-10 w-fit h-fit">
                 {product ? (
                     <img
                         src={product.image_url}
                         className="w-44 h-44 xl:w-64 xl:h-64 object-cover object-center"
+                        alt={product.name}
+                        loading="lazy"
                     />
                 ) : (
                     <Skeleton
@@ -250,6 +253,9 @@ function ProductMainCard({
                         className="w-44 h-44 xl:w-64 xl:h-64"
                     />
                 )}
+                <div className="w-64 xl:w-72 h-36 max-w-full  z-0 mt-2 p-2 flex">
+                    <ProductImageSwiper images={product?.product_image} />
+                </div>
             </div>
             {product ? (
                 <div className="flex flex-1 flex-col">
@@ -754,13 +760,15 @@ function ProductReviewCard({ product }: { product: product | null }) {
                         {t("filterBy")}:
                     </p>
                 </div>
-                <div className="flex flex-row  flex-wrap w-full max-w-full items-center">
+                <div className="flex flex-row  flex-wrap w-full max-w-full items-center space-x-2">
                     {filter.map((filter) => (
                         <div
                             onClick={() => handleFilterClick(filter)}
                             key={filter.id}
-                            className={`max-w-full text-ellipsis flex items-center align-center cursor-pointer bor ${
-                                reviewFilter[filter.id] ? "bg-black" : ""
+                            className={`max-w-full text-ellipsis flex items-center align-center cursor-pointer bor p-2 ${
+                                reviewFilter[filter.id]
+                                    ? "bg-[#80808040] rounded"
+                                    : ""
                             }`}
                         >
                             <span className="my-0">{t(filter.label)}</span>
@@ -852,8 +860,13 @@ function ProductReviewCard({ product }: { product: product | null }) {
     );
 }
 
-function ProductSameCategoryCard({ mainProduct }: { mainProduct: product }) {
+function ProductSameCategoryCard({
+    mainProduct,
+}: {
+    mainProduct: product | null;
+}) {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const size = useWindowSizeDimensions();
     const [products, setProduct] = useState<Array<product> | null>(null);
     const getDummy = () => {
@@ -882,6 +895,17 @@ function ProductSameCategoryCard({ mainProduct }: { mainProduct: product }) {
             });
         }
     };
+
+    const handleSeemore = () => {
+        const path = {
+            pathname: "/product",
+            search: createSearchParams({
+                page: String(1),
+                category: mainProduct?.category_id,
+            }).toString(),
+        };
+        navigate(path);
+    };
     useEffect(() => {
         const getLimit = (size: string) => {
             if (size === "sm") {
@@ -906,7 +930,7 @@ function ProductSameCategoryCard({ mainProduct }: { mainProduct: product }) {
                 )
                 .then(({ data }: { data: any }) => {
                     const products: Array<product> = data.result.products;
-                    console.log(data);
+
                     setProduct(products);
                 });
         };
@@ -935,34 +959,16 @@ function ProductSameCategoryCard({ mainProduct }: { mainProduct: product }) {
                           </span>
                       ))}
             </div>
-            <OutlinedButton className="max-w-fit self-center mt-4 mb-2">
+            <OutlinedButton
+                className="max-w-fit self-center mt-4 mb-2"
+                onClick={handleSeemore}
+            >
                 {t("more")}
             </OutlinedButton>
         </div>
     );
 }
 
-function ProductRecommendCard() {
-    const { t } = useTranslation();
-    return (
-        <div className="flex p-4 flex-col  bg-white pl-6">
-            <h1 className="text-black text-xl font-bold uppercase">
-                {t("recommendProduct")}
-            </h1>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 mt-4">
-                {productSameCat.map((product) => (
-                    <ProductCard
-                        product={product}
-                        className="w-full min-w-fit h-fit"
-                    />
-                ))}
-            </div>
-            <OutlinedButton className="max-w-fit self-center mt-4 mb-2">
-                {t("more")}
-            </OutlinedButton>
-        </div>
-    );
-}
 export default function ProductDetails() {
     const { t } = useTranslation();
     const { id } = useParams();
@@ -988,6 +994,9 @@ export default function ProductDetails() {
                     }
                 });
         };
+        if (id) {
+            setProduct(null);
+        }
         fetchProduct();
         window.scrollTo(0, 0);
     }, [id]);

@@ -12,7 +12,9 @@ function FacebookButton(props: any) {
             component="label"
             variant="contained"
             className="w-full bg-rich-black"
-            startIcon={<img src={Facebook} className="w-4 h-4" />}
+            startIcon={
+                <img src={Facebook} className="w-4 h-4" alt="facebook" />
+            }
             onClick={onClick}
         >
             {t("logInFacebook")}

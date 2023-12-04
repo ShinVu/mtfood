@@ -186,12 +186,12 @@ export default function AddAddressDialog(props) {
                 type: type,
             };
         }
-        console.log(payload);
+
         axiosClient
             .post("/addAddress", payload)
             .then(({ data }) => {
                 const address = data.result.address;
-                console.log(address);
+
                 if (data.message === "updatedAddressSuccessfully") {
                     dispatch(updateAddress(address));
                 } else if (data.message === "addAddressSuccessfully") {

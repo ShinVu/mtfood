@@ -23,6 +23,7 @@ export type product = {
     product_id: number;
     max_discount_amount: string | null;
     priceDiscount: string;
+    product_image?: Array<{ image_url: string }>;
 };
 
 export type productCart = {

@@ -83,13 +83,9 @@ export default function AIChat({
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        function onConnect() {
-            console.log("Connected to Socket.io server");
-        }
+        function onConnect() {}
 
-        function onDisconnect() {
-            console.log("Disconnected from Socket.io server");
-        }
+        function onDisconnect() {}
 
         function botUtteredMessage(value: any) {
             //Check if text is a valid JSON object

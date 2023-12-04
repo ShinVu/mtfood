@@ -21,8 +21,6 @@ export default function ImageSwiper() {
             // install Swiper modules
             modules={[Navigation, Pagination, Scrollbar, A11y, EffectCreative]}
             slidesPerView={1}
-            onSwiper={(swiper) => console.log(swiper)}
-            onSlideChange={() => console.log("slide change")}
             autoplay={{
                 delay: 2500,
             }}
@@ -91,7 +89,6 @@ export default function ImageSwiper() {
                     </div>
                 </div>
             </SwiperSlide>
-            {/* <SwiperSlide></SwiperSlide> */}
         </Swiper>
     );
 }

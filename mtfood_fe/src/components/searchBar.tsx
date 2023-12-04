@@ -92,7 +92,6 @@ export default function SearchBar() {
     const getOptionsDelayed = useCallback(
         debounce(async (keyword) => {
             const fetchOptions = async () => {
-                console.log(keyword);
                 const payload = {
                     keyword: keyword,
                 };

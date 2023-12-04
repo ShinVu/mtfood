@@ -38,7 +38,6 @@ function OrderDetailItems({
     orderDetailItems: orderDetail[];
     open: boolean;
 }) {
-    console.log(open);
     return (
         <Table size="small">
             <TableBody>

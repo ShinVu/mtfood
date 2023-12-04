@@ -90,8 +90,8 @@ export default function FullScreenAIChat() {
                     </IconButton>
                 </div>
             </div>
-            <div className="flex flex-row w-full h-full p-4">
-                <div className="flex flex-col  w-1/2 h-full space-y-2">
+            <div className="flex flex-row w-full h-full p-4 overflow-clip">
+                <div className="flex flex-col  w-1/2 h-full  space-y-2">
                     <Paper className="bg-white flex flex-col h-full space-y-1 overflow-auto scroll-auto">
                         {messages.map(
                             (
@@ -133,7 +133,7 @@ export default function FullScreenAIChat() {
                     {searchLoading ? (
                         <CircularProgress className="self-center" />
                     ) : (
-                        <div className="flex flex-col w-full h-[calc(100%-100px)] overflow-auto scroll-auto">
+                        <div className="flex flex-col w-full h-full overflow-auto scroll-auto">
                             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 mt-5">
                                 {productByKeyword &&
                                 productByKeyword.length > 0 ? (
@@ -141,6 +141,7 @@ export default function FullScreenAIChat() {
                                         <ProductCard
                                             product={product}
                                             className="w-full h-fit"
+                                            key={product.id}
                                         />
                                     ))
                                 ) : (

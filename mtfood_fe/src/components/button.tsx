@@ -41,7 +41,7 @@ function ContainedButton(props: any) {
             startIcon={props.startIcon}
             className={props.className}
             sx={{
-                "background-color": colors.primary_main,
+                backgroundColor: colors.primary_main,
             }}
         >
             {props.children}
@@ -56,7 +56,7 @@ function OutlinedButton(props: any) {
             onClick={props.onClick}
             startIcon={props.startIcon}
             sx={{
-                "border-color": colors.primary_main,
+                borderColor: colors.primary_main,
                 color: colors.primary_main,
             }}
             {...props}

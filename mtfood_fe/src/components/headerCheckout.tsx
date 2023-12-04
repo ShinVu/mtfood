@@ -70,7 +70,7 @@ export default function HeaderCheckout() {
                 <div className="flex flex-col md:flex-row md:items-center  ">
                     <p className="font-medium text-xs text-white capitalize  my-0 mx-2">
                         {t("hotline")}:{" "}
-                        <span className="font-bold">123456</span>
+                        <span className="font-bold">096 321 9191</span>
                     </p>
                     <p className=" font-medium text-xs text-white capitalize my-0 mx-2">
                         {t("address")}:{" "}
@@ -118,75 +118,17 @@ export default function HeaderCheckout() {
                         </div>
                     )}
                     <LanguagePopper />
-                    {/* <div className="dropdown dropdown-bottom dropdown-end my-0  flex">
-                        <label tabIndex={0} className="">
-                            <div onClick={() => setDropdown()}>
-                                <div
-                                    className="mx-3 flex flex-row items-center "
-                                    id="dropdownDefaultButton"
-                                    data-dropdown-toggle="dropdown"
-                                >
-                                    <div className="mx-2">
-                                        {i18n.language === "vn" && (
-                                            <img
-                                                src="/assets/vietnamese_flag.png"
-                                                className="h-auto w-6"
-                                            />
-                                        )}
-                                        {i18n.language === "en" && (
-                                            <img
-                                                src="/assets/english_flag.png"
-                                                className="h-auto w-6"
-                                            />
-                                        )}
-                                    </div>
-
-                                    <FaAngleDown
-                                        style={{ color: colors.white }}
-                                    />
-                                </div>
-                            </div>
-                        </label>
-
-                        <div
-                            tabIndex={0}
-                            className="dropdown-content z-[999] menu  shadow  rounded-box w-52 bg-white mt-2"
-                        >
-                            <div
-                                className="flex flex-row items-center py-2 px-2 hover:bg-gray-100"
-                                onClick={() => changeLanguageHandler("vn")}
-                            >
-                                <img
-                                    src="/assets/vietnamese_flag.png"
-                                    className="h-auto w-6"
-                                />
-                                <span className="flex flex-col">
-                                    <span className="font-medium text-xs capitalize my-0 mx-1 text-black">
-                                        Tiếng Việt
-                                    </span>
-                                </span>
-                            </div>
-                            <div
-                                className="flex flex-row items-center py-2 px-2 hover:bg-gray-100"
-                                onClick={() => changeLanguageHandler("en")}
-                            >
-                                <img
-                                    src="/assets/english_flag.png"
-                                    className="h-auto w-6"
-                                />
-                                <span className="flex flex-col">
-                                    <span className="font-medium text-xs capitalize my-0 mx-1 text-black">
-                                        English
-                                    </span>
-                                </span>
-                            </div>
-                        </div>
-                    </div> */}
                 </div>
             </div>
 
             <div className="flex flex-1 items-center justify-between my-3 px-4 ">
-                <p onClick={() => navigate("/home")}>icon</p>
+                <img
+                    onClick={() => navigate("/home")}
+                    src="/assets/logo.png"
+                    alt="logo"
+                    loading="lazy"
+                    className="w-16 h-16 cursor-pointer"
+                />
                 <div className="flex self-end w-1/2">
                     <SearchBar />
                 </div>

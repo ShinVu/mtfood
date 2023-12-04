@@ -219,9 +219,7 @@ export default function OrderDetail() {
                     const newOrder: orderType = data.result.order;
                     setOrder(newOrder);
                 })
-                .catch(({ response }) => {
-                    console.log(response);
-                });
+                .catch();
         };
         if (!order) {
             fetchOrder();

@@ -88,9 +88,7 @@ export default function AiChatMessage({
                             setProduct(products);
                         }
                     })
-                    .catch(({ response }: { response: any }) => {
-                        console.log(response);
-                    });
+                    .catch();
             };
 
             if ("products" in message) {

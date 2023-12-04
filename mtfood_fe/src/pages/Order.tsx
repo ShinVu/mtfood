@@ -152,7 +152,7 @@ export default function UserOrder() {
                 limit: limit,
                 keyword: keyword,
             };
-            console.log(offset);
+
             axiosClient.post("/getOrders", payload).then(({ data }) => {
                 const resultOrders: orderType[] = data.result.orders;
                 //Increase offset

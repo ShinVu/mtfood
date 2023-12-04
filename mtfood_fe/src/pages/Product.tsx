@@ -536,7 +536,7 @@ function ServiceFilter({
                             }
                             label={
                                 <span className="font-medium text-base text-black">
-                                    {t("Voucher")}
+                                    {t("voucher")}
                                 </span>
                             }
                         />

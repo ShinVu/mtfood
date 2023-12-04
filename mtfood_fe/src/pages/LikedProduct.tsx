@@ -49,7 +49,7 @@ export default function UserLikeProduct() {
     const [products, setProduct] = useState<product[] | null>(null);
     const [totalPage, setTotalPage] = useState<number>(1);
     const itemsPerPage = getItemsPerPage();
-    console.log(products);
+
     useEffect(() => {
         const fetchProducts = async () => {
             const pageNumber = searchParams.get("page")

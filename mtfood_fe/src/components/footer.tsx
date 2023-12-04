@@ -98,10 +98,12 @@ export default function Footer() {
                                     <img
                                         src="/assets/zalo.png"
                                         className="h-auto w-6"
+                                        alt="zalo"
                                     />
                                     <img
                                         src="/assets/facebook.png"
                                         className="h-auto w-6"
+                                        alt="facebook"
                                     />
                                 </div>
                             </TableCell>
@@ -122,6 +124,7 @@ export default function Footer() {
                                     <img
                                         src="/assets/momo.png"
                                         className="h-auto w-6"
+                                        alt="momo"
                                     />
                                     <p className="font-medium text-xs text-gray-100 my-0 mx-2">
                                         {t("momo")}
@@ -145,6 +148,7 @@ export default function Footer() {
                                     <img
                                         src="/assets/zaloPay.png"
                                         className="h-auto w-6"
+                                        alt="zalopay"
                                     />
                                     <p className="font-medium text-xs text-gray-100 my-0 mx-2">
                                         {t("ZaloPay")}
