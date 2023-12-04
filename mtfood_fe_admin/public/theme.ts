@@ -1,0 +1,32 @@
+export const colors = {
+    primary_main: "#333333",
+    primary_light: "#47AD9780",
+    white: "#fff",
+    black: "#000",
+    dark_blue: "#2A353D",
+    gray: {
+        100: "#959595",
+        200: "#808080",
+        light: "#95959559",
+    },
+    background_footer: "#FEF6F5",
+    background_main: "#EFEFEF",
+    red_alert: "#E63946",
+    red_main: "#B73225",
+    blue: "#0055AA",
+    orange: {
+        light: "#FFF5EC",
+        heavy: "#FD820A",
+    },
+
+    "rich-black": "#03071eff",
+    "chocolate-cosmos": "#370617ff",
+    rosewood: "#6a040fff",
+    "penn-red": "#9d0208ff",
+    "engineering-orange": "#d00000ff",
+    sinopia: "#dc2f02ff",
+    persimmon: "#e85d04ff",
+    "princeton-orange": "#f48c06ff",
+    "orange-web": "#faa307ff",
+    "forest-green": "#4d8b31ff",
+};

@@ -41,17 +41,19 @@ export default function ImageSwiper() {
         >
             <SwiperSlide>
                 <div className="relative w-full h-full bg-blue">
-                    <div className=" absolute w-full h-full top-0 left-0 object-cover object-center  bg-blue">
+                    <div className=" absolute w-full h-full top-0 left-0 object-cover  bg-blue">
                         <img
-                            src="/assets/image_14.png"
-                            className="w-full h-full object-cover object-center "
+                            src="/assets/poster_2.jpg"
+                            className="w-full h-full object-cover object-center"
+                            alt="poster"
+                            loading="lazy"
                         />
                     </div>
                     <div className="absolute bottom-40 left-20">
-                        <h1 className="text-[98px] leading-[88px] m-0  text-black font-bold">
+                        <h1 className="text-[98px] leading-[88px] m-0  text-white font-bold">
                             MTFOOD
                         </h1>
-                        <p className="text-lg text-black font-bold m-0">
+                        <p className="text-lg text-white font-bold m-0">
                             {t("introduction")}
                         </p>
                         <Button
@@ -67,8 +69,10 @@ export default function ImageSwiper() {
                 <div className="relative w-full h-full bg-blue">
                     <div className=" absolute w-full h-full top-0 left-0 object-cover object-center  ">
                         <img
-                            src="/assets/image_15.png"
+                            src="/assets/poster.jpg"
                             className="w-full h-full object-cover object-center "
+                            alt="poster"
+                            loading="lazy"
                         />
                     </div>
                     <div className="absolute bottom-40 left-20">

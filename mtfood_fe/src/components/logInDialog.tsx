@@ -34,13 +34,7 @@ export default function LogInDialog() {
 
     const size = useWindowSizeDimensions();
     return (
-        <Dialog
-            open={logInDialogState}
-            onClose={handleClose}
-            fullWidth
-            maxWidth={getSizeDialog(size)}
-            disableScrollLock
-        >
+        <Dialog open={logInDialogState} onClose={handleClose} disableScrollLock>
             <DialogTitle>
                 {" "}
                 <span className="font-bold text-3xl">{t("pleaseSignin")}</span>

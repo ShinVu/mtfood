@@ -158,6 +158,12 @@ function timeDiffByMinute(time1: number, time2: number) {
     return (time2 - time1) / 60;
 }
 
+function getDiscountPercent(priceDiscount: string, price: string) {
+    return Math.ceil(
+        ((parseFloat(price) - parseFloat(priceDiscount)) / parseFloat(price)) *
+            100
+    );
+}
 export {
     matchIsNumeric,
     getSizeDialog,
@@ -172,4 +178,5 @@ export {
     compareTimeDiffDay,
     timeChatMessageHeaderFormat,
     timeDiffByMinute,
+    getDiscountPercent,
 };

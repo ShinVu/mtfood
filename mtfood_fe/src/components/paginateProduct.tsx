@@ -70,13 +70,13 @@ function PaginatedProducts({
                 breakLabel="..."
                 nextLabel={
                     <KeyboardArrowRightIcon
-                        sx={{ color: colors.primary_main, fontSize: 32 }}
+                        sx={{ color: colors.primary_main, fontSize: 36 }}
                         className="my-0"
                     />
                 }
                 previousLabel={
                     <KeyboardArrowLeftIcon
-                        sx={{ color: colors.primary_main, fontSize: 32 }}
+                        sx={{ color: colors.primary_main, fontSize: 36 }}
                         className="my-0"
                     />
                 }

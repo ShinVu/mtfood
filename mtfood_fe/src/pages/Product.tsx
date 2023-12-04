@@ -110,15 +110,28 @@ function CategoryBar({
     };
     const handleCategoryClick = (categoryId: string) => {
         //set query string to category
-        searchParams.set("category", categoryId);
-        setCat(categoryId);
+        if (
+            searchParams.get("category") &&
+            searchParams.get("category") == categoryId
+        ) {
+            searchParams.delete("category");
+
+            setCat(null);
+        } else {
+            searchParams.set("category", categoryId);
+            setCat(categoryId);
+        }
         //set page back to page 0
         searchParams.set("page", String(1));
-
         setSearchParams(searchParams);
     };
 
     const [cat, setCat] = useState<string | null>(searchParams.get("category"));
+    useEffect(() => {
+        if (!searchParams.get("category")) {
+            setCat(null);
+        }
+    }, [searchParams]);
     return (
         <div className="flex flex-col bg-white p-4">
             <p className="font-bold text-lg my-0 text-black">{t("category")}</p>
@@ -185,7 +198,7 @@ function TagBar({
     const [tagsArray, setTagsArray] = useState<string[]>(
         searchParams.get("tag") ? JSON.parse(searchParams.get("tag")) : []
     );
-    console.log(tagsArray);
+
     useEffect(() => {
         setTagsArray(
             searchParams.get("tag") ? JSON.parse(searchParams.get("tag")) : []
@@ -346,6 +359,7 @@ function PriceFilter({
         watch,
         formState: { errors },
         handleSubmit,
+        reset,
     } = useForm();
     const priceFrom = watch("price_from", "");
     const priceTo = watch("price_to", "");
@@ -368,6 +382,14 @@ function PriceFilter({
 
         setSearchParams(searchParams);
     };
+    useEffect(() => {
+        if (!searchParams.get("price_from")) {
+            reset(["price_from"]);
+        }
+        if (!searchParams.get("price_to")) {
+            reset(["price_to"]);
+        }
+    }, [searchParams]);
     return (
         <div className="flex flex-col bg-white p-4">
             <p className="font-bold text-lg my-0 text-black">
@@ -460,7 +482,28 @@ function ServiceFilter({
     const error =
         [discount, voucher, onStock, wholesaleProduct].filter((v) => v)
             .length !== 2;
+    useEffect(() => {
+        let newState = {
+            discount: state.discount,
+            voucher: state.voucher,
+            onStock: state.onStock,
+            wholesaleProduct: state.wholesaleProduct,
+        };
+        if (!searchParams.get("discount")) {
+            newState = { ...newState, discount: false };
+        }
+        if (!searchParams.get("voucher")) {
+            newState = { ...newState, voucher: false };
+        }
+        if (!searchParams.get("onStock")) {
+            newState = { ...newState, onStock: false };
+        }
+        if (!searchParams.get("wholesaleProduct")) {
+            newState = { ...newState, wholesaleProduct: false };
+        }
 
+        setState(newState);
+    }, [searchParams]);
     return (
         <div className="flex flex-col w-full bg-white p-4">
             <p className="font-bold text-lg my-0 text-black">
@@ -541,7 +584,6 @@ function RatingFilter({
 }) {
     const { t } = useTranslation();
     const handleRatingClick = (value: string) => {
-        console.log(searchParams.get("rating"));
         if (
             searchParams.get("rating") &&
             searchParams.get("rating") === value
@@ -758,13 +800,13 @@ function PaginateTab({
                     onClick={handlePrevClick}
                     sx={{
                         color: colors.primary_main,
-                        fontSize: 24,
+                        fontSize: 36,
                     }}
                     className={pageNumber <= 1 ? "opacity-50" : undefined}
                 />
                 <KeyboardArrowRightIcon
                     onClick={handleNextClick}
-                    sx={{ color: colors.primary_main, fontSize: 24 }}
+                    sx={{ color: colors.primary_main, fontSize: 36 }}
                     className={
                         pageNumber >= totalPage ? "opacity-50" : undefined
                     }

@@ -1,0 +1,13 @@
+/* new styles added */
+
+  .image-swiper-button-prev {
+   
+  }
+  .image-swiper-button-next {
+
+  }
+  .swiper-button-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  

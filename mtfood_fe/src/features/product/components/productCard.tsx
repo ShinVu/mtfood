@@ -5,7 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Rating from "@mui/material/Rating";
 import { CardActionArea } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { changePriceFormat } from "../../../utils";
+import { changePriceFormat, getDiscountPercent } from "../../../utils";
 export default function ProductCard(props: {
     product: any;
     className?: string;
@@ -17,6 +17,18 @@ export default function ProductCard(props: {
             <CardActionArea
                 onClick={() => navigate(`/product/details/${product.id}`)}
             >
+                {product.max_discount_amount && (
+                    <div className="bg-saleBadge w-20 h-8  z-10 bg-cover bg-center p-1  absolute top-2">
+                        <p className="font-semibold text-sm text-white my-0">
+                            {"Giảm " +
+                                getDiscountPercent(
+                                    product.priceDiscount,
+                                    product.price
+                                )}
+                            %
+                        </p>
+                    </div>
+                )}
                 <CardMedia
                     component="img"
                     image={product.image_url}

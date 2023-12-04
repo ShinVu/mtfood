@@ -473,10 +473,10 @@ function ProductSlideDiscountProductCard() {
         };
         navigate(path);
     };
-
-    return (
-        <div className="relative flex p-4 w-full h-[400px] bg-sale overflow-visible mb-36">
-            {/* <Divider
+    if (products && products.length > 0) {
+        return (
+            <div className="relative flex p-4 w-full h-[500px] bg-sale overflow-visible mb-36">
+                {/* <Divider
                 className="mx-10 my-4 cursor-pointer"
                 onClick={handleDiscountClick}
             >
@@ -485,31 +485,32 @@ function ProductSlideDiscountProductCard() {
                 </h4>
             </Divider> */}
 
-            <Paper
-                elevation={0}
-                className="absolute top-5 right-0 w-[70%] h-fit flex flex-col flex-1 bg-transparent"
-            >
-                <div className="flex flex-row items-center mb-2">
-                    <FaBoltLightning className="w-8 h-8 text-red_main" />
-                    <h4 className="text-2xl text-white font-bold uppercase">
-                        Ăn thả ga, không lo về giá
-                    </h4>
-                </div>
+                <Paper
+                    elevation={0}
+                    className="absolute top-5 right-0 w-[70%] h-fit flex flex-col flex-1 bg-transparent"
+                >
+                    <div className="flex flex-row items-center mb-2">
+                        <FaBoltLightning className="w-8 h-8 text-red_main" />
+                        <h4 className="text-2xl text-white font-bold uppercase">
+                            Ăn thả ga, không lo về giá
+                        </h4>
+                    </div>
 
-                <div className="px-6 py-4 bg-orange-web  z-0 rounded-xl flex flex-col">
-                    <ProductDiscountSwiper products={products} />
-                    <Button
-                        variant="text"
-                        className="-ml-2 font-medium text-black normal-case text-base self-center"
-                        onClick={() => {}}
-                        endIcon={<LiaLongArrowAltRightSolid />}
-                    >
-                        {t("seeMores")}
-                    </Button>
-                </div>
-            </Paper>
-        </div>
-    );
+                    <div className="px-6 py-4 bg-orange-web  z-0 rounded-xl flex flex-col">
+                        <ProductDiscountSwiper products={products} />
+                        <Button
+                            variant="text"
+                            className="-ml-2 font-medium text-black normal-case text-base self-center"
+                            onClick={handleDiscountClick}
+                            endIcon={<LiaLongArrowAltRightSolid />}
+                        >
+                            {t("seeMores")}
+                        </Button>
+                    </div>
+                </Paper>
+            </div>
+        );
+    }
 }
 
 // function IntroductionCard() {

@@ -18,12 +18,13 @@ import Skeleton from "@mui/material/Skeleton";
 //import react router dom
 import { useNavigate } from "react-router-dom";
 import useWindowSizeDimensions from "../../hooks/useWindowResponsiveDimensions";
-import { changePriceFormat } from "../../utils";
+import { changePriceFormat, getDiscountPercent } from "../../utils";
+import { product } from "../../models/product.model";
 
 function ProductSwiperSkeleton() {
     return <Skeleton variant="rectangular" className="h-[281px] w-full" />;
 }
-function ProductSwiperCard(props: { product: any; className?: string }) {
+function ProductSwiperCard(props: { product: product; className?: string }) {
     const navigate = useNavigate();
     const { product } = props;
 
@@ -32,11 +33,18 @@ function ProductSwiperCard(props: { product: any; className?: string }) {
             <CardActionArea
                 onClick={() => navigate(`/product/details/${product.id}`)}
             >
-                <div className="bg-saleBadge w-20 h-8  z-10 bg-cover bg-center p-1 -left-1 absolute top-2">
-                    <p className="font-semibold text-sm text-white my-0">
-                        Giảm 14%
-                    </p>
-                </div>
+                {product.max_discount_amount && (
+                    <div className="bg-saleBadge w-20 h-8  z-10 bg-cover bg-center p-1 -left-1 absolute top-2">
+                        <p className="font-semibold text-sm text-white my-0">
+                            {"Giảm " +
+                                getDiscountPercent(
+                                    product.priceDiscount,
+                                    product.price
+                                )}
+                            %
+                        </p>
+                    </div>
+                )}
                 <CardMedia
                     component="img"
                     image={product.image_url}
