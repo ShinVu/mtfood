@@ -696,7 +696,14 @@ class ProductController extends Controller
             // Get product
             $products = $products->selectRaw('products.id,products.name,products.image_url,products.price,highest_discount.max_discount_amount, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
                 ->get();
-
+            //Append media path
+            $productPath = 'storage/product/';
+            foreach ($products as $product) {
+                if ($imageName = $product->image_url) {
+                    $fullPath = $productPath . $product->id . "/" . $imageName;
+                    $product->image_url = asset($fullPath);
+                }
+            }
             return response(['message' => 'getUserSeenProductSuccessfully', 'result' => ['product' => $products, 'totalPage' => $totalPageProduct]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
@@ -745,7 +752,14 @@ class ProductController extends Controller
             $products = $products->selectRaw('products.id,products.name,products.image_url,products.price,highest_discount.max_discount_amount, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
                 ->get();
 
-
+            //Append media path
+            $productPath = 'storage/product/';
+            foreach ($products as $product) {
+                if ($imageName = $product->image_url) {
+                    $fullPath = $productPath . $product->id . "/" . $imageName;
+                    $product->image_url = asset($fullPath);
+                }
+            }
             return response(['message' => 'getUserLikeProductSuccessfully', 'result' => ['product' => $products, 'totalPage' => $totalPageProduct]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);

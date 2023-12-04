@@ -32,7 +32,7 @@ export default function ProductCard(props: {
                 <CardMedia
                     component="img"
                     image={product.image_url}
-                    alt="green iguana"
+                    alt={product.name}
                     className="w-full aspect-square object-cover object-center"
                     loading="lazy"
                 />

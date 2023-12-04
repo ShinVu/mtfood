@@ -68,7 +68,7 @@ export default function UserLikeProduct() {
             );
             const products = response.data.result.product;
             const totalPage = response.data.result.totalPage;
-            console.log(products);
+
             setProduct(products);
             setTotalPage(totalPage);
         };
