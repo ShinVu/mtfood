@@ -45,6 +45,7 @@ import { current } from "@reduxjs/toolkit";
 import { productCart } from "../models/product.model.js";
 import { changePriceFormat, getSubTotal } from "../utils/index.js";
 import usePriceCheckout from "../hooks/usePriceCheckout.js";
+import VoucherDialog from "../components/voucherDialog.js";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
@@ -235,7 +236,12 @@ function ProductCartItemCard({ product }: { product: productCart }) {
         <StyledTableRow>
             <TableCell align="left">
                 <div className="flex flex-row items-center space-x-4">
-                    <img src="/assets/image_14.png" className="w-24 h-24" />
+                    <img
+                        src={product.image_url}
+                        className="w-24 h-24"
+                        alt={product.name}
+                        loading="lazy"
+                    />
                     <p className="text-base self-start">{product.name}</p>
                 </div>
             </TableCell>
@@ -520,17 +526,32 @@ const CheckoutItem = forwardRef((props, ref) => {
 
 function CheckoutVoucher() {
     const { t } = useTranslation();
+    //Addaddress modal state
+    const [open, setOpen] = React.useState(false);
+    const handleModalOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        //Set all add Address state to null on Close
+
+        setOpen(false);
+    };
     return (
         <div className="flex flex-row flex-1 bg-white justify-between p-4">
             <div className="flex flex-row items-center space-x-4 px-3">
                 <BiSolidDiscount color={colors.primary_main} size="24px" />
                 <p className="text-primary_main my-0">{t("mtfoodVoucher")}</p>
             </div>
-            <TextButton>
+            <TextButton onClick={handleModalOpen}>
                 <span className="my-0 text-sm font-medium text-blue">
                     {t("enterVoucher")}
                 </span>
             </TextButton>
+            <VoucherDialog
+                open={open}
+                handleModalOpen={handleModalOpen}
+                handleClose={handleClose}
+            />
         </div>
     );
 }

@@ -52,6 +52,7 @@ import {
     handleSnackbarDialogOpen,
 } from "../features/authentication/authenticationSlice.js";
 import axiosClient from "../../axios-client.js";
+import VoucherDialog from "../components/voucherDialog.js";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
@@ -560,6 +561,17 @@ function OrderProceedCard({
             navigate(navigateRoute);
         }
     };
+
+    //voucher dialog states
+    const [open, setOpen] = React.useState(false);
+    const handleModalOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        //Set all add Address state to null on Close
+
+        setOpen(false);
+    };
     return (
         <div className="flex flex-1 flex-col bg-white p-4">
             <div className="flex flex-1 justify-end items-center space-x-24 px-4">
@@ -569,7 +581,17 @@ function OrderProceedCard({
                         {t("mtfoodVoucher")}
                     </p>
                 </div>
-                <p className="my-0 text-sm font-medium">{t("enterVoucher")}</p>
+                <p
+                    className="my-0 text-sm font-medium cursor-pointer"
+                    onClick={handleModalOpen}
+                >
+                    {t("enterVoucher")}
+                </p>
+                <VoucherDialog
+                    open={open}
+                    handleModalOpen={handleModalOpen}
+                    handleClose={handleClose}
+                />
             </div>
             <Divider className="my-4" />
             <div className="flex flex-1 items-center  justify-between">

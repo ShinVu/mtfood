@@ -5,9 +5,11 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\getOrderDetailRequest;
 use App\Http\Requests\getOrdersRequest;
+use App\Http\Requests\getOrderVoucherRequest;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\OrderDiscount;
 use App\Models\Product;
 use Exception;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -268,6 +270,22 @@ class OrderController extends Controller
             $order = $order->first();
 
             return response(['message' => 'getProductDetailSuccessfully', 'result' => ['order' => $order]], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+    public function getOrderVoucher(getOrderVoucherRequest $request)
+    {
+        try {
+            $data = $request->validated();
+
+            /** @var \App\Models\Order $order */
+            $voucher = OrderDiscount::where('is_active', 1);
+
+            $voucher = $voucher->get();
+
+            return response(['message' => 'getOrderVoucherSuccessfully', 'result' => ['voucher' => $voucher]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
         }

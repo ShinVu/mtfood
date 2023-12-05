@@ -64,3 +64,12 @@ export type orderType = {
     updated_at: string;
     order_detail: orderDetail[];
 };
+
+export type orderVoucher = {
+    id: number;
+    notes: string;
+    total_discount: string;
+    is_active: boolean;
+    minimum_order_value: string;
+    maximum_discount_amount: string;
+};

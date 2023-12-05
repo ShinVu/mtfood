@@ -4,7 +4,7 @@ import { createSlice, current } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { update } from "lodash";
-import { orderType } from "../../models/order.model";
+import { orderType, orderVoucher } from "../../models/order.model";
 dayjs.extend(utc);
 
 const getLocalStorage = (key: string) => {
@@ -18,10 +18,12 @@ const getLocalStorage = (key: string) => {
 
 type initialStateType = {
     orders: Array<orderType> | null;
+    selectedVoucher: orderVoucher | null;
 };
 //initial state for authentication slice
 const initialState: initialStateType = {
     orders: null,
+    selectedVoucher: null,
 };
 
 export const orderSlice = createSlice({
@@ -39,11 +41,19 @@ export const orderSlice = createSlice({
             }
             state.orders.push(...orders);
         },
+        setVoucher(state, action) {
+            const selectedVoucher = action.payload;
+            if (selectedVoucher) {
+                state.selectedVoucher = selectedVoucher;
+            } else {
+                state.selectedVoucher = null;
+            }
+        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setOrder, pushOrder } = orderSlice.actions;
+export const { setOrder, pushOrder, setVoucher } = orderSlice.actions;
 
 // Export reducer to create store in app/store.tsx
 export default orderSlice.reducer;

@@ -164,6 +164,13 @@ function getDiscountPercent(priceDiscount: string, price: string) {
             100
     );
 }
+
+function checkVoucher(voucherMinOrder: string, price: string) {
+    if (parseFloat(price) < parseFloat(voucherMinOrder)) {
+        return false;
+    }
+    return true;
+}
 export {
     matchIsNumeric,
     getSizeDialog,
@@ -179,4 +186,5 @@ export {
     timeChatMessageHeaderFormat,
     timeDiffByMinute,
     getDiscountPercent,
+    checkVoucher,
 };

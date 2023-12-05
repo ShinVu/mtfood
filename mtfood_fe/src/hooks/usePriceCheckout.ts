@@ -6,7 +6,7 @@ import { priceCart, product, productCart } from "../models/product.model";
 export default function usePriceCheckout() {
     const [price, setPrice] = useState<priceCart | null>(null);
     const { productCart } = useAppSelector((state) => state.product);
-
+    const { selectedVoucher } = useAppSelector((state) => state.order);
     useEffect(() => {
         function getPrice() {
             let totalPrice = 0;
@@ -31,7 +31,9 @@ export default function usePriceCheckout() {
                             parseFloat(product.max_discount_amount) *
                                 parseFloat(product.quantityForProduct);
                     }
-                    totalVoucher = 0;
+                    totalVoucher = selectedVoucher
+                        ? parseFloat(selectedVoucher.total_discount)
+                        : 0;
                 }
             });
 
@@ -46,7 +48,7 @@ export default function usePriceCheckout() {
         }
         const result: priceCart = getPrice();
         setPrice(result);
-    }, [productCart]);
+    }, [productCart, selectedVoucher]);
 
     return price;
 }
