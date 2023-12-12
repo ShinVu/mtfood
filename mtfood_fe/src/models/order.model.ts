@@ -42,11 +42,12 @@ export type orderDetail = {
 export type orderType = {
     id: number;
     subtotal: string;
+    total: string;
     shipping_subtotal: string;
-    shipping_discount: string;
+
     voucher_discount: string;
     products_discount: string;
-    order_discount: string;
+
     vat: string;
     payment_method: string;
     delivery_method: string;

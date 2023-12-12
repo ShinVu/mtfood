@@ -11,17 +11,4 @@ axiosClient.interceptors.request.use((config) => {
     return config;
 });
 
-// axiosClient.interceptors.response.use(
-//     (response) => {
-//         return response;
-//     },
-//     (error) => {
-//         const { response } = error;
-//         if (response && response.status === 401) {
-//             // localStorage.removeItem("ACCESS_TOKEN");
-//             console.log(response);
-//         }
-//         throw error;
-//     }
-// );
 export default axiosClient;

@@ -16,7 +16,7 @@ import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import Footer from "../components/footer";
 import GoogleSignIn from "../components/googleLogin";
-import FacebookSignIn from "../components/facebookLogin";
+
 import { useNavigate } from "react-router-dom";
 
 //Import useForm
@@ -261,9 +261,7 @@ export default function Login() {
                         <div className="my-3">
                             <GoogleSignIn />
                         </div>
-                        <div className="my-3">
-                            <FacebookSignIn />
-                        </div>
+
                         <div className="my-3 flex flex-row items-center ">
                             <p className="text-base font-medium my-0">
                                 {t("NoPassword?")}

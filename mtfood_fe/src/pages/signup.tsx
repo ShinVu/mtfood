@@ -34,7 +34,6 @@ import axiosClient from "../../axios-client";
 
 //Import sign in components
 import GoogleSignIn from "../components/googleLogin";
-import FacebookSignIn from "../components/facebookLogin";
 
 //Import type
 import {
@@ -279,9 +278,7 @@ export default function SignUp() {
                         <div className="my-3">
                             <GoogleSignIn />
                         </div>
-                        <div className="my-3">
-                            <FacebookSignIn />
-                        </div>
+
                         <div className="my-3 flex flex-row items-center mx-2 ">
                             <p className="text-base font-medium my-0 ">
                                 {t("haveAccount?")}

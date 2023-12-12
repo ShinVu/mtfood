@@ -35,15 +35,15 @@ export default function Dashboard() {
                         handleAiChatOpen={handleAiChatOpen}
                         handleClose={handleClose}
                     />
-                    <Divider
+                    {/* <Divider
                         sx={{ backgroundColor: colors.white }}
                         className="my-1"
-                    />
-                    <Chat
+                    /> */}
+                    {/* <Chat
                         active={currentActiveChat}
                         handleChatOpen={handleChatOpen}
                         handleClose={handleClose}
-                    />
+                    /> */}
                 </div>
 
                 <Outlet />

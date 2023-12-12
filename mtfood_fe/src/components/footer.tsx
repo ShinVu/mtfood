@@ -65,7 +65,7 @@ export default function Footer() {
                     <TableBody>
                         <StyledTableRow>
                             <TableCell>
-                                <p className="font-medium text-xs text-gray-100 my-0">
+                                <p className="font-medium text-xs text-[#808080] my-0">
                                     {t("hotline")}:{" "}
                                     <span className="underline">
                                         096 321 9191
@@ -73,7 +73,7 @@ export default function Footer() {
                                 </p>
                             </TableCell>
                             <TableCell>
-                                <p className="font-medium text-xs text-gray-100 my-0">
+                                <p className="font-medium text-xs text-[#808080] my-0">
                                     {t("introduce")}
                                 </p>
                             </TableCell>
@@ -83,13 +83,13 @@ export default function Footer() {
                                         style={{ color: colors.primary_main }}
                                         className="h-auto w-6"
                                     />
-                                    <p className="font-medium text-xs text-gray-100 my-0 mx-2">
+                                    <p className="font-medium text-xs text-[#808080] my-0 mx-2">
                                         {t("COD")}
                                     </p>
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <p className="font-medium text-xs text-gray-100 my-0">
+                                <p className="font-medium text-xs text-[#808080] my-0">
                                     {t("ahamove")}
                                 </p>
                             </TableCell>
@@ -110,12 +110,12 @@ export default function Footer() {
                         </StyledTableRow>
                         <StyledTableRow>
                             <TableCell>
-                                <p className="font-medium text-xs text-gray-100 my-0">
+                                <p className="font-medium text-xs text-[#808080] my-0">
                                     {t("regQuestion")}
                                 </p>
                             </TableCell>
                             <TableCell>
-                                <p className="font-medium text-xs text-gray-100 my-0">
+                                <p className="font-medium text-xs text-[#808080] my-0">
                                     {t("recruit")}
                                 </p>
                             </TableCell>
@@ -124,9 +124,9 @@ export default function Footer() {
                                     <img
                                         src="/assets/momo.png"
                                         className="h-auto w-6"
-                                        alt="momo"
+                                        alt=""
                                     />
-                                    <p className="font-medium text-xs text-gray-100 my-0 mx-2">
+                                    <p className="font-medium text-xs text-[#808080] my-0 mx-2">
                                         {t("momo")}
                                     </p>
                                 </div>
@@ -134,12 +134,12 @@ export default function Footer() {
                         </StyledTableRow>
                         <StyledTableRow>
                             <TableCell>
-                                <p className="font-medium text-xs text-gray-100 my-0">
+                                <p className="font-medium text-xs text-[#808080] my-0">
                                     {t("orderGuide")}
                                 </p>
                             </TableCell>
                             <TableCell>
-                                <p className="font-medium text-xs text-gray-100 my-0">
+                                <p className="font-medium text-xs text-[#808080] my-0">
                                     {t("privacy_policy")}
                                 </p>
                             </TableCell>
@@ -148,9 +148,9 @@ export default function Footer() {
                                     <img
                                         src="/assets/zaloPay.png"
                                         className="h-auto w-6"
-                                        alt="zalopay"
+                                        alt=""
                                     />
-                                    <p className="font-medium text-xs text-gray-100 my-0 mx-2">
+                                    <p className="font-medium text-xs text-[#808080] my-0 mx-2">
                                         {t("ZaloPay")}
                                     </p>
                                 </div>
@@ -158,12 +158,12 @@ export default function Footer() {
                         </StyledTableRow>
                         <StyledTableRow>
                             <TableCell>
-                                <p className="font-medium text-xs text-gray-100 my-0">
+                                <p className="font-medium text-xs text-[#808080] my-0">
                                     {t("returnPolicy")}
                                 </p>
                             </TableCell>
                             <TableCell>
-                                <p className="font-medium text-xs text-gray-100 my-0">
+                                <p className="font-medium text-xs text-[#808080] my-0">
                                     {t("payment")}
                                 </p>
                             </TableCell>

@@ -47,7 +47,6 @@ const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
 
 function OrderSummary({ order }: { order: orderType }) {
     const { t } = useTranslation();
-    const billing = getOrderBillingValue(order);
     return (
         <div className="flex flex-col items-end  mt-8">
             <div>
@@ -62,8 +61,7 @@ function OrderSummary({ order }: { order: orderType }) {
                             </TableCell>
                             <TableCell align="right">
                                 <p className="text-base font-medium text-black">
-                                    {" "}
-                                    {changePriceFormat(billing.subTotal)}đ
+                                    {changePriceFormat(order.subtotal)}
                                 </p>
                             </TableCell>
                         </StyledTableRow>
@@ -75,22 +73,24 @@ function OrderSummary({ order }: { order: orderType }) {
                             </TableCell>
                             <TableCell align="right">
                                 <p className="text-base font-medium text-black">
-                                    {changePriceFormat(billing.shippingFee)}đ
+                                    {/* {changePriceFormat(billing.shippingFee)}đ */}
+                                    {changePriceFormat(order.shipping_subtotal)}
                                 </p>
                             </TableCell>
                         </StyledTableRow>
                         <StyledTableRow>
                             <TableCell>
                                 <span className="text-gray-100 font-medium">
-                                    {t("deliveryFeeDiscount")}
+                                    {/* {t("deliveryFeeDiscount")} */}
+                                    Giảm giá sản phẩm
                                 </span>
                             </TableCell>
                             <TableCell align="right">
                                 <p className="text-base font-medium text-black">
-                                    {changePriceFormat(
+                                    {/* {changePriceFormat(
                                         billing.shippingDiscount
-                                    )}
-                                    đ
+                                    )} */}
+                                    {changePriceFormat(order.products_discount)}
                                 </p>
                             </TableCell>
                         </StyledTableRow>
@@ -102,9 +102,11 @@ function OrderSummary({ order }: { order: orderType }) {
                             </TableCell>
                             <TableCell align="right">
                                 <p className="text-base font-medium text-black">
-                                    {" "}
-                                    {changePriceFormat(billing.voucherDiscount)}
-                                    đ
+                                    {/* {" "}
+                                    {changePriceFormat(billing.voucherDiscount)} */}
+                                    {changePriceFormat(
+                                        order.voucher_discount
+                                    ) ?? "0đ"}
                                 </p>
                             </TableCell>
                         </StyledTableRow>
@@ -116,7 +118,8 @@ function OrderSummary({ order }: { order: orderType }) {
                             </TableCell>
                             <TableCell align="right">
                                 <span className="text-2xl font-bold text-red_main">
-                                    {changePriceFormat(billing.total)}đ
+                                    {/* {changePriceFormat(billing.total)}đ */}
+                                    {changePriceFormat(order.total)}
                                 </span>
                             </TableCell>
                         </StyledTableRow>
@@ -313,13 +316,8 @@ export default function OrderDetail() {
 
                                 <div className="mt-3">
                                     <p className="text-black font-medium">
-                                        {user.name}
-                                    </p>
-                                    <p className="text-gray-100">
-                                        {user.phoneNumber}
-                                    </p>
-                                    <p className="text-gray-100">
-                                        {user.address}
+                                        {order.delivery_method == "fast" &&
+                                            "Giao hàng nhanh"}
                                     </p>
                                 </div>
                             </Paper>
@@ -330,13 +328,7 @@ export default function OrderDetail() {
 
                                 <div className="mt-3">
                                     <p className="text-black font-medium">
-                                        {user.name}
-                                    </p>
-                                    <p className="text-gray-100">
-                                        {user.phoneNumber}
-                                    </p>
-                                    <p className="text-gray-100">
-                                        {user.address}
+                                        {t(order.payment_method)}
                                     </p>
                                 </div>
                             </Paper>

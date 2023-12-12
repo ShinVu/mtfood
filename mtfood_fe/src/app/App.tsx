@@ -94,9 +94,7 @@ window.Echo = new Echo({
 
     encrypted: true,
 });
-window.Echo.channel("testing").listen("PublicMessageEvent", (e) => {
-    console.log(e);
-});
+window.Echo.channel("testing").listen("PublicMessageEvent", () => {});
 function App() {
     return (
         // <React.StrictMode>

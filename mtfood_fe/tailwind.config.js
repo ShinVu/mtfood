@@ -55,8 +55,8 @@ export default {
                 xl: "1280px",
             },
             backgroundImage: {
-                signUp: "url('/assets/image_15.png')",
-                signIn: "url('/assets/image_14.png')",
+                signUp: "url('/assets/poster.jpg')",
+                signIn: "url('/assets/poster.jpg')",
                 saleBadge:
                     "url('//bizweb.dktcdn.net/100/491/159/themes/915419/assets/icon_giamgia.png?1699001498002')",
                 sale: "url(//bizweb.dktcdn.net/100/491/159/themes/915419/assets/bg_flash_sale.jpg?1699002238658)",

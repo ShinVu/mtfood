@@ -32,17 +32,9 @@ import { OutlinedInput } from "@mui/material";
 //Import axios client
 import axiosClient from "../../axios-client";
 
-//Import sign in components
-import GoogleSignIn from "../components/googleLogin";
-import FacebookSignIn from "../components/facebookLogin";
-
 //Import type
 import {
     onSubmitValue,
-    signUpSuccessResponse,
-    signUpFailResponse,
-    mailVerificationSuccessResponse,
-    mailVerificationFailResponse,
     mailResetPasswordSuccessResponse,
     mailResetPasswordFailResponse,
 } from "../models/user.model";

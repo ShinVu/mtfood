@@ -316,5 +316,15 @@
     "assistant": "Assistant",
     "chat": "Chat",
     "viewProduct": "View product",
-    "searchFor": "Search result for"
+    "searchFor": "Search result for",
+    "googleLoginSuccess": "Google log in successfully",
+    "googleLoginFail": "Google log in failed",
+    "facebookLoginSuccess": "Facebook log in successfully",
+    "facebookLoginFail": "Facebook log in failed",
+    "connectToChatFailed": "Can't connect to chat",
+    "cod": "Charge on delivery",
+    "seePriceBelow": "See wholesale price below",
+    "addToWholesaleCart": "Add to wholesale cart",
+    "normalCart": "Cart",
+    "wholesaleCart": "Wholesale cart"
 }

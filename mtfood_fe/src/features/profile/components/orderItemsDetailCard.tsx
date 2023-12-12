@@ -25,6 +25,7 @@ export default function OrderItemsDetailCard({
 }) {
     const { t } = useTranslation();
     const navigate = useNavigate();
+
     return (
         <div className="flex flex-col flex-1">
             <Table>
@@ -68,6 +69,7 @@ export default function OrderItemsDetailCard({
                                     <img
                                         src={orderDetail.product.image_url}
                                         className="w-24 h-24"
+                                        alt=""
                                     />
                                     <p className="text-base font-medium">
                                         {orderDetail.product.name}
@@ -76,10 +78,15 @@ export default function OrderItemsDetailCard({
                             </TableCell>
                             <TableCell align="right">
                                 <p className="font-medium text-base text-black">
-                                    {changePriceFormat(
+                                    {/* {changePriceFormat(
                                         orderDetail.unit_discount
+                                    )} */}
+                                    {changePriceFormat(
+                                        parseFloat(orderDetail.unit_price) -
+                                            parseFloat(
+                                                orderDetail.unit_discount
+                                            )
                                     )}
-                                    đ
                                 </p>
                             </TableCell>
                             <TableCell align="right">
@@ -89,13 +96,16 @@ export default function OrderItemsDetailCard({
                             </TableCell>
                             <TableCell align="right">
                                 <p className="font-medium text-base text-red_main">
-                                    {changePriceFormat(
+                                    {/* {changePriceFormat(
                                         getOrderItemSubTotal(
                                             orderDetail.unit_discount,
                                             orderDetail.quantity
                                         )
+                                    )} */}
+                                    {changePriceFormat(
+                                        parseFloat(orderDetail.unit_price) *
+                                            orderDetail.quantity
                                     )}
-                                    đ
                                 </p>
                             </TableCell>
                         </StyledTableRow>

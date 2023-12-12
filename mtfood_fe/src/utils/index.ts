@@ -42,6 +42,8 @@ function changePriceFormat(value: string | number | null) {
     return formated;
 }
 
+//get wholesale price
+function getWholesalePrice(wholesalePricing: any, quantity: number) {}
 //Check int number
 function isInt(value: string) {
     return (

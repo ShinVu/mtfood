@@ -26,6 +26,8 @@ import Dashboard from "../pages/Dashboard";
 import LoginRedirect from "../pages/LoginRedirect";
 import AddProduct from "../pages/addProductTestingFile";
 import AddCategory from "../pages/addCategoryTestingFile";
+import ProductWholesale from "../pages/ProductWholesale";
+import ProductWholesaleDetails from "../pages/product_details_wholesale";
 
 const router = createBrowserRouter([
     {
@@ -69,6 +71,10 @@ const router = createBrowserRouter([
             {
                 path: "product/details/:id",
                 element: <ProductDetails />,
+            },
+            {
+                path: "productWholesale/details/:id",
+                element: <ProductWholesaleDetails />,
             },
             {
                 path: "user/account",
@@ -121,6 +127,10 @@ const router = createBrowserRouter([
             {
                 path: "product",
                 element: <Product />,
+            },
+            {
+                path: "productWholesale",
+                element: <ProductWholesale />,
             },
             {
                 path: "addProductTesting",

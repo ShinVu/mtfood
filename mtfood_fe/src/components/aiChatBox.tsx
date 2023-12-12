@@ -48,6 +48,7 @@ import AiChatMessage from "./aichatMessage";
 import AiChatInput from "./aiChatinput";
 import { MdFullscreen } from "react-icons/md";
 import { MdClearAll } from "react-icons/md";
+import { handleSnackbarDialogOpen } from "../features/authentication/authenticationSlice";
 
 export default function AIChat({
     active,
@@ -87,6 +88,16 @@ export default function AIChat({
 
         function onDisconnect() {}
 
+        function onConnectError() {
+            const payload = {
+                message: "connectToChatFailed",
+                severity: "error",
+            };
+
+            dispatch(handleSnackbarDialogOpen(payload));
+            socket.disconnect();
+        }
+
         function botUtteredMessage(value: any) {
             //Check if text is a valid JSON object
             const response: string = value.text;
@@ -125,7 +136,7 @@ export default function AIChat({
         }
         socket.on("connect", onConnect);
 
-        socket.on("connect_error", onDisconnect);
+        socket.on("connect_error", onConnectError);
 
         socket.on("bot_uttered", botUtteredMessage);
 

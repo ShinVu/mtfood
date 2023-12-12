@@ -22,7 +22,9 @@ const initialState = {
     productMostLiked: null,
     productDiscount: null,
     productCart: getLocalStorage("CART"),
+    productWholesaleCart: getLocalStorage("WHOLESALE_CART"),
     cartChecked: getLocalStorage("CART_CHECKED"),
+    wholesaleCartChecked: getLocalStorage("WHOLESALE_CART_CHECKED"),
 };
 export const productSlice = createSlice({
     name: "product",
@@ -89,6 +91,54 @@ export const productSlice = createSlice({
                 JSON.stringify(state.cartChecked)
             );
         },
+
+        addProductToWholesaleCart(state, action) {
+            //set  Cart based on action payload
+            const product: productCart = action.payload;
+            const newProductCart = {
+                ...state.productWholesaleCart,
+                [product.id]: { ...product },
+            };
+            state.productWholesaleCart = newProductCart;
+
+            localStorage.setItem(
+                "WHOLESALECART",
+                JSON.stringify(newProductCart)
+            );
+        },
+        removeProductFromWholesaleCart(state, action) {
+            let removeProductId = action.payload;
+            const { [removeProductId]: omit, ...newProductCart } =
+                state.productWholesaleCart;
+            state.productWholesaleCart = newProductCart;
+
+            localStorage.setItem(
+                "WHOLESALECART",
+                JSON.stringify(newProductCart)
+            );
+        },
+        removeAllProductFromWholesaleCart(state) {
+            state.productWholesaleCart = {};
+            localStorage.setItem("WHOLESALECART", JSON.stringify({}));
+        },
+
+        setAllProductCheckedWholesaleCart(state) {
+            const currentCheck = state.wholesaleCartChecked;
+            Object.entries(state.productWholesaleCart).forEach(
+                ([key, product]: any) => {
+                    product.check = !currentCheck;
+                }
+            );
+            state.wholesaleCartChecked = !currentCheck;
+            localStorage.setItem(
+                "WHOLESALECART",
+                JSON.stringify(state.productWholesaleCart)
+            );
+            localStorage.setItem(
+                "WHOLESALE_CART_CHECKED",
+                JSON.stringify(state.wholesaleCartChecked)
+            );
+        },
     },
 });
 
@@ -103,6 +153,10 @@ export const {
     removeProductFromCart,
     setAllProductCheckedCart,
     removeAllProductFromCart,
+    addProductToWholesaleCart,
+    removeAllProductFromWholesaleCart,
+    setAllProductCheckedWholesaleCart,
+    removeProductFromWholesaleCart,
 } = productSlice.actions;
 
 // Export reducer to create store in app/store.tsx

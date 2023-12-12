@@ -48,7 +48,7 @@ function OrderDetailItems({
                             <TableCell align="left">
                                 <div className="flex flex-row space-x-4">
                                     <img
-                                        src="/assets/image_14.png"
+                                        src={orderDetailItem.product.image_url}
                                         className="w-24 h-24 object-cover object-center"
                                     />
                                     <p className="font-medium text-sm my-0">
@@ -59,10 +59,8 @@ function OrderDetailItems({
                             <TableCell align="right">
                                 <div>
                                     {orderDetailItem.unit_discount && (
-                                        <p className="text-base text-gray-100 line-through my-0">
-                                            {changePriceFormat(
-                                                orderDetailItem.unit_discount
-                                            )}
+                                        <p className="text-base text-gray-100  my-0">
+                                            50000đ
                                         </p>
                                     )}
                                 </div>
@@ -70,9 +68,7 @@ function OrderDetailItems({
                             <TableCell align="right">
                                 <div>
                                     <p className="text-base font-medium text-red_main my-0">
-                                        {changePriceFormat(
-                                            orderDetailItem.unit_price
-                                        )}
+                                        250.000đ
                                     </p>
                                 </div>
                             </TableCell>
@@ -97,10 +93,11 @@ function OrderDetailItems({
                                 <TableCell align="right">
                                     <div>
                                         {orderDetailItem.unit_discount && (
-                                            <p className="text-base text-gray-100 line-through my-0">
-                                                {changePriceFormat(
-                                                    orderDetailItem.unit_discount
-                                                )}
+                                            <p className="text-base text-gray-100 my-0">
+                                                {/* {changePriceFormat(
+                                                    orderDetailItem.unit_price
+                                                )} */}
+                                                50000đ
                                             </p>
                                         )}
                                     </div>
@@ -108,9 +105,7 @@ function OrderDetailItems({
                                 <TableCell align="right">
                                     <div>
                                         <p className="text-base font-medium text-red_main my-0">
-                                            {changePriceFormat(
-                                                orderDetailItem.unit_price
-                                            )}
+                                            250.000đ
                                         </p>
                                     </div>
                                 </TableCell>
@@ -155,7 +150,8 @@ export default function OrderItem(props: { order: orderType }) {
                     {t("totalOrderAmount")}
                 </p>
                 <p className="text-md font-medium text-red_main my-0">
-                    đ{changePriceFormat(order.subtotal)}
+                    {/* đ{changePriceFormat(order.subtotal)} */}
+                    280.000đ
                 </p>
             </div>
             <div className="flex flex-1 flex-row justify-between mt-12 items-center">

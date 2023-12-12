@@ -44,7 +44,6 @@ export default function ImageSwiper() {
                             src="/assets/poster_2.jpg"
                             className="w-full h-full object-cover object-center"
                             alt="poster"
-                            loading="lazy"
                         />
                     </div>
                     <div className="absolute bottom-40 left-20">
@@ -70,7 +69,6 @@ export default function ImageSwiper() {
                             src="/assets/poster.jpg"
                             className="w-full h-full object-cover object-center "
                             alt="poster"
-                            loading="lazy"
                         />
                     </div>
                     <div className="absolute bottom-40 left-20">

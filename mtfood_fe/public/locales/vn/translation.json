@@ -20,7 +20,7 @@
     "payment": "Thanh toán",
     "paymentMethod": "Phương thức thanh toán",
     "momo": "Ví Momo",
-    "ZaloPay": "Ví ZaloPay",
+    "vnpay": "Ví điện tử VNPay",
     "COD": "Thanh toán khi nhận hàng",
     "deliveryMethod": "Dịch vụ giao hàng",
     "ahamove": "Ahamove",
@@ -318,5 +318,15 @@
     "assistant": "Trợ lý",
     "chat": "Tin mới",
     "viewProduct": "Xem sản phẩm",
-    "searchFor": "Kết quả tìm kiếm cho"
+    "searchFor": "Kết quả tìm kiếm cho",
+    "googleLoginSuccess": "Đăng nhập bằng Google thành công",
+    "googleLoginFail": "Đăng nhập bằng Google xảy ra lỗi",
+    "facebookLoginSuccess": "Đăng nhập bằng Facebook thành công",
+    "facebookLoginFail": "Đăng nhập bằng Facebook xảy ra lỗi",
+    "connectToChatFailed": "Có lỗi xảy ra khi chúng tôi cố gắng kết nối với Chat",
+    "cod": "Thanh toán khi giao hàng",
+    "seePriceBelow": "Xem giá sỉ ở bảng phía dưới",
+    "addToWholesaleCart": "Thêm vào giỏ hàng sỉ",
+    "normalCart": "Giỏ hàng cho sản phẩm lẻ",
+    "wholesaleCart": "Giỏ hàng cho sản phẩm sỉ"
 }

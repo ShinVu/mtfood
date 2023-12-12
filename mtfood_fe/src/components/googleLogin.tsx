@@ -9,6 +9,7 @@ import { logInFailResponse, logInSuccessResponse } from "../models/user.model";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
+    handleSnackbarDialogOpen,
     setToken,
     setUser,
 } from "../features/authentication/authenticationSlice";
@@ -19,7 +20,14 @@ export default function GoogleSignIn() {
     const navigate = useNavigate();
     const login = useGoogleLogin({
         onSuccess: (codeResponse) => setUserGoogle(codeResponse),
-        onError: (error) => console.log("Login Failed:", error),
+        onError: () => {
+            const payload = {
+                message: "googleLoginFailed",
+                severity: "error",
+            };
+
+            dispatch(handleSnackbarDialogOpen(payload));
+        },
     });
 
     //use redux
@@ -37,14 +45,25 @@ export default function GoogleSignIn() {
             .post("/googleLogin", payload)
             .then(({ data }: { data: logInSuccessResponse }) => {
                 const { user, token } = data.result;
+                const payload = {
+                    message: "googleLoginSuccess",
+                    severity: "success",
+                };
+
+                dispatch(handleSnackbarDialogOpen(payload));
                 //Set user, token
                 dispatch(setUser(user));
                 dispatch(setToken(token));
                 navigate("/home");
             })
-            .catch(({ response }: { response: logInFailResponse }) =>
-                console.log(response)
-            );
+            .catch(() => {
+                const payload = {
+                    message: "googleLoginFail",
+                    severity: "error",
+                };
+
+                dispatch(handleSnackbarDialogOpen(payload));
+            });
     };
     useEffect(() => {
         if (user) {
@@ -65,7 +84,7 @@ export default function GoogleSignIn() {
                     };
                     GoogleLogin(data);
                 })
-                .catch((err) => console.log(err));
+                .catch();
         }
     }, [user]);
 

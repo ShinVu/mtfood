@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import Header from "../components/header";
-import Footer from "../components/footer";
+import Header from "../components/header.js";
+import Footer from "../components/footer.js";
 import { createSearchParams, useNavigate, useParams } from "react-router-dom";
 
 //Import MUI
@@ -19,6 +19,7 @@ import {
     Table,
     TableBody,
     TableCell,
+    TableHead,
     TableRow,
     TextField,
 } from "@mui/material";
@@ -38,7 +39,7 @@ import {
     ContainedButton,
     OutlinedButton,
     TextButton,
-} from "../components/button.jsx";
+} from "../components/button.js";
 
 import { Review, ProductCard } from "../features/product/index.js";
 import axiosClient from "../../axios-client.js";
@@ -48,7 +49,10 @@ import useWindowSizeDimensions from "../hooks/useWindowResponsiveDimensions.js";
 import { FlareSharp } from "@mui/icons-material";
 import { AddAddressDialog } from "../features/profile/index.js";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
-import { addProductToCart } from "../features/product/productSlice.js";
+import {
+    addProductToCart,
+    addProductToWholesaleCart,
+} from "../features/product/productSlice.js";
 import usePriceCart from "../hooks/usePrice.js";
 import AddressDialog from "../features/profile/addressDialog.js";
 import { current } from "@reduxjs/toolkit";
@@ -224,13 +228,13 @@ function ProductMainCard({
     const addToCart = () => {
         const quantityForProduct = quantity;
         const productCart = { ...product, quantityForProduct, check: false };
-        dispatch(addProductToCart(productCart));
+        dispatch(addProductToWholesaleCart(productCart));
     };
 
     const buyNow = () => {
         const quantityForProduct = quantity;
         const productCart = { ...product, quantityForProduct, check: false };
-        dispatch(addProductToCart(productCart));
+        dispatch(addProductToWholesaleCart(productCart));
         navigate("/cart");
     };
 
@@ -342,20 +346,10 @@ function ProductMainCard({
                         </div>
                     </div>
 
-                    <div>
-                        <h1 className="text-3xl font-bold text-red_main">
-                            {product &&
-                                changePriceFormat(product?.priceDiscount)}
-                            đ
-                        </h1>
-                        <p className="text-base font-medium text-gray-100 line-through">
-                            {product.max_discount_amount ? (
-                                changePriceFormat(product.price) + "đ"
-                            ) : (
-                                <br />
-                            )}
-                        </p>
-                    </div>
+                    <p className="text-xl font-medium my-2">
+                        {t("seePriceBelow")}
+                    </p>
+
                     <Divider
                         sx={{
                             borderBottomWidth: 0.5,
@@ -480,7 +474,7 @@ function ProductMainCard({
                                 }
                                 onClick={addToCart}
                             >
-                                {t("addToCart")}
+                                {t("addToWholesaleCart")}
                             </OutlinedButton>
                             <ContainedButton
                                 className="min-w-fit  bg-primary_main"
@@ -969,7 +963,56 @@ function ProductSameCategoryCard({
     );
 }
 
-export default function ProductDetails() {
+function ProductWholesalePriceCard({ product }: { product: any }) {
+    if (product) {
+        return (
+            <div className="p-4 bg-white flex self-center">
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell className="text-2xl font-semibold">
+                                Từ (sản phẩm)
+                            </TableCell>
+                            <TableCell className="text-2xl font-semibold">
+                                Đến (sản phẩm)
+                            </TableCell>
+                            <TableCell className="text-2xl font-semibold">
+                                Giá
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {product.product_wholesale_pricing.map((price: any) => (
+                            <StyledTableRow>
+                                <TableCell
+                                    className="text-2xl font-semibold"
+                                    align="center"
+                                >
+                                    {price.quantity_from}
+                                </TableCell>
+                                <TableCell
+                                    className="text-2xl font-semibold"
+                                    align="center"
+                                >
+                                    {price.quantity_to
+                                        ? price.quantity_to
+                                        : "----"}
+                                </TableCell>
+                                <TableCell
+                                    className="text-2xl font-semibold text-red_main"
+                                    align="right"
+                                >
+                                    {changePriceFormat(price.price)}đ
+                                </TableCell>
+                            </StyledTableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
+        );
+    }
+}
+export default function ProductWholesaleDetails() {
     const { t } = useTranslation();
     const { id } = useParams();
     const [product, setProduct] = useState<product | null>(null);
@@ -981,7 +1024,7 @@ export default function ProductDetails() {
     useEffect(() => {
         const fetchProduct = () => {
             axiosClient
-                .get(`/productDetail?id=${id}`, {
+                .get(`/productWholesaleDetail?id=${id}`, {
                     params: { customerId: user?.id },
                 })
                 .then(({ data }) => {
@@ -1013,6 +1056,7 @@ export default function ProductDetails() {
                     likeProduct={likeProduct}
                     setLikedProduct={setLikedProduct}
                 />
+                <ProductWholesalePriceCard product={product} />
                 <ProductDetailCard product={product} />
                 <ProductDescriptionCard product={product} />
                 <ProductReviewCard product={product} />

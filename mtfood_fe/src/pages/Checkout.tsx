@@ -613,9 +613,7 @@ function CheckoutPayment() {
                     />
                     <div className="flex flex-row items-center space-x-2 ">
                         <img src="/assets/zaloPay.png" className="h-auto w-6" />
-                        <span className="text-sm text-gray-100">
-                            {t("ZaloPay")}
-                        </span>
+                        <span className="text-sm text-gray-100">VNPay</span>
                     </div>
                 </div>
                 {/* <div className="flex flex-row items-center space-x-4">
@@ -662,7 +660,7 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
             </div>
             <div className="flex flex-row flex-1 px-3 items-center">
                 <span className="text-sm text-gray-100 my-0">
-                    5 {t("product")}
+                    1 {t("product")}
                 </span>
                 <TextButton
                     endIcon={
@@ -691,7 +689,19 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="text-black text-sm font-medium my-0">
-                                        500.000đ
+                                        285.000đ
+                                    </span>
+                                </TableCell>
+                            </StyledTableRow>
+                            <StyledTableRow>
+                                <TableCell align="left">
+                                    <span className="text-gray-100 text-sm my-0">
+                                        Phí vận chuyển
+                                    </span>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <span className="text-black text-sm font-medium my-0">
+                                        30.000đ
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
@@ -703,7 +713,7 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="text-black text-sm font-medium my-0">
-                                        500.000đ
+                                        30.000đ
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
@@ -715,7 +725,7 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="text-black text-sm font-medium my-0">
-                                        500.000đ
+                                        5.000đ
                                     </span>
                                 </TableCell>
                             </TableRow>
@@ -727,7 +737,7 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="text-black text-sm font-medium my-0">
-                                        500.000đ
+                                        35.000đ
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
@@ -739,7 +749,7 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="my-0 text-red_main text-2xl font-bold">
-                                        500.000đ
+                                        290.000đ
                                     </span>
                                 </TableCell>
                             </StyledTableRow>

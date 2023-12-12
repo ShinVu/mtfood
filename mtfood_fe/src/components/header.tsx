@@ -1,10 +1,3 @@
-// Import react library
-import { useState } from "react";
-
-// Import tailwind css
-import { useSelector } from "react-redux";
-import "../index.css";
-
 // Import react router dom
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -12,22 +5,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 //Import icon
-import { FaAngleDown, FaCartShopping } from "react-icons/fa6";
+import { FaCartShopping } from "react-icons/fa6";
 
 //Import color theme
 import { colors } from "../../public/theme";
 
 //Import MUI
-import {
-    Badge,
-    Button,
-    Divider,
-    MenuItem,
-    Popper,
-    Select,
-    SelectChangeEvent,
-    Stack,
-} from "@mui/material";
+import { Badge, Button, Stack } from "@mui/material";
 import LoopIcon from "@mui/icons-material/Loop";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -39,10 +23,7 @@ import {
     handleLogInDialogOpen,
     signOut,
 } from "../features/authentication/authenticationSlice";
-import {
-    logOutFailResponse,
-    logOutSuccessResponse,
-} from "../models/user.model";
+import { logOutSuccessResponse } from "../models/user.model";
 
 //Axios client
 import axiosClient from "../../axios-client";
@@ -77,9 +58,7 @@ export default function Header() {
                 dispatch(signOut(null));
                 navigate("/home");
             })
-            .catch(({ response }: { response: logOutFailResponse }) => {
-                console.log(response.data.message);
-            });
+            .catch();
     };
 
     const handleNavigateMustLogin = (navigateRoute: string) => {
@@ -215,7 +194,7 @@ export default function Header() {
                     </TextButton>
                     <TextButton
                         className="text-white text-sm"
-                        onClick={() => navigate("/product")}
+                        onClick={() => navigate("/productWholesale")}
                     >
                         {t("wholesaleProduct")}
                     </TextButton>

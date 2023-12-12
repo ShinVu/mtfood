@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 //Import MUI
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+
 //Import components
 import Header from "../components/header";
 import Footer from "../components/footer";
@@ -15,7 +15,7 @@ import useWindowSizeDimensions from "../hooks/useWindowResponsiveDimensions.js";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
 import { FaBoltLightning } from "react-icons/fa6";
 import { LiaLongArrowAltRightSolid } from "react-icons/lia";
-import { FaShippingFast } from "react-icons/fa";
+
 import {
     setProductCategory,
     setProductDiscount,
@@ -23,10 +23,8 @@ import {
     setProductNew,
     setProductTag,
 } from "../features/product/productSlice.js";
-import { colors } from "../../public/theme.js";
+
 import ProductDiscountSwiper from "../components/productSwiper/productDiscountSwiper.js";
-import { t } from "i18next";
-import MyMap from "../components/map.js";
 
 type product = {
     id: number;
@@ -61,6 +59,8 @@ function CategoryCardItem(props) {
                 <img
                     src={category.image_url}
                     className="w-20 h-20 object-cover object-center"
+                    alt={category.name}
+                    loading="lazy"
                 />
             )}
             <p className="text-sm mt-2 font-semibold text-black uppercase">
@@ -170,9 +170,9 @@ function CategoryCard() {
     return (
         <div className="flex flex-col flex-1 p-4 ">
             <Divider className="mx-10 my-4 cursor-pointer">
-                <h5 className="font-bold my-0 text-lg text-black uppercase">
+                <h1 className="font-bold my-0 text-lg text-black uppercase">
                     {t("category")}
-                </h5>
+                </h1>
             </Divider>
 
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6  mt-4 gap-x-2 gap-y-4">
@@ -251,12 +251,6 @@ function TagCard() {
     };
     return (
         <div className="flex flex-col flex-1 p-4">
-            {/* <Divider className="mx-10 my-4 cursor-pointer">
-                <h5 className="font-bold my-0 text-lg text-black uppercase">
-                    {t("tag")}
-                </h5>
-            </Divider> */}
-
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2  gap-y-4 gap-x-2 mt-4">
                 {tags
                     ? tags
@@ -408,7 +402,7 @@ function ProductSlideMostLikedProductCard() {
                 onClick={handleMostLikedClick}
             >
                 <h4 className="text-2xl my-0 text-primary_main">
-                    {t("mostLikedDish")}
+                    Gợi ý cho bạn
                 </h4>
             </Divider>
             <Paper
