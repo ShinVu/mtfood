@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -19,7 +20,7 @@ class OrderFactory extends Factory
     {
         $a = array('created', 'waiting_payment', 'waiting_confirm_payment', 'waiting_confirm', 'packing', 'waiting_shipment', 'shipping', 'delivered', 'completed', 'cancel_waiting_refund', 'canceled_refund', 'canceled', 'return_waiting_refund', 'returned');
         $random_keys = array_rand($a);
-        $order_code = $a[$random_keys];
+        $order_code = Carbon::now();
         return [
             'subtotal'  => fake()->randomFloat($nbMaxDecimals = 0, $min = 0, $max = NULL),
             'shipping_subtotal' => fake()->randomFloat($nbMaxDecimals = 0, $min = 0, $max = NULL),

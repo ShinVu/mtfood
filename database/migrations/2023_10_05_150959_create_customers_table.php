@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id(); //customer primary key
             $table->string('name')->nullable(); //customer name
             $table->string('phone_number', 20)->unique()->nullable(); //customer phone number, also used as account
+            $table->string('image_url', 2048)->nullable(); //customer avatar
             $table->string('email')->unique()->nullable(); //customer email
             $table->string('password')->nullable(); //customer password
             $table->string('pin_code')->nullable(); //customer pin code

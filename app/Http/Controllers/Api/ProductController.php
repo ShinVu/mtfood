@@ -20,6 +20,7 @@ use App\Http\Requests\GetProductImageReview;
 use App\Http\Requests\GetProductMostLikedRequest;
 use App\Http\Requests\GetProductNewRequest;
 use App\Http\Requests\GetProductReview;
+use App\Http\Requests\getProductWholesaleByFilterRequest;
 use App\Http\Requests\getSeenProductRequest;
 use App\Http\Requests\GetTagRequest;
 use App\Http\Requests\productLikeStatusRequest;
@@ -184,12 +185,71 @@ class ProductController extends Controller
                     $image->image_url = asset($fullPath);
                 }
             }
+            // foreach (glob("C:/xampp/htdocs/mtfood/public/storage/product" . '/*') as $file) {
+            //     $folderName = explode("/", $file)[7];
+            //     foreach (glob("C:/xampp/htdocs/mtfood/public/storage/product/" . $folderName  . '/*') as $image) {
+            //         $productId = $folderName;
+            //         $imageUrl = explode("/", $image)[8];
+            //         ProductImage::create([
+            //             'image_url' => $imageUrl,
+            //             'product_id' => $productId,
+            //             'default' => 0,
+            //         ]);
+            //     }
+            // }
 
             return response(['message' => 'getProductSuccessfully', 'result' => ['product' => $product, 'likeState' => $likeState]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
         }
     }
+
+    public function productWholesaleDetail(GetProductDetailRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $productId = $data['id'];
+
+            $likeState = false;
+            //Check user like product status
+            if (isset($data['customerId'])) {
+                $customerId = $data['customerId'];
+
+                $likeStatus = UserLikeProduct::where('product_id', $productId)->where('customer_id', $customerId);
+
+                if ($likeStatus->exists()) {
+                    $likeState = true;
+                }
+            }
+            /** @var \App\Models\Product $product */
+            /** @var \App\Models\ProductDiscount $highestDiscount */
+            $product = Product::query()->where('id', $productId);
+            $product = $product->with(['productImage',  'productWholesalePricing'])->first();
+
+            //Append media path
+            $productPath = 'storage/product/';
+
+            if ($imageName = $product->image_url) {
+                $fullPath = $productPath . $product->id . "/" . $imageName;
+                $product->image_url = asset($fullPath);
+            }
+
+            if ($images = $product->productImage) {
+                foreach ($images as $image) {
+                    $fullPath = $productPath . $product->id . "/" . $image['image_url'];
+                    $image->image_url = asset($fullPath);
+                }
+            }
+
+
+
+            return response(['message' => 'getProductSuccessfully', 'result' => ['product' => $product, 'likeState' => $likeState]], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+
 
     public function category(GetCategoryRequest $request)
     {
@@ -490,6 +550,87 @@ class ProductController extends Controller
         }
     }
 
+    public function getProductWholesaleByFilter(getProductWholesaleByFilterRequest $request)
+    {
+        try {
+            $data = $request->validated();
+
+            /** @var \App\Models\Product $products */
+
+            $products = Product::query()->where('status', 1)->where('is_wholesale', 1);
+
+            $products = $products->selectRaw('products.id,products.name,products.image_url,products.is_wholesale,products.category_id,products.rating,products.quantity_available,products.updated_at,products.price');
+
+
+            //If user search by keyword
+            if (isset($data['keyword'])) {
+                $searchProducts = Product::search((string)$data['keyword'])->keys();
+                $products = $products->whereIn('products.id', $searchProducts);
+            }
+
+            /**Setting query for product filter */
+            //Filter category
+
+            if (isset($data['category'])) {
+                $category = (int)$data['category'];
+
+                $products = $products->where('products.category_id', $category);
+            }
+
+            //Filter tag
+            if (isset($data['tag'])) {
+
+                $tag = json_decode($data['tag'], true);
+
+                $products = $products->join('product_have_tag', 'products.id', '=', 'product_have_tag.product_id')->whereIn('product_have_tag.tag_id', $tag)->distinct();
+            }
+
+            if (isset($data['rating'])) {
+                $products = $products->where('products.rating', '>=', (float)$data['rating']);
+            }
+
+            //Sort product
+            if (isset($data['sort'])) {
+                $sort = (string)$data['sort'];
+                if ($sort == "common") {
+                    $products = $products;
+                } else if ($sort == "mostPurchased") {
+                    $products = $products;
+                } else if ($sort == "new") {
+                    $products = $products->orderBy('products.updated_at', 'desc');
+                } else if ($sort == "priceHTL") {
+                    $products = $products->orderBy('products.price', 'desc');
+                } else if ($sort == "priceLTH") {
+                    $products = $products->orderBy('products.price', 'asc');
+                }
+            }
+
+            //Pagination
+            //Get total page of products
+            if (isset($data['offset']) && isset($data['limit'])) {
+                $totalPageProduct = ceil($products->count() / (int)$data['limit']);
+                $products = $products->skip((int)$data['offset'])->take((int)$data['limit']);
+            }
+
+            //Get order details and its relationships
+            $products = $products->with([
+                'productWholesalePricing'
+            ]);
+
+            $products = $products->get();
+            //Append media path
+            $productPath = 'storage/product/';
+            foreach ($products as $product) {
+                if ($imageName = $product->image_url) {
+                    $fullPath = $productPath . $product->id . "/" . $imageName;
+                    $product->image_url = asset($fullPath);
+                }
+            }
+            return response(['message' => 'getProductSuccessfully', 'result' => ['product' => $products, 'totalPage' => $totalPageProduct]], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
     public function getProductByIds(getProductByIdsRequest $request)
     {
         try {

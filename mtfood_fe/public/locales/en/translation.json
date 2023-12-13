@@ -326,5 +326,6 @@
     "seePriceBelow": "See wholesale price below",
     "addToWholesaleCart": "Add to wholesale cart",
     "normalCart": "Cart",
-    "wholesaleCart": "Wholesale cart"
+    "wholesaleCart": "Wholesale cart",
+    "quantityInvalid": "Quantity invalid"
 }

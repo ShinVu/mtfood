@@ -46,6 +46,8 @@ import { productCart } from "../models/product.model.js";
 import { changePriceFormat, getSubTotal } from "../utils/index.js";
 import usePriceCheckout from "../hooks/usePriceCheckout.js";
 import VoucherDialog from "../components/voucherDialog.js";
+import { Navigate, useNavigate } from "react-router-dom";
+import usePriceCart from "../hooks/usePrice.js";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
@@ -176,51 +178,6 @@ function CheckoutDelivery() {
                             <TableCell align="right">
                                 <span className="text-sm font-medium text-red_main">
                                     30.000đ
-                                </span>
-                            </TableCell>
-                        </StyledTableRow>
-                        <StyledTableRow>
-                            <TableCell align="left">
-                                <div className="-ml-3">
-                                    {" "}
-                                    <Radio
-                                        checked={selectedValue === "normal"}
-                                        onChange={handleChange}
-                                        value="normal"
-                                        name="radio-buttons"
-                                        inputProps={{ "aria-label": "normal" }}
-                                    />
-                                    <span className="text-sm text-gray-100">
-                                        {t("normalDelivery")}
-                                    </span>
-                                </div>
-                            </TableCell>
-                            <TableCell align="right">
-                                {" "}
-                                <span className="text-sm font-medium text-red_main">
-                                    21.000đ
-                                </span>
-                            </TableCell>
-                        </StyledTableRow>
-                        <StyledTableRow>
-                            <TableCell align="left">
-                                <div className="-ml-3">
-                                    <Radio
-                                        checked={selectedValue === "instant"}
-                                        onChange={handleChange}
-                                        value="instant"
-                                        name="radio-buttons"
-                                        inputProps={{ "aria-label": "instant" }}
-                                    />
-                                    <span className="text-sm text-gray-100">
-                                        {t("instantDelivery")}
-                                    </span>
-                                </div>
-                            </TableCell>
-                            <TableCell align="right">
-                                {" "}
-                                <span className="text-sm font-medium text-red_main">
-                                    21.000đ
                                 </span>
                             </TableCell>
                         </StyledTableRow>
@@ -637,8 +594,8 @@ function CheckoutPayment() {
 
 function CheckoutSumup({ refProps }: { refProps: any }) {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const handleSeeInformation = () => {
-        console.log(refProps);
         if (refProps) {
             refProps.current.scrollIntoView({
                 behavior: "smooth",
@@ -646,13 +603,14 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
             });
         }
     };
+    const price = usePriceCheckout();
     return (
         <div className="flex flex-col flex-1 bg-white p-4">
             <div className="flex flex-row flex-1 justify-between px-3 items-center">
                 <h5 className=" text-base uppercase my-0 font-semibold">
                     {t("order")}
                 </h5>
-                <TextButton>
+                <TextButton onClick={() => navigate(-1)}>
                     <span className="normal-case my-0 text-blue">
                         {t("change")}
                     </span>
@@ -689,7 +647,9 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="text-black text-sm font-medium my-0">
-                                        285.000đ
+                                        {price &&
+                                            changePriceFormat(price.totalSub)}
+                                        đ
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
@@ -701,46 +661,69 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="text-black text-sm font-medium my-0">
-                                        30.000đ
+                                        {price &&
+                                            changePriceFormat(
+                                                price.totalShippingFee
+                                            )}
+                                        đ
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
-                            <StyledTableRow>
-                                <TableCell align="left">
-                                    <span className="text-gray-100 text-sm my-0">
-                                        {t("productDiscount")}
-                                    </span>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <span className="text-black text-sm font-medium my-0">
-                                        30.000đ
-                                    </span>
-                                </TableCell>
-                            </StyledTableRow>
-                            <TableRow>
-                                <TableCell align="left">
-                                    <span className="text-gray-100 text-sm my-0">
-                                        {t("voucherDiscounts")}
-                                    </span>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <span className="text-black text-sm font-medium my-0">
-                                        5.000đ
-                                    </span>
-                                </TableCell>
-                            </TableRow>
-                            <StyledTableRow>
-                                <TableCell align="left">
-                                    <span className="text-gray-100 text-sm my-0">
-                                        {t("saving")}
-                                    </span>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <span className="text-black text-sm font-medium my-0">
-                                        35.000đ
-                                    </span>
-                                </TableCell>
-                            </StyledTableRow>
+                            {price?.totalProductDiscount ? (
+                                <StyledTableRow>
+                                    <TableCell align="left">
+                                        <span className="text-gray-100 text-sm my-0">
+                                            {t("productDiscount")}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <span className="text-black text-sm font-medium my-0">
+                                            {price &&
+                                                changePriceFormat(
+                                                    price.totalProductDiscount
+                                                )}
+                                        </span>
+                                    </TableCell>
+                                </StyledTableRow>
+                            ) : (
+                                <></>
+                            )}
+                            {price && price.totalVoucher ? (
+                                <TableRow>
+                                    <TableCell align="left">
+                                        <span className="text-gray-100 text-sm my-0">
+                                            {t("voucherDiscounts")}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <span className="text-black text-sm font-medium my-0">
+                                            {changePriceFormat(
+                                                price.totalVoucher
+                                            )}
+                                        </span>
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                <></>
+                            )}
+                            {price && price.totalDiscount ? (
+                                <StyledTableRow>
+                                    <TableCell align="left">
+                                        <span className="text-gray-100 text-sm my-0">
+                                            {t("saving")}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <span className="text-black text-sm font-medium my-0">
+                                            {changePriceFormat(
+                                                price.totalDiscount
+                                            )}
+                                        </span>
+                                    </TableCell>
+                                </StyledTableRow>
+                            ) : (
+                                <></>
+                            )}
                             <StyledTableRow>
                                 <TableCell align="left">
                                     <span className="text-gray-100 text-sm my-0">
@@ -749,7 +732,7 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="my-0 text-red_main text-2xl font-bold">
-                                        290.000đ
+                                        {changePriceFormat(price?.totalPrice)}
                                     </span>
                                 </TableCell>
                             </StyledTableRow>

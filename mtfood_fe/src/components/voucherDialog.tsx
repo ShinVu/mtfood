@@ -24,6 +24,7 @@ import { Check } from "@mui/icons-material";
 import { setVoucher } from "../features/order/orderSlice";
 import usePriceCheckout from "../hooks/usePriceCheckout";
 import { handleSnackbarDialogOpen } from "../features/authentication/authenticationSlice";
+import usePriceCart from "../hooks/usePrice";
 
 export default function VoucherDialog(props: any) {
     const { t } = useTranslation();
@@ -33,7 +34,7 @@ export default function VoucherDialog(props: any) {
     const dispatch = useAppDispatch();
 
     const [vouchers, setVouchers] = useState<orderVoucher[] | null>(null);
-    const price = usePriceCheckout();
+    const price = usePriceCart();
     const handleVoucherChecked = (voucher: orderVoucher) => {
         if (voucher.id === selectedVoucher?.id) {
             dispatch(setVoucher(null));
@@ -84,6 +85,7 @@ export default function VoucherDialog(props: any) {
 
     useEffect(() => {
         if (vouchers) {
+            console.log("hello");
             const availableVouchers: orderVoucher[] = [];
             const unAvailableVouchers: orderVoucher[] = [];
             for (let i = 0; i < vouchers.length; i++) {

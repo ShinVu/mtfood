@@ -22,7 +22,7 @@ const initialState = {
     productMostLiked: null,
     productDiscount: null,
     productCart: getLocalStorage("CART"),
-    productWholesaleCart: getLocalStorage("WHOLESALE_CART"),
+    productWholesaleCart: getLocalStorage("WHOLESALECART"),
     cartChecked: getLocalStorage("CART_CHECKED"),
     wholesaleCartChecked: getLocalStorage("WHOLESALE_CART_CHECKED"),
 };

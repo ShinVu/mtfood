@@ -24,6 +24,13 @@ export type product = {
     max_discount_amount: string | null;
     priceDiscount: string;
     product_image?: Array<{ image_url: string }>;
+    product_wholesale_pricing?: {
+        id: number;
+        price: string;
+        quantity_from: number;
+        quantity_to: number;
+        product_id: number;
+    }[];
 };
 
 export type productCart = {
@@ -53,6 +60,13 @@ export type productCart = {
     max_discount_amount: string | null;
     check: boolean;
     priceDiscount: string;
+    product_wholesale_pricing?: {
+        id: number;
+        price: string;
+        quantity_from: number;
+        quantity_to: number;
+        product_id: number;
+    }[];
 };
 
 export type priceCart = {
@@ -61,6 +75,11 @@ export type priceCart = {
     totalDiscount: number;
     totalProductDiscount: number;
     totalVoucher: number;
+};
+
+export type priceWholesaleCart = {
+    totalPrice: number;
+    totalSub: number;
 };
 
 export type filter = {

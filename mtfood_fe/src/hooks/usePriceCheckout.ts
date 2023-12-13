@@ -11,6 +11,7 @@ export default function usePriceCheckout() {
         function getPrice() {
             let totalPrice = 0;
             let totalProductDiscount = 0;
+            let totalShippingFee = 21000;
             let totalVoucher = 0;
             let totalSub = 0;
             let totalDiscount = 0;
@@ -38,9 +39,11 @@ export default function usePriceCheckout() {
             });
 
             totalDiscount = totalProductDiscount + totalVoucher;
+            totalPrice = totalPrice + totalShippingFee - totalVoucher;
             return {
                 totalPrice,
                 totalProductDiscount,
+                totalShippingFee,
                 totalSub,
                 totalVoucher,
                 totalDiscount,

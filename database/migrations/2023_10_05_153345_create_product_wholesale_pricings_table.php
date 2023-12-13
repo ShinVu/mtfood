@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('product_wholesale_pricings', function (Blueprint $table) {
             $table->id(); //product wholesale pricing primary key
             $table->unsignedDecimal('price', $precision = 19, $scale = 4); //price of the product
-            $table->unsignedInteger('quantity_apply'); //Quantity for the price to be applied
+            $table->unsignedInteger('quantity_from')->nullable(); //Quantity from which the price to be applied
+            $table->unsignedInteger('quantity_to')->nullable(); //Quantity to which the price to be applied
             $table->dateTime('valid_from'); //price is valid from
             $table->dateTime('valid_to'); //price is valid to
             $table->boolean('is_active'); //whether price is still being applied for the product

@@ -7,6 +7,7 @@ import {
     TableRow,
     TableCell,
     Divider,
+    Button,
 } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -40,9 +41,13 @@ import { productCart } from "../models/product.model.js";
 import { changePriceFormat, getSubTotal, isInt } from "../utils/index.js";
 import {
     addProductToCart,
+    addProductToWholesaleCart,
     removeAllProductFromCart,
+    removeAllProductFromWholesaleCart,
     removeProductFromCart,
+    removeProductFromWholesaleCart,
     setAllProductCheckedCart,
+    setAllProductCheckedWholesaleCart,
 } from "../features/product/productSlice.js";
 import usePriceCart from "../hooks/usePrice.js";
 import usePriceCheckout from "../hooks/usePriceCheckout.js";
@@ -53,6 +58,8 @@ import {
 } from "../features/authentication/authenticationSlice.js";
 import axiosClient from "../../axios-client.js";
 import VoucherDialog from "../components/voucherDialog.js";
+import { current } from "@reduxjs/toolkit";
+import usePriceWholesaleCart from "../hooks/usePriceWholesale.js";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
@@ -282,34 +289,74 @@ function ProductWholesaleCartItemCard({ product }: { product: productCart }) {
 
     useEffect(() => {
         const handleQuantityChange = () => {
-            const quantityForProduct = quantity;
-            const productCart = { ...product, quantityForProduct };
-            dispatch(addProductToCart(productCart));
+            if (product.product_wholesale_pricing) {
+                if (
+                    product.product_wholesale_pricing[0].quantity_from >
+                    quantity
+                ) {
+                    dispatch(
+                        handleSnackbarDialogOpen({
+                            message: "quantityInvalid",
+                            severity: "error",
+                        })
+                    );
+                } else {
+                    const quantityForProduct = quantity;
+                    const productCart = { ...product, quantityForProduct };
+                    dispatch(addProductToWholesaleCart(productCart));
+                }
+            }
         };
         handleQuantityChange();
     }, [quantity]);
 
     const quantitySubstract = () => {
-        setQuantity(quantity > 1 ? quantity - 1 : quantity);
+        if (product.product_wholesale_pricing) {
+            if (
+                product.product_wholesale_pricing[0].quantity_from >= quantity
+            ) {
+                dispatch(
+                    handleSnackbarDialogOpen({
+                        message: `quantityInvalid`,
+                        severity: "error",
+                    })
+                );
+            } else {
+                setQuantity(quantity - 1);
+            }
+        }
     };
     const quantityAdd = () => {
         setQuantity(quantity + 1);
     };
 
     const quantityChange = (value: string) => {
-        const quantity = value.trim();
-        if (isInt(quantity)) {
-            setQuantity(parseInt(quantity));
+        if (isInt(value.trim())) {
+            const quantity = parseInt(value.trim());
+            if (product.product_wholesale_pricing) {
+                if (
+                    product.product_wholesale_pricing[0].quantity_from >
+                    quantity
+                ) {
+                    dispatch(
+                        handleSnackbarDialogOpen({
+                            message: "quantityInvalid",
+                            severity: "error",
+                        })
+                    );
+                }
+                setQuantity(quantity);
+            }
         }
     };
 
     const deleteProduct = () => {
-        dispatch(removeProductFromCart(product.id));
+        dispatch(removeProductFromWholesaleCart(product.id));
     };
 
     const checkChange = () => {
         const productCart = { ...product, check: !product.check };
-        dispatch(addProductToCart(productCart));
+        dispatch(addProductToWholesaleCart(productCart));
     };
 
     const handleLikeProduct = () => {
@@ -341,6 +388,22 @@ function ProductWholesaleCartItemCard({ product }: { product: productCart }) {
         }
     };
 
+    const getWholesalePrice = () => {
+        const wholesalePrice = product.product_wholesale_pricing;
+
+        if (wholesalePrice && wholesalePrice.length > 0) {
+            for (
+                let priceIndex = wholesalePrice.length - 1;
+                priceIndex >= 0;
+                priceIndex--
+            ) {
+                if (quantity >= wholesalePrice[priceIndex].quantity_from) {
+                    return wholesalePrice[priceIndex].price;
+                }
+            }
+        }
+        return "";
+    };
     return (
         <StyledTableRow>
             <TableCell align="left">
@@ -367,14 +430,9 @@ function ProductWholesaleCartItemCard({ product }: { product: productCart }) {
             </TableCell>
             <TableCell align="center">
                 <div>
-                    <p className="my-0 text-lg font-medium text-black">
-                        {changePriceFormat(product.priceDiscount)}đ
+                    <p className="my-0 text-lg font-medium">
+                        {changePriceFormat(getWholesalePrice())}đ
                     </p>
-                    {product.max_discount_amount && (
-                        <p className="my-0 text-base text-gray-100 line-through">
-                            {changePriceFormat(product.price)}đ
-                        </p>
-                    )}
                 </div>
             </TableCell>
             <TableCell align="center">
@@ -430,22 +488,12 @@ function ProductWholesaleCartItemCard({ product }: { product: productCart }) {
                     <p className="my-0 text-lg font-medium text-red_main">
                         {changePriceFormat(
                             getSubTotal(
-                                product.priceDiscount,
+                                getWholesalePrice(),
                                 product.quantityForProduct
                             )
                         )}
                         đ
                     </p>
-                    {/* {product.max_discount_amount && (
-                        <p className="my-0 text-base text-gray-100 line-through">
-                            {changePriceFormat(
-                                getSubTotal(
-                                    product.max_discount_amount,
-                                    product.quantityForProduct
-                                )
-                            )}
-                        </p>
-                    )} */}
                 </div>
             </TableCell>
             <TableCell align="center">
@@ -569,7 +617,7 @@ function ProductWholesaleCartItems({
     const dispatch = useAppDispatch();
     //Redux
     const handleAllChecked = () => {
-        dispatch(setAllProductCheckedCart());
+        dispatch(setAllProductCheckedWholesaleCart());
     };
     return (
         <div className="flex flex-1 bg-white">
@@ -818,6 +866,115 @@ function PopOverOrderPayment() {
     );
 }
 
+function PopOverOrderWholesalePayment() {
+    const { t } = useTranslation();
+    const [anchorEl, setAnchorEl] = useState(null);
+    const handlePopoverOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+
+    //Cart prices
+    const priceCart = usePriceWholesaleCart();
+    return (
+        <>
+            <Popover
+                id="mouse-over-popover"
+                sx={{
+                    pointerEvents: "none",
+                }}
+                disableRestoreFocus
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handlePopoverClose}
+                anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                }}
+                transformOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                }}
+            >
+                <div className="p-4">
+                    <p id="tableTitle" className="text-sm font-medium">
+                        {t("discountDetail")}
+                    </p>
+                    <Table aria-labelledby="tableTitle">
+                        <TableBody>
+                            <StyledTableRow>
+                                <TableCell align="left">
+                                    <span className="text-gray-100 text-sm my-0">
+                                        {t("productSum")}
+                                    </span>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <span className="text-black text-sm font-medium my-0">
+                                        {priceCart &&
+                                            changePriceFormat(
+                                                String(priceCart.totalSub)
+                                            )}
+                                        đ
+                                    </span>
+                                </TableCell>
+                            </StyledTableRow>
+
+                            <StyledTableRow>
+                                <TableCell align="left">
+                                    <span className="text-gray-100 text-sm my-0">
+                                        {t("totalPayment")}
+                                    </span>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <span className="my-0 text-red_main text-2xl font-bold">
+                                        {priceCart &&
+                                            changePriceFormat(
+                                                String(priceCart.totalPrice)
+                                            )}
+                                        đ
+                                    </span>
+                                </TableCell>
+                            </StyledTableRow>
+                        </TableBody>
+                    </Table>
+                </div>
+            </Popover>
+            <div
+                aria-owns={open ? "mouse-over-popover" : undefined}
+                aria-haspopup="true"
+                onMouseEnter={handlePopoverOpen}
+                onMouseLeave={handlePopoverClose}
+            >
+                <Table size="small">
+                    <TableBody>
+                        <StyledTableRow>
+                            <TableCell align="left">
+                                <p className="my-0 text-sm font-medium">
+                                    {t("totalOrder")}
+                                </p>
+                            </TableCell>
+                            <TableCell align="right">
+                                <p className="my-0 text-red_main text-2xl font-bold">
+                                    {priceCart &&
+                                        changePriceFormat(
+                                            String(priceCart.totalPrice)
+                                        )}
+                                    đ
+                                </p>
+                            </TableCell>
+                        </StyledTableRow>
+                    </TableBody>
+                </Table>
+            </div>
+        </>
+    );
+}
+
 function OrderProceedCard({
     products,
     cartChecked,
@@ -933,11 +1090,11 @@ function OrderWholesaleProceedCard({
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const handleAllChecked = () => {
-        dispatch(setAllProductCheckedCart());
+        dispatch(setAllProductCheckedWholesaleCart());
     };
 
     const handleAllRemoved = () => {
-        dispatch(removeAllProductFromCart());
+        dispatch(removeAllProductFromWholesaleCart());
     };
     const { token } = useAppSelector((state) => state.authentication);
     //Cart prices
@@ -956,38 +1113,8 @@ function OrderWholesaleProceedCard({
         }
     };
 
-    //voucher dialog states
-    const [open, setOpen] = React.useState(false);
-    const handleModalOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        //Set all add Address state to null on Close
-
-        setOpen(false);
-    };
     return (
         <div className="flex flex-1 flex-col bg-white p-4">
-            <div className="flex flex-1 justify-end items-center space-x-24 px-4">
-                <div className="flex flex-row items-center space-x-4">
-                    <BiSolidDiscount color={colors.primary_main} size="24px" />
-                    <p className="text-primary_main my-0">
-                        {t("mtfoodVoucher")}
-                    </p>
-                </div>
-                <p
-                    className="my-0 text-sm font-medium cursor-pointer"
-                    onClick={handleModalOpen}
-                >
-                    {t("enterVoucher")}
-                </p>
-                <VoucherDialog
-                    open={open}
-                    handleModalOpen={handleModalOpen}
-                    handleClose={handleClose}
-                />
-            </div>
-            <Divider className="my-4" />
             <div className="flex flex-1 items-center  justify-between">
                 <div className="flex flex-row items-center space-x-12">
                     <div className="flex flex-row items-center">
@@ -1011,7 +1138,7 @@ function OrderWholesaleProceedCard({
                 </div>
 
                 <div className="flex w-fit px-4 items-center space-x-48">
-                    <PopOverOrderPayment />
+                    <PopOverOrderWholesalePayment />
                     <div>
                         <ContainedButton
                             className="h-fit bg-primary_main"
@@ -1050,43 +1177,81 @@ export default function Cart() {
     useEffect(() => {
         setProducts(productCart);
         setWholesaleProducts(productWholesaleCart);
-    }, [productCart]);
+    }, [productCart, productWholesaleCart]);
+
+    const [currentCart, setCurrentCart] = useState<string>("cart");
+    const handleClickCart = () => {
+        setCurrentCart("cart");
+    };
+    const handleClickWholesaleCart = () => {
+        setCurrentCart("wholesaleCart");
+    };
+
     return (
         <div className="flex flex-1 min-h-screen flex-col">
             <HeaderCheckout />
 
             <div className="flex  flex-col flex-1 h-fit bg-background_main p-4 space-y-4">
-                <p className="text-3xl font-bold">{t("normalCart")}</p>
-                {products && Object.keys(products).length ? (
-                    <>
-                        <ProductCartItems
-                            products={products}
-                            cartChecked={cartChecked}
-                        />
-                        <OrderProceedCard
-                            products={products}
-                            cartChecked={cartChecked}
-                        />
-                    </>
+                <div className="flex flex-row self-center space-x-10 mt-2">
+                    <Button
+                        className={`${
+                            currentCart === "cart"
+                                ? "bg-rich-black text-white"
+                                : ""
+                        } text-2xl font-semibold`}
+                        onClick={handleClickCart}
+                    >
+                        {t("normalCart")}
+                    </Button>
+                    <Button
+                        className={`${
+                            currentCart === "wholesaleCart"
+                                ? "bg-rich-black text-white"
+                                : ""
+                        } text-2xl font-semibold`}
+                        onClick={handleClickWholesaleCart}
+                    >
+                        {t("wholesaleCart")}
+                    </Button>
+                </div>
+
+                {currentCart === "cart" ? (
+                    products && Object.keys(products).length ? (
+                        <>
+                            <ProductCartItems
+                                products={products}
+                                cartChecked={cartChecked}
+                            />
+                            <OrderProceedCard
+                                products={products}
+                                cartChecked={cartChecked}
+                            />
+                        </>
+                    ) : (
+                        <ProductCartNoItem />
+                    )
                 ) : (
-                    <ProductCartNoItem />
+                    <></>
                 )}
 
-                <p className="text-3xl font-bold">{t("wholesaleCart")}</p>
-
-                {products && Object.keys(products).length ? (
-                    <>
-                        <ProductWholesaleCartItems
-                            products={wholesaleProducts}
-                            cartChecked={wholesaleCartChecked}
-                        />
-                        <OrderWholesaleProceedCard
-                            products={wholesaleProducts}
-                            cartChecked={wholesaleCartChecked}
-                        />
-                    </>
+                {currentCart === "wholesaleCart" ? (
+                    wholesaleProducts &&
+                    Object.keys(wholesaleProducts).length ? (
+                        <>
+                            <ProductWholesaleCartItems
+                                products={wholesaleProducts}
+                                cartChecked={wholesaleCartChecked}
+                            />
+                            <OrderWholesaleProceedCard
+                                products={wholesaleProducts}
+                                cartChecked={wholesaleCartChecked}
+                            />
+                        </>
+                    ) : (
+                        <ProductCartNoItem />
+                    )
                 ) : (
-                    <ProductCartNoItem />
+                    <></>
                 )}
             </div>
 

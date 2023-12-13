@@ -68,7 +68,10 @@ export default function ProductWholesaleCard(props: {
                         {product.product_wholesale_pricing
                             .slice(0, 2)
                             .map((wholesale_price: any) => (
-                                <div className="flex flex-row justify-between">
+                                <div
+                                    className="flex flex-row justify-between"
+                                    key={wholesale_price.id}
+                                >
                                     <p className="text-base font-medium  my-0">
                                         {t("from") + " "}
                                         {wholesale_price.quantity_from}

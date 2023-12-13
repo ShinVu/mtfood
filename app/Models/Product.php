@@ -58,4 +58,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class, 'product_id', 'id');
     }
+
+    public function productWholesalePricing(): HasMany
+    {
+        return $this->hasMany(ProductWholesalePricing::class, 'product_id', 'id')->orderBy('quantity_from');
+    }
 }

@@ -143,18 +143,6 @@ export default function Footer() {
                                     {t("privacy_policy")}
                                 </p>
                             </TableCell>
-                            <TableCell>
-                                <div className="flex flex-row items-center my-2">
-                                    <img
-                                        src="/assets/zaloPay.png"
-                                        className="h-auto w-6"
-                                        alt=""
-                                    />
-                                    <p className="font-medium text-xs text-[#808080] my-0 mx-2">
-                                        {t("ZaloPay")}
-                                    </p>
-                                </div>
-                            </TableCell>
                         </StyledTableRow>
                         <StyledTableRow>
                             <TableCell>

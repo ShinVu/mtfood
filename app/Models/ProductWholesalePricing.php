@@ -22,7 +22,8 @@ class ProductWholesalePricing extends Model
      */
     protected $fillable = [
         'price',
-        'quantity_apply',
+        'quantity_from',
+        'quantity_to',
         'valid_from',
         'valid_to',
         'is_active',

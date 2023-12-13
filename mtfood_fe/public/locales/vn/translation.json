@@ -327,6 +327,7 @@
     "cod": "Thanh toán khi giao hàng",
     "seePriceBelow": "Xem giá sỉ ở bảng phía dưới",
     "addToWholesaleCart": "Thêm vào giỏ hàng sỉ",
-    "normalCart": "Giỏ hàng cho sản phẩm lẻ",
-    "wholesaleCart": "Giỏ hàng cho sản phẩm sỉ"
+    "normalCart": "Giỏ hàng lẻ",
+    "wholesaleCart": "Giỏ hàng sỉ",
+    "quantityInvalid": "Xin vui lòng nhập số lượng sản phẩm sỉ phù hợp"
 }
