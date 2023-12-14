@@ -285,11 +285,7 @@ export default function OrderDetail() {
                                         </p>
                                     </div>
                                     <div className="px-2">
-                                        <p className="my-0 text-base">
-                                            <MapHeader
-                                                orderStatus={order.status}
-                                            />
-                                        </p>
+                                        <MapHeader orderStatus={order.status} />
                                     </div>
                                 </div>
                             </div>

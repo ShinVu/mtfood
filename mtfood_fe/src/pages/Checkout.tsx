@@ -825,9 +825,10 @@ export default function Checkout() {
             order_discount_id: order_discount_id,
         };
 
-        axiosClient
-            .post("/createOrder", payload)
-            .then(({ data }) => setLoading(false));
+        axiosClient.post("/createOrder", payload).then(({ data }) => {
+            setLoading(false);
+            console.log(data);
+        });
     };
     return (
         <div className="flex flex-1 flex-col">

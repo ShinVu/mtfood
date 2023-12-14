@@ -349,6 +349,9 @@ class OrderController extends Controller
                 return response(['message' => 'invalidAccess', 'result' => []], 401);
             }
 
+            //Begin transaction for creating order
+            DB::beginTransaction();
+
 
             //Create order with initial information
             $payment_method = $data['payment_method'];
@@ -364,7 +367,6 @@ class OrderController extends Controller
                 'delivery_address_id' => $delivery_address_id,
                 'status' => 'created'
             ]);
-
 
             //Init order amount
             $total = 0;
@@ -523,10 +525,10 @@ class OrderController extends Controller
             // }
             // $newOrder->save();
 
-
-
-
+            //Only commit transaction to database if everything is valid
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             return response(['message' => $e->getMessage(), 'result' => []], 500);
         }
     }
