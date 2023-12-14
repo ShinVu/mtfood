@@ -48,6 +48,7 @@ import usePriceCheckout from "../hooks/usePriceCheckout.js";
 import VoucherDialog from "../components/voucherDialog.js";
 import { Navigate, useNavigate } from "react-router-dom";
 import usePriceCart from "../hooks/usePrice.js";
+import { setPaymentMethod } from "../features/order/orderSlice.js";
 
 const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
     "& td, & th": {
@@ -177,7 +178,7 @@ function CheckoutDelivery() {
                             </TableCell>
                             <TableCell align="right">
                                 <span className="text-sm font-medium text-red_main">
-                                    30.000đ
+                                    21.000đ
                                 </span>
                             </TableCell>
                         </StyledTableRow>
@@ -515,10 +516,10 @@ function CheckoutVoucher() {
 
 function CheckoutPayment() {
     const { t } = useTranslation();
-    const [selectedValue, setSelectedValue] = React.useState("COD");
-
-    const handleChange = (event) => {
-        setSelectedValue(event.target.value);
+    const { selectedPaymentMethod } = useAppSelector((state) => state.order);
+    const dispatch = useAppDispatch();
+    const handleChange = (event: any) => {
+        dispatch(setPaymentMethod(event.target.value));
     };
 
     return (
@@ -529,9 +530,9 @@ function CheckoutPayment() {
             <div className="mt-4 w-fit">
                 <div className="flex flex-row items-center space-x-4">
                     <Radio
-                        checked={selectedValue === "COD"}
+                        checked={selectedPaymentMethod === "cod"}
                         onChange={handleChange}
-                        value="COD"
+                        value="cod"
                         name="radio-buttons"
                         inputProps={{ "aria-label": "COD" }}
                     />
@@ -547,7 +548,7 @@ function CheckoutPayment() {
                 </div>
                 <div className="flex flex-row items-center space-x-4">
                     <Radio
-                        checked={selectedValue === "momo"}
+                        checked={selectedPaymentMethod === "momo"}
                         onChange={handleChange}
                         value="momo"
                         name="radio-buttons"
@@ -562,11 +563,11 @@ function CheckoutPayment() {
                 </div>
                 <div className="flex flex-row items-center space-x-4">
                     <Radio
-                        checked={selectedValue === "zalopay"}
+                        checked={selectedPaymentMethod === "vnpay"}
                         onChange={handleChange}
-                        value="zalopay"
+                        value="vnpay"
                         name="radio-buttons"
-                        inputProps={{ "aria-label": "zalopay" }}
+                        inputProps={{ "aria-label": "vnpay" }}
                     />
                     <div className="flex flex-row items-center space-x-2 ">
                         <img src="/assets/zaloPay.png" className="h-auto w-6" />
@@ -592,7 +593,13 @@ function CheckoutPayment() {
     );
 }
 
-function CheckoutSumup({ refProps }: { refProps: any }) {
+function CheckoutSumup({
+    refProps,
+    handleOrder,
+}: {
+    refProps: any;
+    handleOrder: () => void;
+}) {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const handleSeeInformation = () => {
@@ -604,6 +611,7 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
         }
     };
     const price = usePriceCheckout();
+
     return (
         <div className="flex flex-col flex-1 bg-white p-4">
             <div className="flex flex-row flex-1 justify-between px-3 items-center">
@@ -661,6 +669,7 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="text-black text-sm font-medium my-0">
+                                        +
                                         {price &&
                                             changePriceFormat(
                                                 price.totalShippingFee
@@ -678,10 +687,12 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                     </TableCell>
                                     <TableCell align="right">
                                         <span className="text-black text-sm font-medium my-0">
+                                            -
                                             {price &&
                                                 changePriceFormat(
                                                     price.totalProductDiscount
                                                 )}
+                                            đ
                                         </span>
                                     </TableCell>
                                 </StyledTableRow>
@@ -689,7 +700,7 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                 <></>
                             )}
                             {price && price.totalVoucher ? (
-                                <TableRow>
+                                <StyledTableRow>
                                     <TableCell align="left">
                                         <span className="text-gray-100 text-sm my-0">
                                             {t("voucherDiscounts")}
@@ -697,17 +708,19 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                     </TableCell>
                                     <TableCell align="right">
                                         <span className="text-black text-sm font-medium my-0">
+                                            -
                                             {changePriceFormat(
                                                 price.totalVoucher
                                             )}
+                                            đ
                                         </span>
                                     </TableCell>
-                                </TableRow>
+                                </StyledTableRow>
                             ) : (
                                 <></>
                             )}
                             {price && price.totalDiscount ? (
-                                <StyledTableRow>
+                                <TableRow>
                                     <TableCell align="left">
                                         <span className="text-gray-100 text-sm my-0">
                                             {t("saving")}
@@ -718,9 +731,10 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                             {changePriceFormat(
                                                 price.totalDiscount
                                             )}
+                                            đ
                                         </span>
                                     </TableCell>
-                                </StyledTableRow>
+                                </TableRow>
                             ) : (
                                 <></>
                             )}
@@ -732,14 +746,17 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
                                 </TableCell>
                                 <TableCell align="right">
                                     <span className="my-0 text-red_main text-2xl font-bold">
-                                        {changePriceFormat(price?.totalPrice)}
+                                        {changePriceFormat(price?.totalPrice)}đ
                                     </span>
                                 </TableCell>
                             </StyledTableRow>
                             <StyledTableRow>
                                 <TableCell align="left"></TableCell>
                                 <TableCell align="right">
-                                    <ContainedButton className="bg-primary_main">
+                                    <ContainedButton
+                                        className="bg-primary_main"
+                                        onClick={handleOrder}
+                                    >
                                         <span>{t("orderNow")}</span>
                                     </ContainedButton>
                                 </TableCell>
@@ -754,6 +771,54 @@ function CheckoutSumup({ refProps }: { refProps: any }) {
 export default function Checkout() {
     const { t } = useTranslation();
     const itemCard = useRef();
+    const { productCart } = useAppSelector((state) => state.product);
+    const { selectedVoucher, selectedPaymentMethod } = useAppSelector(
+        (state) => state.order
+    );
+    const { user } = useAppSelector((state) => state.authentication);
+    const { currentAddress } = useAppSelector((state) => state.authentication);
+    const handleOrder = () => {
+        //get products
+        const products: { id: number; quantity: number }[] = [];
+        Object.entries(productCart).forEach(([key, product]: any) => {
+            if (product.check) {
+                const newProduct = {
+                    id: product.id,
+                    quantity: product.quantityForProduct,
+                };
+                products.push(newProduct);
+            }
+        });
+
+        //get orderVoucher
+        const order_discount_id = selectedVoucher ? selectedVoucher.id : null;
+
+        //get customerId
+        const customer_id = user.id;
+
+        //get delievery address
+        const delivery_address_id = currentAddress.id;
+
+        //get delivery method
+        const delivery_method = "fast";
+
+        //get payment method
+        const payment_method = selectedPaymentMethod;
+
+        //create payload
+        const payload = {
+            products: products,
+            payment_method: payment_method,
+            delivery_method: delivery_method,
+            customer_id: customer_id,
+            delivery_address_id: delivery_address_id,
+            order_discount_id: order_discount_id,
+        };
+
+        axiosClient
+            .post("/createOrder", payload)
+            .then(({ data }) => console.log(data));
+    };
     return (
         <div className="flex flex-1 flex-col">
             <HeaderCheckout />
@@ -763,7 +828,7 @@ export default function Checkout() {
                 <CheckoutItem ref={itemCard} />
                 <CheckoutVoucher />
                 <CheckoutPayment />
-                <CheckoutSumup refProps={itemCard} />
+                <CheckoutSumup refProps={itemCard} handleOrder={handleOrder} />
             </div>
             <Footer />
         </div>

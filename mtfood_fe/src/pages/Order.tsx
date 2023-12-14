@@ -33,22 +33,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { CircularProgress, Paper } from "@mui/material";
 //Import colors
 
-const user = {
-    address: "Bạch Đằng, Quận Tân Bình, TP.HCM",
-    avatar: "./assets/image_15.png",
-    name: "Lorem",
-};
-
-const orders = [
-    {
-        status: "canceled",
-        totalAmount: "đ500.000",
-        products: [
-            { name: "Khô bò", basePrice: "đ1.000.000", price: "đ500.000" },
-        ],
-    },
-];
-
 function MyTabs() {
     const { t } = useTranslation();
     // You need to provide the routes in descendant order.

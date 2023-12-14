@@ -19,11 +19,13 @@ const getLocalStorage = (key: string) => {
 type initialStateType = {
     orders: Array<orderType> | null;
     selectedVoucher: orderVoucher | null;
+    selectedPaymentMethod: "cod" | "momo" | "vnpay";
 };
 //initial state for authentication slice
 const initialState: initialStateType = {
     orders: null,
     selectedVoucher: null,
+    selectedPaymentMethod: "cod",
 };
 
 export const orderSlice = createSlice({
@@ -49,11 +51,17 @@ export const orderSlice = createSlice({
                 state.selectedVoucher = null;
             }
         },
+
+        setPaymentMethod(state, action) {
+            const selectedPaymentMethod = action.payload;
+            state.selectedPaymentMethod = selectedPaymentMethod;
+        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setOrder, pushOrder, setVoucher } = orderSlice.actions;
+export const { setOrder, pushOrder, setVoucher, setPaymentMethod } =
+    orderSlice.actions;
 
 // Export reducer to create store in app/store.tsx
 export default orderSlice.reducer;

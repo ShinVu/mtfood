@@ -327,5 +327,6 @@
     "addToWholesaleCart": "Add to wholesale cart",
     "normalCart": "Cart",
     "wholesaleCart": "Wholesale cart",
-    "quantityInvalid": "Quantity invalid"
+    "quantityInvalid": "Quantity invalid",
+    "totalProductDiscount": "Products discount"
 }

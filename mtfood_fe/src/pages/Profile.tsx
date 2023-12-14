@@ -107,10 +107,13 @@ export default function Profile() {
     const [openSnackbar, setOpenSnackbar] = React.useState({
         state: false,
         message: "",
-        severity: "",
+        severity: undefined,
     });
 
-    const handleSnackbarOpen = (message: string, severity: string) => {
+    const handleSnackbarOpen = (
+        message: string,
+        severity: string | undefined
+    ) => {
         setOpenSnackbar({ state: true, message: message, severity: severity });
     };
 
@@ -119,7 +122,7 @@ export default function Profile() {
             return;
         }
 
-        setOpenSnackbar({ state: false, message: "", severity: "" });
+        setOpenSnackbar({ state: false, message: "", severity: undefined });
     };
 
     const handleModalOpen = (type: string) => {
@@ -220,418 +223,388 @@ export default function Profile() {
                                 </StyledBadge>
                             </div>
                             <Table className="" size="small">
-                                <StyledTableRow>
-                                    <TableCell
-                                        style={{
-                                            width: "1px",
-                                            whiteSpace: "nowrap",
-                                        }}
-                                        className="align-top py-3"
-                                    >
-                                        <p className="text-sm font-medium my-0 text-gray-200">
-                                            {t("nameFAL")}
-                                        </p>
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="flex flex-col space-y-1">
-                                            <TextField
-                                                required
-                                                size="small"
-                                                id="outlined-required"
-                                                placeholder={t("nameFAL")}
-                                                inputProps={{
-                                                    style: { fontSize: 14 },
-                                                }}
-                                                className="w-full max-w-lg"
-                                                {...register("name")}
-                                            />
-                                            {errors.name && (
-                                                <span className="text-red_main text-sm text-medium">
-                                                    {t(
-                                                        errors?.name?.message
-                                                            ? errors.name
-                                                                  .message
-                                                            : "defaultErrorMessage"
-                                                    )}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </TableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <TableCell className="align-top py-3">
-                                        <p className="text-sm font-medium my-0 text-gray-200">
-                                            {t("phoneNumber")}
-                                        </p>
-                                    </TableCell>
-                                    <TableCell className="align-top py-3">
-                                        <div className="flex flex-row text-black text-sm">
-                                            {user.phoneNumber
-                                                ? user.phoneNumber
-                                                : t("notRegistered")}
-                                        </div>
-                                    </TableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <TableCell className="align-top py-3">
-                                        {" "}
-                                        <p className="text-sm font-medium my-0 text-gray-200">
-                                            {t("gender")}
-                                        </p>
-                                    </TableCell>
-                                    <TableCell className="py-0">
-                                        <div className="flex h-full w-full flex-col align-top">
-                                            <FormControl className="mb-0">
-                                                <Controller
-                                                    control={control}
-                                                    name="gender"
-                                                    render={({ field }) => (
-                                                        <RadioGroup
-                                                            row
-                                                            defaultValue={
-                                                                user.gender
-                                                                    ? user.gender
-                                                                    : "0"
-                                                            }
-                                                            {...field}
-                                                        >
-                                                            <FormControlLabel
-                                                                value="0"
-                                                                control={
-                                                                    <Radio />
+                                <TableBody>
+                                    <StyledTableRow>
+                                        <TableCell
+                                            style={{
+                                                width: "1px",
+                                                whiteSpace: "nowrap",
+                                            }}
+                                            className="align-top py-3"
+                                        >
+                                            <p className="text-sm font-medium my-0 text-gray-200">
+                                                {t("nameFAL")}
+                                            </p>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex flex-col space-y-1">
+                                                <TextField
+                                                    required
+                                                    size="small"
+                                                    id="outlined-required"
+                                                    placeholder={t("nameFAL")}
+                                                    inputProps={{
+                                                        style: { fontSize: 14 },
+                                                    }}
+                                                    className="w-full max-w-lg"
+                                                    {...register("name")}
+                                                />
+                                                {errors.name && (
+                                                    <span className="text-red_main text-sm text-medium">
+                                                        {t(
+                                                            errors?.name
+                                                                ?.message
+                                                                ? errors.name
+                                                                      .message
+                                                                : "defaultErrorMessage"
+                                                        )}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </TableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <TableCell className="align-top py-3">
+                                            <p className="text-sm font-medium my-0 text-gray-200">
+                                                {t("phoneNumber")}
+                                            </p>
+                                        </TableCell>
+                                        <TableCell className="align-top py-3">
+                                            <div className="flex flex-row text-black text-sm">
+                                                {user.phoneNumber
+                                                    ? user.phoneNumber
+                                                    : t("notRegistered")}
+                                            </div>
+                                        </TableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <TableCell className="align-top py-3">
+                                            {" "}
+                                            <p className="text-sm font-medium my-0 text-gray-200">
+                                                {t("gender")}
+                                            </p>
+                                        </TableCell>
+                                        <TableCell className="py-0">
+                                            <div className="flex h-full w-full flex-col align-top">
+                                                <FormControl className="mb-0">
+                                                    <Controller
+                                                        control={control}
+                                                        name="gender"
+                                                        render={({ field }) => (
+                                                            <RadioGroup
+                                                                row
+                                                                defaultValue={
+                                                                    user.gender
+                                                                        ? user.gender
+                                                                        : "0"
                                                                 }
-                                                                label={
-                                                                    <span className="text-sm text-gray-200">
-                                                                        {t(
-                                                                            "male"
-                                                                        )}
-                                                                    </span>
-                                                                }
-                                                                sx={{
-                                                                    fontSize: 14,
-                                                                }}
-                                                            />
-                                                            <FormControlLabel
-                                                                value="1"
-                                                                control={
-                                                                    <Radio />
-                                                                }
-                                                                label={
-                                                                    <span className="text-sm text-gray-200">
-                                                                        {t(
-                                                                            "female"
-                                                                        )}
-                                                                    </span>
-                                                                }
-                                                            />
+                                                                {...field}
+                                                            >
+                                                                <FormControlLabel
+                                                                    value="0"
+                                                                    control={
+                                                                        <Radio />
+                                                                    }
+                                                                    label={
+                                                                        <span className="text-sm text-gray-200">
+                                                                            {t(
+                                                                                "male"
+                                                                            )}
+                                                                        </span>
+                                                                    }
+                                                                    sx={{
+                                                                        fontSize: 14,
+                                                                    }}
+                                                                />
+                                                                <FormControlLabel
+                                                                    value="1"
+                                                                    control={
+                                                                        <Radio />
+                                                                    }
+                                                                    label={
+                                                                        <span className="text-sm text-gray-200">
+                                                                            {t(
+                                                                                "female"
+                                                                            )}
+                                                                        </span>
+                                                                    }
+                                                                />
 
-                                                            <FormControlLabel
-                                                                value="2"
-                                                                control={
-                                                                    <Radio />
-                                                                }
-                                                                label={
-                                                                    <span className="text-sm text-gray-200">
-                                                                        {t(
-                                                                            "other"
-                                                                        )}
-                                                                    </span>
-                                                                }
-                                                            />
-                                                        </RadioGroup>
+                                                                <FormControlLabel
+                                                                    value="2"
+                                                                    control={
+                                                                        <Radio />
+                                                                    }
+                                                                    label={
+                                                                        <span className="text-sm text-gray-200">
+                                                                            {t(
+                                                                                "other"
+                                                                            )}
+                                                                        </span>
+                                                                    }
+                                                                />
+                                                            </RadioGroup>
+                                                        )}
+                                                    />
+                                                </FormControl>
+                                                {errors.gender && (
+                                                    <span className="text-red_main text-sm text-medium">
+                                                        {t(
+                                                            errors?.gender
+                                                                ?.message
+                                                                ? errors.gender
+                                                                      .message
+                                                                : "defaultErrorMessage"
+                                                        )}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </TableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <TableCell className="align-top py-3">
+                                            <div className="">
+                                                <p className="text-sm font-medium my-0 text-gray-200">
+                                                    {t("dateOfBirth")}
+                                                </p>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="align-top">
+                                            <div className="flex flex-col space-y-1">
+                                                <Controller
+                                                    name="dateOfBirth"
+                                                    control={control}
+                                                    render={({ field }) => (
+                                                        <DatePicker
+                                                            className="w-full max-w-lg"
+                                                            placeholderText="Select date"
+                                                            onChange={(date) =>
+                                                                field.onChange(
+                                                                    date
+                                                                )
+                                                            }
+                                                            value={field.value}
+                                                            timezone="UTC"
+                                                        />
                                                     )}
                                                 />
-                                            </FormControl>
-                                            {errors.gender && (
-                                                <span className="text-red_main text-sm text-medium">
-                                                    {t(
-                                                        errors?.gender?.message
-                                                            ? errors.gender
-                                                                  .message
-                                                            : "defaultErrorMessage"
-                                                    )}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </TableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <TableCell className="align-top py-3">
-                                        <div className="">
-                                            <p className="text-sm font-medium my-0 text-gray-200">
-                                                {t("dateOfBirth")}
-                                            </p>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="align-top">
-                                        <div className="flex flex-col space-y-1">
-                                            <Controller
-                                                name="dateOfBirth"
-                                                control={control}
-                                                render={({ field }) => (
-                                                    <DatePicker
-                                                        className="w-full max-w-lg"
-                                                        placeholderText="Select date"
-                                                        onChange={(date) =>
-                                                            field.onChange(date)
-                                                        }
-                                                        value={field.value}
-                                                        timezone="UTC"
-                                                    />
+                                                {errors.dateOfBirth && (
+                                                    <span className="text-red_main text-sm text-medium">
+                                                        {t(
+                                                            errors?.dateOfBirth
+                                                                ?.message
+                                                                ? errors
+                                                                      .dateOfBirth
+                                                                      .message
+                                                                : "defaultErrorMessage"
+                                                        )}
+                                                    </span>
                                                 )}
-                                            />
-                                            {errors.dateOfBirth && (
-                                                <span className="text-red_main text-sm text-medium">
-                                                    {t(
-                                                        errors?.dateOfBirth
-                                                            ?.message
-                                                            ? errors.dateOfBirth
-                                                                  .message
-                                                            : "defaultErrorMessage"
-                                                    )}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </TableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <TableCell
-                                        style={{
-                                            width: "1px",
-                                            whiteSpace: "nowrap",
-                                        }}
-                                        className="align-top py-3"
-                                    >
-                                        <p className="text-sm font-medium my-0 text-gray-200">
-                                            {t("identificationNumber")}
-                                        </p>
-                                    </TableCell>
-                                    <TableCell className="align-top">
-                                        <div className="flex flex-col space-y-1">
-                                            <TextField
-                                                required
-                                                size="small"
-                                                id="outlined-required"
-                                                placeholder={t(
-                                                    "identificationNumber"
-                                                )}
-                                                defaultValue={
-                                                    user.identificationNumber
-                                                }
-                                                inputProps={{
-                                                    style: { fontSize: 14 },
-                                                }}
-                                                className="w-full max-w-lg"
-                                                {...register(
-                                                    "identificationNumber"
-                                                )}
-                                            />
-                                            {errors.identificationNumber && (
-                                                <span className="text-red_main text-sm text-medium">
-                                                    {t(
-                                                        errors
-                                                            ?.identificationNumber
-                                                            ?.message
-                                                            ? errors
-                                                                  .identificationNumber
-                                                                  .message
-                                                            : "defaultErrorMessage"
-                                                    )}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </TableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <TableCell>
-                                        <Button
-                                            onClick={handleSubmit((value) =>
-                                                onSubmit(value)
-                                            )}
-                                            variant="contained"
-                                            className="bg-primary_main"
+                                            </div>
+                                        </TableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <TableCell
+                                            style={{
+                                                width: "1px",
+                                                whiteSpace: "nowrap",
+                                            }}
+                                            className="align-top py-3"
                                         >
-                                            {t("update")}
-                                        </Button>
-                                    </TableCell>
-                                </StyledTableRow>
+                                            <p className="text-sm font-medium my-0 text-gray-200">
+                                                {t("identificationNumber")}
+                                            </p>
+                                        </TableCell>
+                                        <TableCell className="align-top">
+                                            <div className="flex flex-col space-y-1">
+                                                <TextField
+                                                    required
+                                                    size="small"
+                                                    id="outlined-required"
+                                                    placeholder={t(
+                                                        "identificationNumber"
+                                                    )}
+                                                    defaultValue={
+                                                        user.identificationNumber
+                                                    }
+                                                    inputProps={{
+                                                        style: { fontSize: 14 },
+                                                    }}
+                                                    className="w-full max-w-lg"
+                                                    {...register(
+                                                        "identificationNumber"
+                                                    )}
+                                                />
+                                                {errors.identificationNumber && (
+                                                    <span className="text-red_main text-sm text-medium">
+                                                        {t(
+                                                            errors
+                                                                ?.identificationNumber
+                                                                ?.message
+                                                                ? errors
+                                                                      .identificationNumber
+                                                                      .message
+                                                                : "defaultErrorMessage"
+                                                        )}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </TableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <TableCell>
+                                            <Button
+                                                onClick={handleSubmit((value) =>
+                                                    onSubmit(value)
+                                                )}
+                                                variant="contained"
+                                                className="bg-primary_main"
+                                            >
+                                                {t("update")}
+                                            </Button>
+                                        </TableCell>
+                                    </StyledTableRow>
+                                </TableBody>
                             </Table>
                         </div>
                         <Divider orientation="vertical" flexItem />
                         <div className="flex flex-col w-fit min-w-fit mt-2 xl:mt-0">
                             <Table className="" size="small">
-                                <StyledTableRow>
-                                    <TableCell>
-                                        <p className="text-sm font-medium my-0 text-gray-200">
-                                            {t("phoneNumberAndEmail")}
-                                        </p>
-                                    </TableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <TableCell>
-                                        <div className="flex flex-row items-center">
-                                            <PhoneIcon
-                                                sx={{
-                                                    fontSize: 24,
-                                                    color: colors.primary_main,
-                                                }}
-                                            />
-                                            <div className="flex flex-col ml-5">
-                                                <p className="text-xs font-medium my-0 text-gray-200">
-                                                    {t("phoneNumber")}
-                                                </p>
-                                                <p className="text-xs font-semibold my-0 text-black">
-                                                    {user.phoneNumber
-                                                        ? user.phoneNumber
-                                                        : t("notRegistered")}
-                                                </p>
+                                <TableBody>
+                                    <StyledTableRow>
+                                        <TableCell>
+                                            <p className="text-sm font-medium my-0 text-gray-200">
+                                                {t("phoneNumberAndEmail")}
+                                            </p>
+                                        </TableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <TableCell>
+                                            <div className="flex flex-row items-center">
+                                                <PhoneIcon
+                                                    sx={{
+                                                        fontSize: 24,
+                                                        color: colors.primary_main,
+                                                    }}
+                                                />
+                                                <div className="flex flex-col ml-5">
+                                                    <p className="text-xs font-medium my-0 text-gray-200">
+                                                        {t("phoneNumber")}
+                                                    </p>
+                                                    <p className="text-xs font-semibold my-0 text-black">
+                                                        {user.phoneNumber
+                                                            ? user.phoneNumber
+                                                            : t(
+                                                                  "notRegistered"
+                                                              )}
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <OutlinedButton
-                                            className="w-fit min-w-fit"
-                                            onClick={() =>
-                                                handleModalOpen("phoneNumber")
-                                            }
-                                        >
-                                            {t("update")}
-                                        </OutlinedButton>
-                                    </TableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <TableCell>
-                                        <div className="flex flex-row items-center">
-                                            <EmailIcon
-                                                sx={{
-                                                    fontSize: 24,
-                                                    color: colors.primary_main,
-                                                }}
-                                            />
-                                            <div className="flex flex-col ml-5">
-                                                <p className="text-xs font-medium my-0 text-gray-200">
-                                                    {t("email")}
-                                                </p>
-                                                <p className="text-xs font-semibold my-0 text-black">
-                                                    {user.email}
-                                                </p>
+                                        </TableCell>
+                                        <TableCell>
+                                            <OutlinedButton
+                                                className="w-fit min-w-fit"
+                                                onClick={() =>
+                                                    handleModalOpen(
+                                                        "phoneNumber"
+                                                    )
+                                                }
+                                            >
+                                                {t("update")}
+                                            </OutlinedButton>
+                                        </TableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <TableCell>
+                                            <div className="flex flex-row items-center">
+                                                <EmailIcon
+                                                    sx={{
+                                                        fontSize: 24,
+                                                        color: colors.primary_main,
+                                                    }}
+                                                />
+                                                <div className="flex flex-col ml-5">
+                                                    <p className="text-xs font-medium my-0 text-gray-200">
+                                                        {t("email")}
+                                                    </p>
+                                                    <p className="text-xs font-semibold my-0 text-black">
+                                                        {user.email}
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <OutlinedButton
-                                            className="max-w-fit"
-                                            onClick={() =>
-                                                handleModalOpen("email")
-                                            }
-                                        >
-                                            {t("update")}
-                                        </OutlinedButton>
-                                    </TableCell>
-                                </StyledTableRow>
+                                        </TableCell>
+                                        <TableCell>
+                                            <OutlinedButton
+                                                className="max-w-fit"
+                                                onClick={() =>
+                                                    handleModalOpen("email")
+                                                }
+                                            >
+                                                {t("update")}
+                                            </OutlinedButton>
+                                        </TableCell>
+                                    </StyledTableRow>
 
-                                <StyledTableRow>
-                                    <TableCell>
-                                        <p className="text-sm font-medium my-0 text-gray-200">
-                                            {t("security")}
-                                        </p>
-                                    </TableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <TableCell>
-                                        <div className="flex flex-row items-center">
-                                            <LockIcon
-                                                sx={{
-                                                    fontSize: 24,
-                                                    color: colors.primary_main,
-                                                }}
-                                            />
-                                            <p className="text-xs font-medium my-0 text-gray-200 ml-5">
-                                                {t("setPassword")}
+                                    <StyledTableRow>
+                                        <TableCell>
+                                            <p className="text-sm font-medium my-0 text-gray-200">
+                                                {t("security")}
                                             </p>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <OutlinedButton
-                                            className="max-w-fit"
-                                            onClick={() =>
-                                                handleModalOpen(
-                                                    "changePassword"
-                                                )
-                                            }
-                                        >
-                                            {t("update")}
-                                        </OutlinedButton>
-                                    </TableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <TableCell>
-                                        <div className="flex flex-row items-center">
-                                            <FiberPinIcon
-                                                sx={{
-                                                    fontSize: 24,
-                                                    color: colors.primary_main,
-                                                }}
-                                            />
-                                            <p className="text-xs font-medium my-0 text-gray-200 ml-5">
-                                                {t("setPin")}
-                                            </p>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <OutlinedButton
-                                            className="max-w-fit"
-                                            onClick={() =>
-                                                handleModalOpen("changePin")
-                                            }
-                                        >
-                                            {t("update")}
-                                        </OutlinedButton>
-                                    </TableCell>
-                                </StyledTableRow>
-                                {/* <StyledTableRow>
-                                    <TableCell>
-                                        <p className="text-sm font-medium my-0 text-gray-200 ">
-                                            {t("link")}
-                                        </p>
-                                    </TableCell>
-                                </StyledTableRow> */}
-                                {/* <StyledTableRow>
-                                    <TableCell>
-                                        <div className="flex flex-row items-center">
-                                            <img
-                                                src={Facebook}
-                                                className="w-6 h-6"
-                                            />
-                                            <p className="text-xs font-medium my-0 text-gray-200 ml-5">
-                                                Facebook
-                                            </p>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <OutlinedButton className="max-w-fit">
-                                            {t("update")}
-                                        </OutlinedButton>
-                                    </TableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <TableCell>
-                                        <div className="flex flex-row items-center">
-                                            <img
-                                                src={Google}
-                                                className="w-6 h-6"
-                                            />
-                                            <p className="text-xs font-medium my-0 text-gray-200 ml-5">
-                                                Google
-                                            </p>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <OutlinedButton className="max-w-fit">
-                                            {t("update")}
-                                        </OutlinedButton>
-                                    </TableCell>
-                                </StyledTableRow> */}
+                                        </TableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <TableCell>
+                                            <div className="flex flex-row items-center">
+                                                <LockIcon
+                                                    sx={{
+                                                        fontSize: 24,
+                                                        color: colors.primary_main,
+                                                    }}
+                                                />
+                                                <p className="text-xs font-medium my-0 text-gray-200 ml-5">
+                                                    {t("setPassword")}
+                                                </p>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <OutlinedButton
+                                                className="max-w-fit"
+                                                onClick={() =>
+                                                    handleModalOpen(
+                                                        "changePassword"
+                                                    )
+                                                }
+                                            >
+                                                {t("update")}
+                                            </OutlinedButton>
+                                        </TableCell>
+                                    </StyledTableRow>
+                                    <StyledTableRow>
+                                        <TableCell>
+                                            <div className="flex flex-row items-center">
+                                                <FiberPinIcon
+                                                    sx={{
+                                                        fontSize: 24,
+                                                        color: colors.primary_main,
+                                                    }}
+                                                />
+                                                <p className="text-xs font-medium my-0 text-gray-200 ml-5">
+                                                    {t("setPin")}
+                                                </p>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <OutlinedButton
+                                                className="max-w-fit"
+                                                onClick={() =>
+                                                    handleModalOpen("changePin")
+                                                }
+                                            >
+                                                {t("update")}
+                                            </OutlinedButton>
+                                        </TableCell>
+                                    </StyledTableRow>
+                                </TableBody>
                             </Table>
                         </div>
                     </Paper>
@@ -652,7 +625,7 @@ export default function Profile() {
             >
                 <Alert
                     onClose={handleSnackbarClose}
-                    severity={openSnackbar.severity}
+                    severity={openSnackbar.severity ?? undefined}
                     sx={{ width: "100%" }}
                 >
                     {t(openSnackbar.message)}

@@ -2,6 +2,7 @@ export type orderDetailProduct = {
     id: number;
     name: string;
     image_url: string;
+    image_path: string;
     description: string;
     status: number;
     price: string;

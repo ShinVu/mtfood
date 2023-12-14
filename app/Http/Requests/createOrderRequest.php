@@ -28,7 +28,7 @@ class createOrderRequest extends FormRequest
             'notes' => 'sometimes',
             'customer_id' => 'required',
             'delivery_address_id' => 'required',
-            'order_discount_id' => 'required',
+            'order_discount_id' => 'sometimes',
         ];
     }
 }

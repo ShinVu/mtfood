@@ -77,17 +77,26 @@ export default function OrderItemsDetailCard({
                                 </div>
                             </TableCell>
                             <TableCell align="right">
-                                <p className="font-medium text-base text-black">
-                                    {/* {changePriceFormat(
-                                        orderDetail.unit_discount
-                                    )} */}
-                                    {changePriceFormat(
-                                        parseFloat(orderDetail.unit_price) -
-                                            parseFloat(
-                                                orderDetail.unit_discount
-                                            )
+                                <>
+                                    {parseFloat(orderDetail.unit_discount) >
+                                        0 && (
+                                        <p className="text-base  text-gray-100 my-0 line-through">
+                                            {changePriceFormat(
+                                                parseFloat(
+                                                    orderDetail.unit_price
+                                                ) +
+                                                    parseFloat(
+                                                        orderDetail.unit_discount
+                                                    )
+                                            )}
+                                        </p>
                                     )}
-                                </p>
+                                    <p className="text-lg font-medium  my-0 ">
+                                        {changePriceFormat(
+                                            orderDetail.unit_price
+                                        )}
+                                    </p>
+                                </>
                             </TableCell>
                             <TableCell align="right">
                                 <p className="font-regular text-base text-black">

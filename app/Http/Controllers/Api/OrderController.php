@@ -25,6 +25,8 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use function PHPSTORM_META\map;
+
 class OrderController extends Controller
 {
     public function getOrders(getOrdersRequest $request)
@@ -129,12 +131,16 @@ class OrderController extends Controller
 
             //Append media path
             $productPath = 'storage/product/';
+
             foreach ($orders as $order) {
                 foreach ($order->orderDetail as $orderDetail) {
+                    if ($orderDetail->product->image_url) {
 
-                    if ($imageName = $orderDetail->product->image_url) {
-                        $fullPath = $productPath . $orderDetail->product->id . "/" . $imageName;
-                        $orderDetail->product->image_url = asset($fullPath);
+                        $productId = $orderDetail->product->id;
+
+                        $fullPath = $productPath . $productId . "/" . $orderDetail->product->image_url;
+
+                        $orderDetail->product->image_path = asset($fullPath);
                     }
                 }
             }
@@ -343,10 +349,10 @@ class OrderController extends Controller
                 return response(['message' => 'invalidAccess', 'result' => []], 401);
             }
 
+
             //Create order with initial information
             $payment_method = $data['payment_method'];
             $delivery_method = $data['delivery_method'];
-
             $customer_id = $data['customer_id'];
             $delivery_address_id = $data['delivery_address_id'];
             $order_code = Carbon::now()->timestamp;
@@ -354,14 +360,13 @@ class OrderController extends Controller
                 'order_code' => $order_code,
                 'payment_method' => $payment_method,
                 'delivery_method' => $delivery_method,
-
                 'customer_id' => $customer_id,
                 'delivery_address_id' => $delivery_address_id,
                 'status' => 'created'
             ]);
 
-            return response(['message' => $newOrder], 200);
-            //Create order details and calculate amount
+
+            //Init order amount
             $total = 0;
             $subtotal = 0;
             $shipping_subtotal = 0;
@@ -369,8 +374,12 @@ class OrderController extends Controller
             $products_discount = 0;
             $vat = 0;
 
-            $products = json_decode($data['products'], true);
+            //Products user want to buy, including {id: productId, quantity: productQuantity}
+            $products = $data['products'];
+
+            //Create order detail, calculate amount for each product
             foreach ($products as $orderProduct) {
+
                 //Get products discount
                 $highestDiscount = ProductDiscount::select('product_discounts.product_id', DB::raw('MAX(discount_amount) as max_discount_amount'))
                     ->where('is_active', true)
@@ -381,24 +390,33 @@ class OrderController extends Controller
 
                 $product = $product->selectRaw('products.id,products.name,products.image_url,products.is_wholesale,products.category_id,products.rating,products.quantity_available,products.updated_at,products.price,highest_discount.max_discount_amount, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount');
                 $product = $product->first();
+
+
                 // If product doesn't exist
                 if (!$product) {
                     return response(['message' => 'productNotAvailable', 'result' => []], 200);
                 }
 
-                // If product quantity is not enough
+
+                // If product quantity is not enough for user 
                 if ($product['quantity_available'] < $orderProduct['quantity']) {
                     return response(['message' => 'productQuantityNotAvailable', 'result' => ['product' => $product]], 402);
                 }
 
 
                 // Create order detail
+
                 //Product batches, there may be more then 1 available batch
                 $batches = ProductBatch::where('product_id', $product['id'])->where('quantity_available', '>', 0)->orderBy('expiry_date', 'asc')->get();
 
+                //Product pricing, there should be only 1 active price
                 $pricing = ProductPricing::where('product_id', $product['id'])->where('is_active', 1)->first();
+
+                //Product discount, there should be only 1 active discount
                 $discount = ProductDiscount::where('product_id', $product['id'])->where('is_active', 1)->first();
 
+
+                //Create order detail with informations
                 $orderDetail = OrderDetail::create([
                     'quantity' => $orderProduct['quantity'],
                     'unit_price' => $product['priceDiscount'],
@@ -416,17 +434,22 @@ class OrderController extends Controller
                 $product['quantity_available'] = $product['quantity_available'] - $quantity;
                 $product->save();
 
+
+                //Create order_detail_batch for each batch till quantity match
                 foreach ($batches as $batch) {
                     if ($quantity > 0) {
-                        if ($batches['quantity_available'] <= $quantity) {
+                        //If batch quantities left is not enough => batch quantity left = 0;
+                        if ($batch['quantity_available'] <= $quantity) {
                             orderDetailBatch::create([
                                 'order_detail_id' => $orderDetail['id'],
                                 'batch_id' => $batch['id'],
-                                'quantity' => $quantity - $batches['quantity_available']
+                                'quantity' => $batch['quantity_available']
                             ]);
-                            $quantity = $quantity - $batches['quantity_available'];
+                            $quantity = $quantity - $batch['quantity_available'];
                             $batch['quantity_available'] = 0;
+                            $batch->save();
                         } else {
+                            //If batch quantities left is enough => batch quantity left = batch quantity - number of product user need;
                             orderDetailBatch::create([
                                 'order_detail_id' => $orderDetail['id'],
                                 'batch_id' => $batch['id'],
@@ -435,21 +458,64 @@ class OrderController extends Controller
 
                             $batch['quantity_available'] = $batch['quantity_available'] - $quantity;
                             $quantity = 0;
+
+                            $batch->save();
                         }
                     }
                 }
 
-                //Save batches
-                $batches->save();
-                $subTotal = $total + $product['priceDiscount'] * $orderProduct['quantity'];
+                //Total price of products not including discount
+                $subtotal = $subtotal + $product['price'] * $orderProduct['quantity'];
+
+                //Total discount of products
                 $products_discount = $products_discount + $product['max_discount_amount'] * $orderProduct['quantity'];
             }
 
-            $voucher_discount = OrderDiscount::where('id', 'order_discount_id')->first()->totalDiscount;
-            $total = $subtotal + $shipping_subtotal - $voucher_discount - $products_discount + $vat;
+
+            //Voucher 
+            $voucher_discount_value = 0;
+            //If there is a voucher 
+            if (isset($data['order_discount_id'])) {
+                //check if voucher requirement for minimum value is met
+                $voucher_discount = OrderDiscount::where('id', $data['order_discount_id'])->first();
+
+                //if total after discount is smaller than minimum order value requirement
+                if ($subtotal - $products_discount < $voucher_discount['minimum_order_value']) {
+                    return response(['message' => 'voucherRequirementNotMeet'], 202);
+                }
+
+                //Get voucher discount
+                $voucher_discount_value = $voucher_discount['total_discount'];
+
+                //newOrder voucher discount id
+                $newOrder->order_discount_id = $voucher_discount['id'];
+            }
 
 
+            // calculate order total
 
+            //Get shipping fee
+            $customer_address = $data['delivery_address_id'];
+            //Calculate shipping fee with delivery services api (not implemented yet)
+            $shipping_subtotal = 21000;
+
+
+            //Get vat
+            $vat = 0;
+
+            //Get total
+            $total = $subtotal + $shipping_subtotal - $voucher_discount_value - $products_discount + $vat;
+
+
+            //Update new payment value to the order
+            $newOrder->total = $total;
+            $newOrder->subtotal = $subtotal;
+            $newOrder->shipping_subtotal = $shipping_subtotal;
+            $newOrder->voucher_discount = $voucher_discount_value;
+            $newOrder->products_discount = $products_discount;
+            $newOrder->vat = $vat;
+
+            $newOrder->save();
             // if ($payment_method == 'momo' | $payment_method == "vnpay") {
             //     $newOrder->status = "waiting_payment";
             // } else if ($payment_method = "cod") {
@@ -458,64 +524,6 @@ class OrderController extends Controller
             // $newOrder->save();
 
 
-            // $orderProducts = json_decode($data['products']);
-
-            // foreach ($orderProducts as $orderProduct) {
-
-            //     $highestDiscount = ProductDiscount::select('product_id', DB::raw('MAX(discount_amount) as max_discount_amount'))
-            //         ->where('is_active', true)
-            //         ->groupBy('product_id');
-
-            //     $product = Product::where('id', $orderProduct->id)
-            //         ->leftJoinSub($highestDiscount, 'highest_discount', function (JoinClause $join) {
-            //             $join->on('products.id', '=', 'highest_discount.product_id');
-            //         })
-            //         ->selectRaw('*, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
-            //         ->first();
-
-            //     // If product doesn't exist
-            //     if (!$product) {
-            //         return response(['message' => 'productNotAvailable', 'result' => []], 200);
-            //     }
-
-            //     // If product quantity is not enough
-            //     if ($product['quantity_available'] < $orderProduct->quantity) {
-            //         return response(['message' => 'productQuantityNotAvailable', 'result' => ['product' => $product]], 402);
-            //     }
-
-            //     //Create order detail
-            //     $batch = ProductBatch::where('product_id', $product['id'])->first();
-            //     $pricing = ProductPricing::where('product_id', $product['id'])->where('is_active', 1)->first();
-            //     $discount = ProductDiscount::where('product_id', $product['id'])->where('is_active', 1)->first();
-
-            //     OrderDetail::create([
-            //         'quantity' => $orderProduct->quantity,
-            //         'unit_price' => $product['price'],
-            //         'unit_discount' =>  $product['max_discount_amount'] ? $product['max_discount_amount'] : 0,
-            //         'batch_code' => $batch['batch_code'],
-            //         'pricing_id' =>  $pricing['id'],
-            //         'discount_id' => $discount ? $discount['id'] : null,
-            //         'batch_id' => $batch['id'],
-            //         'order_id' => $newOrder['id'],
-            //         'product_id' => $product['id']
-            //     ]);
-            // }
-
-            // if ($payment_method == 'momo') {
-            // }
-            // return response(['message' => 'createOrderSuccessfully', 'result' => ['order' => $newOrder]], 200);
-
-            // // $products = Product::get();
-            // // foreach ($products as $product) {
-            // //     ProductBatch::create([
-            // //         'batch_code' => uuid_create() . Carbon::now(),
-            // //         'quantity' => 999,
-            // //         'quantity_available' => 666,
-            // //         'manufacturing_date' => Carbon::now()->subDays(30),
-            // //         'expiry_date' => Carbon::now()->addDays(210),
-            // //         'product_id' => $product['id']
-            // //     ]);
-            // // }
 
 
         } catch (Exception $e) {

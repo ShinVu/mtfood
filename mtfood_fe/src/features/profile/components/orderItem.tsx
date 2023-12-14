@@ -48,7 +48,7 @@ function OrderDetailItems({
                             <TableCell align="left">
                                 <div className="flex flex-row space-x-4">
                                     <img
-                                        src={orderDetailItem.product.image_url}
+                                        src={orderDetailItem.product.image_path}
                                         className="w-24 h-24 object-cover object-center"
                                     />
                                     <p className="font-medium text-sm my-0">
@@ -59,16 +59,43 @@ function OrderDetailItems({
                             <TableCell align="right">
                                 <div>
                                     {orderDetailItem.unit_discount && (
-                                        <p className="text-base text-gray-100  my-0">
-                                            50000đ
-                                        </p>
+                                        <>
+                                            {parseFloat(
+                                                orderDetailItem.unit_discount
+                                            ) > 0 && (
+                                                <p className="text-base  text-gray-100 my-0 line-through">
+                                                    {changePriceFormat(
+                                                        parseFloat(
+                                                            orderDetailItem.unit_price
+                                                        ) +
+                                                            parseFloat(
+                                                                orderDetailItem.unit_discount
+                                                            )
+                                                    )}
+                                                </p>
+                                            )}
+                                            <p className="text-lg font-medium  my-0 ">
+                                                {changePriceFormat(
+                                                    orderDetailItem.unit_price
+                                                )}
+                                            </p>
+                                        </>
                                     )}
                                 </div>
                             </TableCell>
                             <TableCell align="right">
+                                <p className="text-lg font-medium  my-0 ">
+                                    x{orderDetailItem.quantity}
+                                </p>
+                            </TableCell>
+                            <TableCell align="right">
                                 <div>
-                                    <p className="text-base font-medium text-red_main my-0">
-                                        250.000đ
+                                    <p className="text-lg font-medium text-red_main my-0">
+                                        {changePriceFormat(
+                                            parseFloat(
+                                                orderDetailItem.unit_price
+                                            ) * orderDetailItem.quantity
+                                        )}
                                     </p>
                                 </div>
                             </TableCell>
@@ -145,13 +172,12 @@ export default function OrderItem(props: { order: orderType }) {
                 )}
             </div>
             <Divider className="my-2" />
-            <div className="flex flex-1 justify-end space-x-4">
+            <div className="flex flex-1 justify-end space-x-4 items-center">
                 <p className="text-gray-100 text-md my-0">
                     {t("totalOrderAmount")}
                 </p>
-                <p className="text-md font-medium text-red_main my-0">
-                    {/* đ{changePriceFormat(order.subtotal)} */}
-                    280.000đ
+                <p className="text-2xl font-bold text-red_main my-0 pr-2">
+                    {changePriceFormat(order.total)}
                 </p>
             </div>
             <div className="flex flex-1 flex-row justify-between mt-12 items-center">

@@ -60,8 +60,8 @@ function OrderSummary({ order }: { order: orderType }) {
                                 </span>
                             </TableCell>
                             <TableCell align="right">
-                                <p className="text-base font-medium text-black">
-                                    {changePriceFormat(order.subtotal)}
+                                <p className="text-lg font-medium text-black">
+                                    {changePriceFormat(order.subtotal)}đ
                                 </p>
                             </TableCell>
                         </StyledTableRow>
@@ -72,25 +72,28 @@ function OrderSummary({ order }: { order: orderType }) {
                                 </span>
                             </TableCell>
                             <TableCell align="right">
-                                <p className="text-base font-medium text-black">
+                                <p className="text-lg font-medium text-black">
+                                    +
                                     {/* {changePriceFormat(billing.shippingFee)}đ */}
                                     {changePriceFormat(order.shipping_subtotal)}
+                                    đ
                                 </p>
                             </TableCell>
                         </StyledTableRow>
                         <StyledTableRow>
                             <TableCell>
                                 <span className="text-gray-100 font-medium">
-                                    {/* {t("deliveryFeeDiscount")} */}
-                                    Giảm giá sản phẩm
+                                    {t("totalProductDiscount")}
                                 </span>
                             </TableCell>
                             <TableCell align="right">
-                                <p className="text-base font-medium text-black">
+                                <p className="text-lg font-medium text-black">
                                     {/* {changePriceFormat(
                                         billing.shippingDiscount
                                     )} */}
+                                    -
                                     {changePriceFormat(order.products_discount)}
+                                    đ
                                 </p>
                             </TableCell>
                         </StyledTableRow>
@@ -101,12 +104,14 @@ function OrderSummary({ order }: { order: orderType }) {
                                 </span>
                             </TableCell>
                             <TableCell align="right">
-                                <p className="text-base font-medium text-black">
+                                <p className="text-lg font-medium text-black">
                                     {/* {" "}
                                     {changePriceFormat(billing.voucherDiscount)} */}
+                                    -
                                     {changePriceFormat(
                                         order.voucher_discount
                                     ) ?? "0đ"}
+                                    đ
                                 </p>
                             </TableCell>
                         </StyledTableRow>
@@ -119,7 +124,7 @@ function OrderSummary({ order }: { order: orderType }) {
                             <TableCell align="right">
                                 <span className="text-2xl font-bold text-red_main">
                                     {/* {changePriceFormat(billing.total)}đ */}
-                                    {changePriceFormat(order.total)}
+                                    {changePriceFormat(order.total)}đ
                                 </span>
                             </TableCell>
                         </StyledTableRow>
