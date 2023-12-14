@@ -757,16 +757,16 @@ function CheckoutSumup({
                             <StyledTableRow>
                                 <TableCell align="left"></TableCell>
                                 <TableCell align="right">
-                                    <ContainedButton
-                                        className="bg-primary_main"
-                                        onClick={handleOrder}
-                                    >
-                                        {loading ? (
-                                            <CircularProgress />
-                                        ) : (
+                                    {loading ? (
+                                        <CircularProgress />
+                                    ) : (
+                                        <ContainedButton
+                                            className="bg-primary_main"
+                                            onClick={handleOrder}
+                                        >
                                             <span>{t("orderNow")}</span>
-                                        )}
-                                    </ContainedButton>
+                                        </ContainedButton>
+                                    )}
                                 </TableCell>
                             </StyledTableRow>
                         </TableBody>
@@ -827,9 +827,7 @@ export default function Checkout() {
 
         axiosClient
             .post("/createOrder", payload)
-            .then(({ data }) => console.log(data));
-
-        setLoading(false);
+            .then(({ data }) => setLoading(false));
     };
     return (
         <div className="flex flex-1 flex-col">
