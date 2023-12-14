@@ -47,6 +47,7 @@ const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
 
 function OrderSummary({ order }: { order: orderType }) {
     const { t } = useTranslation();
+    console.log(parseFloat(order.products_discount));
     return (
         <div className="flex flex-col items-end  mt-8">
             <div>
@@ -80,41 +81,51 @@ function OrderSummary({ order }: { order: orderType }) {
                                 </p>
                             </TableCell>
                         </StyledTableRow>
-                        <StyledTableRow>
-                            <TableCell>
-                                <span className="text-gray-100 font-medium">
-                                    {t("totalProductDiscount")}
-                                </span>
-                            </TableCell>
-                            <TableCell align="right">
-                                <p className="text-lg font-medium text-black">
-                                    {/* {changePriceFormat(
+
+                        {parseFloat(order.products_discount) != 0 && (
+                            <StyledTableRow>
+                                <TableCell>
+                                    <span className="text-gray-100 font-medium">
+                                        {t("totalProductDiscount")}
+                                    </span>
+                                </TableCell>
+                                {parseFloat(order.products_discount) != 0 && (
+                                    <TableCell align="right">
+                                        <p className="text-lg font-medium text-black">
+                                            {/* {changePriceFormat(
                                         billing.shippingDiscount
                                     )} */}
-                                    -
-                                    {changePriceFormat(order.products_discount)}
-                                    đ
-                                </p>
-                            </TableCell>
-                        </StyledTableRow>
-                        <StyledTableRow>
-                            <TableCell>
-                                <span className="text-gray-100 font-medium">
-                                    {t("voucherDiscount")}
-                                </span>
-                            </TableCell>
-                            <TableCell align="right">
-                                <p className="text-lg font-medium text-black">
-                                    {/* {" "}
+                                            -
+                                            {changePriceFormat(
+                                                order.products_discount
+                                            )}
+                                            đ
+                                        </p>
+                                    </TableCell>
+                                )}
+                            </StyledTableRow>
+                        )}
+                        {parseFloat(order.voucher_discount) != 0 && (
+                            <StyledTableRow>
+                                <TableCell>
+                                    <span className="text-gray-100 font-medium">
+                                        {t("voucherDiscount")}
+                                    </span>
+                                </TableCell>
+                                <TableCell>
+                                    <p className="text-lg font-medium text-black">
+                                        {/* {" "}
                                     {changePriceFormat(billing.voucherDiscount)} */}
-                                    -
-                                    {changePriceFormat(
-                                        order.voucher_discount
-                                    ) ?? "0đ"}
-                                    đ
-                                </p>
-                            </TableCell>
-                        </StyledTableRow>
+                                        -
+                                        {changePriceFormat(
+                                            order.voucher_discount
+                                        ) ?? "0đ"}
+                                        đ
+                                    </p>
+                                </TableCell>
+                            </StyledTableRow>
+                        )}
+
                         <StyledTableRow>
                             <TableCell>
                                 <span className="text-gray-100 font-medium">

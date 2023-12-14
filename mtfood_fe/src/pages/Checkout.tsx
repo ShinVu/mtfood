@@ -8,6 +8,8 @@ import {
     TableCell,
     Divider,
     TextField,
+    CircularProgress,
+    Button,
 } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -596,9 +598,11 @@ function CheckoutPayment() {
 function CheckoutSumup({
     refProps,
     handleOrder,
+    loading,
 }: {
     refProps: any;
     handleOrder: () => void;
+    loading: boolean;
 }) {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -757,7 +761,11 @@ function CheckoutSumup({
                                         className="bg-primary_main"
                                         onClick={handleOrder}
                                     >
-                                        <span>{t("orderNow")}</span>
+                                        {loading ? (
+                                            <CircularProgress />
+                                        ) : (
+                                            <span>{t("orderNow")}</span>
+                                        )}
                                     </ContainedButton>
                                 </TableCell>
                             </StyledTableRow>
@@ -777,7 +785,9 @@ export default function Checkout() {
     );
     const { user } = useAppSelector((state) => state.authentication);
     const { currentAddress } = useAppSelector((state) => state.authentication);
+    const [loading, setLoading] = useState<boolean>(false);
     const handleOrder = () => {
+        setLoading(true);
         //get products
         const products: { id: number; quantity: number }[] = [];
         Object.entries(productCart).forEach(([key, product]: any) => {
@@ -818,6 +828,8 @@ export default function Checkout() {
         axiosClient
             .post("/createOrder", payload)
             .then(({ data }) => console.log(data));
+
+        setLoading(false);
     };
     return (
         <div className="flex flex-1 flex-col">
@@ -828,7 +840,11 @@ export default function Checkout() {
                 <CheckoutItem ref={itemCard} />
                 <CheckoutVoucher />
                 <CheckoutPayment />
-                <CheckoutSumup refProps={itemCard} handleOrder={handleOrder} />
+                <CheckoutSumup
+                    refProps={itemCard}
+                    handleOrder={handleOrder}
+                    loading={loading}
+                />
             </div>
             <Footer />
         </div>

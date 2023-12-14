@@ -127,7 +127,7 @@ class OrderController extends Controller
                 $limit = $data['limit'];
             }
 
-            $orders = $orders->skip($offset)->take($limit)->get();
+            $orders = $orders->skip($offset)->take($limit)->orderBy('updated_at', 'desc')->get();
 
             //Append media path
             $productPath = 'storage/product/';
