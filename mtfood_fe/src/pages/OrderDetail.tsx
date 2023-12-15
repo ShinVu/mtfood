@@ -18,8 +18,17 @@ import {
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     Divider,
+    FormControl,
+    FormControlLabel,
     Paper,
+    Radio,
+    RadioGroup,
     Table,
     TableBody,
     TableCell,
@@ -112,7 +121,7 @@ function OrderSummary({ order }: { order: orderType }) {
                                         {t("voucherDiscount")}
                                     </span>
                                 </TableCell>
-                                <TableCell>
+                                <TableCell align="right">
                                     <p className="text-lg font-medium text-black">
                                         {/* {" "}
                                     {changePriceFormat(billing.voucherDiscount)} */}
@@ -163,8 +172,27 @@ function OrderCancel({ orderStatus }: { orderStatus: string }) {
     }
 }
 
-function MapToButton({ order }: { order: orderType }) {
+function MapToButton({
+    order,
+    handleOpen,
+    handleClose,
+}: {
+    order: orderType;
+    handleOpen: () => void;
+    handleClose: () => void;
+}) {
     const { t } = useTranslation();
+    const navigate = useNavigate();
+    const { user } = useAppSelector((state) => state.authentication);
+    const cancelOrder = () => {
+        const payload = {
+            customerId: user.id,
+            orderId: order.id,
+        };
+        axiosClient
+            .post("/cancelOrder", payload)
+            .then(({ data }) => navigate(0));
+    };
 
     if (order.status === order_states[1]) {
         return (
@@ -173,7 +201,27 @@ function MapToButton({ order }: { order: orderType }) {
                     {t("payNow")}
                 </ContainedButton>
                 <OutlinedButton>{t("Contact")}</OutlinedButton>
-                <OutlinedButton>{t("CancelOrder")}</OutlinedButton>
+                <OutlinedButton onClick={handleOpen}>
+                    {t("changePaymentMethod")}
+                </OutlinedButton>
+                <OutlinedButton onClick={cancelOrder}>
+                    {t("CancelOrder")}
+                </OutlinedButton>
+            </div>
+        );
+    }
+    if (order.status === order_states[3]) {
+        return (
+            <div className="flex flex-col space-y-4">
+                <ContainedButton className=" bg-primary_main">
+                    {t("Contact")}
+                </ContainedButton>
+                <OutlinedButton onClick={handleOpen}>
+                    {t("changePaymentMethod")}
+                </OutlinedButton>
+                <OutlinedButton onClick={cancelOrder}>
+                    {t("CancelOrder")}
+                </OutlinedButton>
             </div>
         );
     }
@@ -196,7 +244,9 @@ function MapToButton({ order }: { order: orderType }) {
                 <ContainedButton className=" bg-primary_main">
                     {t("Contact")}
                 </ContainedButton>
-                <OutlinedButton>{t("CancelOrder")}</OutlinedButton>
+                <OutlinedButton onClick={cancelOrder}>
+                    {t("CancelOrder")}
+                </OutlinedButton>
             </div>
         );
     }
@@ -209,6 +259,66 @@ function MapToButton({ order }: { order: orderType }) {
             </div>
         );
     }
+}
+
+function ChangePaymentMethodDialog(props) {
+    const { orderId, open, handleOpen, handleClose } = props;
+    const { t } = useTranslation();
+    const navigate = useNavigate();
+    const { user } = useAppSelector((state) => state.authentication);
+    const [value, setValue] = useState<string>("cod");
+
+    const changePaymentMethod = () => {
+        const payload = {
+            customerId: user.id,
+            orderId: orderId,
+            paymentMethod: value,
+        };
+        axiosClient
+            .post("/changePaymentMethod", payload)
+            .then(({ data }) => navigate(0));
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue((event.target as HTMLInputElement).value);
+    };
+    return (
+        <Dialog open={open}>
+            <DialogTitle>{t("choosePaymentMethod")}</DialogTitle>
+            <DialogContent>
+                <FormControl>
+                    <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        name="radio-buttons-group"
+                        value={value}
+                        onChange={handleChange}
+                    >
+                        <FormControlLabel
+                            value="cod"
+                            control={<Radio />}
+                            label="Thanh toán khi nhận hàng"
+                        />
+                        <FormControlLabel
+                            value="momo"
+                            control={<Radio />}
+                            label="Ví Momo"
+                        />
+                        <FormControlLabel
+                            value="vnpay"
+                            control={<Radio />}
+                            label="Ví VNPay"
+                        />
+                    </RadioGroup>
+                </FormControl>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose}>{t("cancel")}</Button>
+                <Button onClick={changePaymentMethod} autoFocus>
+                    Agree
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
 }
 export default function OrderDetail() {
     const { t } = useTranslation();
@@ -259,6 +369,18 @@ export default function OrderDetail() {
             fetchAddress();
         }
     }, [addresses]);
+
+    //Change payment method state
+
+    const [open, setOpen] = useState<boolean>(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     return (
         <div className="flex flex-1 flex-col">
             <Header />
@@ -299,7 +421,17 @@ export default function OrderDetail() {
                             <Divider className="mt-4 mb-4" />
                             <div className="flex flex-row justify-between px-4">
                                 <MapToText order={order} />
-                                <MapToButton order={order} />
+                                <MapToButton
+                                    order={order}
+                                    handleOpen={handleOpen}
+                                    handleClose={handleClose}
+                                />
+                                <ChangePaymentMethodDialog
+                                    open={open}
+                                    orderId={order.id}
+                                    handleOpen={handleOpen}
+                                    handleClose={handleClose}
+                                />
                             </div>
                         </Paper>
                         <div className="flex flex-row flex-1 space-x-4">

@@ -328,5 +328,7 @@
     "normalCart": "Cart",
     "wholesaleCart": "Wholesale cart",
     "quantityInvalid": "Quantity invalid",
-    "totalProductDiscount": "Products discount"
+    "totalProductDiscount": "Products discount",
+    "changePaymentMethod": "Change payment",
+    "choosePaymentMethod": "Choose payment method"
 }

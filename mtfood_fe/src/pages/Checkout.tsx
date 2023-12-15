@@ -827,7 +827,6 @@ export default function Checkout() {
 
         axiosClient.post("/createOrder", payload).then(({ data }) => {
             setLoading(false);
-            console.log(data);
         });
     };
     return (

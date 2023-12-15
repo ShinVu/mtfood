@@ -90,6 +90,8 @@ Route::controller(OrderController::class)->group(function () {
     Route::post('/getOrderDetail', 'getOrderDetail');
     Route::get('/getOrderVoucher', 'getOrderVoucher');
     Route::post('/createOrder', 'createOrder');
+    Route::post('/cancelOrder', 'cancelOrder');
+    Route::post('/changePaymentMethod', 'changePaymentMethod');
 });
 
 Route::controller(ChatController::class)->group(function () {

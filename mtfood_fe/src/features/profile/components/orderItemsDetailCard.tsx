@@ -56,7 +56,7 @@ export default function OrderItemsDetailCard({
 
                 <TableBody>
                     {orderDetails.map((orderDetail: orderDetail) => (
-                        <StyledTableRow>
+                        <StyledTableRow key={orderDetail.id}>
                             <TableCell align="left">
                                 <div
                                     className="flex flex-row space-x-4 cursor-pointer"

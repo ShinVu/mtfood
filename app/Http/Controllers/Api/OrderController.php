@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\cancelOrderRequest;
+use App\Http\Requests\changePaymentMethodRequest;
 use App\Http\Requests\createOrderRequest;
 use App\Http\Requests\getOrderDetailRequest;
 use App\Http\Requests\getOrdersRequest;
@@ -312,6 +314,125 @@ class OrderController extends Controller
         }
     }
 
+    public function cancelOrder(cancelOrderRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $token = $request->bearerToken();
+
+
+            /** @var \App\Models\Customer $customer */
+            //Customer collection that matches id
+            $user = Customer::where('id', $data['customerId']);
+
+            //Check if customer id exists
+            if (!$user->exists()) {
+                return response(['message' => 'userInvalid', 'result' => []], 422);
+            }
+
+            //Check request authorization
+            if ($token != $user->first()['remember_token']) {
+                return response(['message' => 'invalidAccess', 'result' => []], 401);
+            }
+
+            /** @var \App\Models\Order $order */
+            $order = Order::where('id', $data['orderId']);
+
+            $order = $order->first();
+
+            $availableCancelStatus = ['created', 'waiting_payment', 'waiting_confirm_payment', 'waiting_confirm', 'packing', 'waiting_shipment'];
+            $availableForRefundStatus = ['waiting_confirm_payment', 'packing', 'waiting_shipment'];
+
+            //If state can be cancel
+            if (in_array($order->status, $availableForRefundStatus)) {
+                //Get payment method
+                $payment_method = $order->payment_method;
+                if ($payment_method == "momo" || $payment_method == "vnpay") {
+                    //Set to cancel state, waiting for refund
+                    $order->status = 'cancel_waiting_refund';
+                    $order->save();
+                    return response(['message' => 'cancelOrderWaitingRefundSuccessfully', 'result' => ['status' => 'cancel_waiting_refund']], 200);
+                }
+            }
+            if (in_array($order->status, $availableCancelStatus)) {
+                $order->status = 'canceled';
+                $order->save();
+                return response(['message' => 'cancelOrderSuccessfully', 'result' => ['status' => 'canceled']], 200);
+            }
+
+            return response(['message' => 'cancelOrderFail'], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+    public function changePaymentMethod(changePaymentMethodRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $token = $request->bearerToken();
+
+
+            /** @var \App\Models\Customer $customer */
+            //Customer collection that matches id
+            $user = Customer::where('id', $data['customerId']);
+
+            //Check if customer id exists
+            if (!$user->exists()) {
+                return response(['message' => 'userInvalid', 'result' => []], 422);
+            }
+
+            //Check request authorization
+            if ($token != $user->first()['remember_token']) {
+                return response(['message' => 'invalidAccess', 'result' => []], 401);
+            }
+
+
+            //Check payment method
+            //User new payment method
+            $payment_method = $data['paymentMethod'];
+            if (!($payment_method == 'momo' || $payment_method == 'vnpay' ||  $payment_method == 'cod')) {
+                return response(['message' => 'paymentMethodInvalid', 'result' => []], 401);
+            }
+            /** @var \App\Models\Order $order */
+            $order = Order::where('id', $data['orderId']);
+
+            $order = $order->first();
+
+            $availableStatus = ['created', 'waiting_payment', 'waiting_confirm'];
+
+
+            //If state is valid for changing payment method
+            if (in_array($order->status, $availableStatus)) {
+                if ($payment_method == 'cod') {
+                    //change order payment method and status
+                    $order->payment_method = 'cod';
+                    $order->status = 'waiting_confirm';
+                    $order->save();
+                    return response(['message' => 'changePaymentMethodSuccess', 'result' => ['payment_method' => 'cod']], 200);
+                }
+                if ($payment_method == 'momo') {
+                    //change order payment method and status
+                    $order->payment_method = 'momo';
+                    $order->status = 'waiting_payment';
+                    $order->save();
+                    return response(['message' => 'changePaymentMethodSuccess', 'result' => ['payment_method' => 'momo']], 200);
+                }
+                if ($payment_method == 'vnpay') {
+                    //change order payment method and status
+                    $order->payment_method = 'vnpay';
+                    $order->status = 'waiting_payment';
+                    $order->save();
+                    return response(['message' => 'changePaymentMethodSuccess', 'result' => ['payment_method' => 'vnpay']], 200);
+                }
+            }
+
+
+            return response(['message' => 'changePaymentMethodFail'], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
     public function getOrderVoucher(getOrderVoucherRequest $request)
     {
         try {
@@ -517,13 +638,13 @@ class OrderController extends Controller
             $newOrder->products_discount = $products_discount;
             $newOrder->vat = $vat;
 
+            //Update status based on payment method
+            if ($payment_method == 'momo' | $payment_method == "vnpay") {
+                $newOrder->status = "waiting_payment";
+            } else if ($payment_method = "cod") {
+                $newOrder->status = "waiting_confirm";
+            }
             $newOrder->save();
-            // if ($payment_method == 'momo' | $payment_method == "vnpay") {
-            //     $newOrder->status = "waiting_payment";
-            // } else if ($payment_method = "cod") {
-            //     $newOrder->status = "waiting_confirm";
-            // }
-            // $newOrder->save();
 
             //Only commit transaction to database if everything is valid
             DB::commit();
