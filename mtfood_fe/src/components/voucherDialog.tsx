@@ -34,6 +34,7 @@ export default function VoucherDialog(props: any) {
     const dispatch = useAppDispatch();
 
     const [vouchers, setVouchers] = useState<orderVoucher[] | null>(null);
+    const [voucherSet, setVoucherSet] = useState<boolean>(false);
     const price = usePriceCart();
     const handleVoucherChecked = (voucher: orderVoucher) => {
         if (voucher.id === selectedVoucher?.id) {
@@ -78,6 +79,7 @@ export default function VoucherDialog(props: any) {
 
             if (!vouchers) {
                 setVouchers(finalVouchers);
+                setVoucherSet(true);
             }
         };
         fetchVoucher();
@@ -85,7 +87,6 @@ export default function VoucherDialog(props: any) {
 
     useEffect(() => {
         if (vouchers) {
-            console.log("hello");
             const availableVouchers: orderVoucher[] = [];
             const unAvailableVouchers: orderVoucher[] = [];
             for (let i = 0; i < vouchers.length; i++) {
@@ -104,7 +105,7 @@ export default function VoucherDialog(props: any) {
 
             setVouchers(finalVouchers);
         }
-    }, [price?.totalPrice]);
+    }, [voucherSet, price?.totalPrice]);
     return (
         <Dialog
             open={open}
