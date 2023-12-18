@@ -330,5 +330,7 @@
     "quantityInvalid": "Quantity invalid",
     "totalProductDiscount": "Products discount",
     "changePaymentMethod": "Change payment",
-    "choosePaymentMethod": "Choose payment method"
+    "choosePaymentMethod": "Choose payment method",
+    "normalOrder": "Order",
+    "wholesaleOrder": "Wholesale order"
 }

@@ -1,3 +1,5 @@
+import { StringNullableChain } from "lodash";
+
 export type orderDetailProduct = {
     id: number;
     name: string;
@@ -65,6 +67,38 @@ export type orderType = {
     created_at: string;
     updated_at: string;
     order_detail: orderDetail[];
+};
+
+export type orderWholesaleDetail = {
+    id: number;
+    quantity: number;
+    unit_price: string;
+    quantity_delivered: number;
+    wholesale_pricing_id: number;
+    order_wholesale_summary_id: number;
+    product_id: number;
+    created_at: string;
+    updated_at: string;
+    product: orderDetailProduct;
+};
+
+export type orderWholesaleType = {
+    id: number;
+    total: string;
+    total_paid: string;
+    payment_method: string;
+    delivery_method: string;
+    notes: string | null;
+    order_code: string;
+    status: "created" | "waiting_confirm" | "in_process" | "completed";
+    confirmed_at: string;
+    completed_at: string;
+    employee_id: number | null;
+    customer_id: number;
+    delivery_address_id: number;
+    created_at: string;
+    updated_at: string;
+    order_summary_detail: orderWholesaleDetail[];
 };
 
 export type orderVoucher = {

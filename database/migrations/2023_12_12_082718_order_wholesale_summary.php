@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('order_wholesale_summary', function (Blueprint $table) {
             $table->id(); //order primary key
-            $table->unsignedDecimal('total', $precision = 19, $scale = 4); //Total payment of order
-            $table->unsignedDecimal('total_paid', $precision = 19, $scale = 4); //Total payment paid
+            $table->unsignedDecimal('total', $precision = 19, $scale = 4)->nullable(); //Total payment of order
+            $table->unsignedDecimal('total_paid', $precision = 19, $scale = 4)->nullable(); //Total payment paid
             $table->string('payment_method'); //Payment method
             $table->string('delivery_method'); //Delivery method
-            $table->longText('notes'); //order notes
+            $table->longText('notes')->nullable(); //order notes
             $table->string('order_code'); //order code
             $table->enum('status', ['created', 'waiting_confirm', 'in_process', 'completed']); //Order states
             $table->dateTime('confirmed_at')->nullable(); // when order is confirmed

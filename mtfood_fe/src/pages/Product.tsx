@@ -127,6 +127,7 @@ function CategoryBar({
     };
 
     const [cat, setCat] = useState<string | null>(searchParams.get("category"));
+    console.log(cat);
     useEffect(() => {
         if (!searchParams.get("category")) {
             setCat(null);
@@ -146,7 +147,7 @@ function CategoryBar({
                               enterNextDelay={1000}
                               enterDelay={1000}
                           >
-                              {cat && cat === category.id ? (
+                              {cat && cat == category.id ? (
                                   <div
                                       onClick={() =>
                                           handleCategoryClick(category.id)
@@ -454,7 +455,7 @@ function ServiceFilter({
 }) {
     const { t } = useTranslation();
     const [state, setState] = React.useState({
-        discount: false,
+        discount: searchParams.get("discount") ? true : false,
         voucher: false,
         onStock: false,
         wholesaleProduct: false,

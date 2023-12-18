@@ -86,10 +86,12 @@ Route::controller(ProfileController::class)->group(function () {
 
 Route::controller(OrderController::class)->group(function () {
     Route::post('/getOrders', 'getOrders');
+    Route::post('/getWholesaleOrders', 'getWholesaleOrders');
     Route::post('/orderSearch', 'orderSearch');
     Route::post('/getOrderDetail', 'getOrderDetail');
     Route::get('/getOrderVoucher', 'getOrderVoucher');
     Route::post('/createOrder', 'createOrder');
+    Route::post('/createWholesaleOrder', 'createWholesaleOrder');
     Route::post('/cancelOrder', 'cancelOrder');
     Route::post('/changePaymentMethod', 'changePaymentMethod');
 });

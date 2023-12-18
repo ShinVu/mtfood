@@ -80,6 +80,7 @@ export type priceCart = {
 export type priceWholesaleCart = {
     totalPrice: number;
     totalSub: number;
+    totalShippingFee?: number;
 };
 
 export type filter = {

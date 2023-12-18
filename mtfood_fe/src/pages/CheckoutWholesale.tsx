@@ -1,0 +1,701 @@
+import React, { forwardRef, useEffect, useRef, useState } from "react";
+//Import MUI
+import {
+    Table,
+    TableHead,
+    TableBody,
+    TableRow,
+    TableCell,
+    Divider,
+    TextField,
+    CircularProgress,
+    Button,
+} from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { styled as mui_styled } from "@mui/material/styles";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import { BiSolidDiscount } from "react-icons/bi";
+import { FaMoneyBills } from "react-icons/fa6";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+//Import color
+import { colors } from "../../public/theme.js";
+//Import components
+import Footer from "../components/footer.js";
+import HeaderCheckout from "../components/headerCheckout.js";
+import {
+    ContainedButton,
+    OutlinedButton,
+    TextButton,
+} from "../components/button.js";
+import { AddAddressDialog } from "../features/profile/index.js";
+import Popover from "@mui/material/Popover";
+//Import i18-n
+import { useTranslation } from "react-i18next";
+
+//lodash
+import { debounce } from "@mui/material/utils";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
+import axiosClient from "../../axios-client.js";
+import { setAddress } from "../features/authentication/authenticationSlice.js";
+import AddressDialog from "../features/profile/addressDialog.js";
+import { current } from "@reduxjs/toolkit";
+import { productCart } from "../models/product.model.js";
+import { changePriceFormat, getSubTotal } from "../utils/index.js";
+import usePriceCheckout from "../hooks/usePriceCheckout.js";
+import VoucherDialog from "../components/voucherDialog.js";
+import { Navigate, useNavigate } from "react-router-dom";
+import usePriceCart from "../hooks/usePrice.js";
+import { setPaymentMethod } from "../features/order/orderSlice.js";
+import usePriceWholesaleCheckout from "../hooks/usePriceCheckoutWholesale.js";
+import usePriceWholesaleCart from "../hooks/usePriceWholesale.js";
+
+const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
+    "& td, & th": {
+        border: 0,
+    },
+}));
+
+const products = [
+    {
+        id: 1,
+        name: "Khô bò",
+        basePrice: "đ1.000.000",
+        quantity: "12",
+        price: "đ500.000",
+    },
+    {
+        id: 1,
+        name: "Khô bò",
+        basePrice: "đ1.000.000",
+        quantity: "12",
+        price: "đ500.000",
+    },
+    {
+        id: 1,
+        name: "Khô bò",
+        basePrice: "đ1.000.000",
+        quantity: "12",
+        price: "đ500.000",
+    },
+];
+
+function CheckoutAddress() {
+    const { t } = useTranslation();
+
+    const { addresses, user, currentAddress } = useAppSelector(
+        (state) => state.authentication
+    );
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        const fetchAddress = async () => {
+            const payload = {
+                customerId: user.id,
+            };
+            const response = await axiosClient.post("/getAddress", payload);
+            const newAddress = response.data.result.address;
+
+            dispatch(setAddress(newAddress));
+        };
+        if (!addresses) {
+            fetchAddress();
+        }
+    }, [addresses]);
+
+    //Address dialog state
+    const [open, setOpen] = useState<boolean>(false);
+
+    const handleModalOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const getFullAddress = () => {
+        return `${currentAddress?.address}, ${currentAddress?.ward_name}, ${currentAddress?.district_name}, ${currentAddress?.province_name}`;
+    };
+    return (
+        <div className="flex flex-col flex-1 bg-white py-4 px-10">
+            <h5 className="text-primary_main text-base uppercase my-0">
+                {t("orderAddress")}
+            </h5>
+            <div className="flex flex-1 justify-between items-center mt-4">
+                <div className="flex flex-col">
+                    <p className="font-medium text-sm my-0">
+                        {currentAddress?.name}
+                    </p>
+                    <p className="font-medium text-sm my-0">
+                        {currentAddress?.phone_number}
+                    </p>
+                </div>
+                <p className="font-normal text-sm my-0">{getFullAddress()}</p>
+                <p className="text-primary_main normal-case my-0 text-sm">
+                    {currentAddress?.default ? t("default") : <></>}
+                </p>
+                <TextButton onClick={handleModalOpen}>
+                    <span className="normal-case text-blue">{t("change")}</span>
+                </TextButton>
+            </div>
+            <AddressDialog
+                open={open}
+                handleModalOpen={handleModalOpen}
+                handleClose={handleClose}
+            />
+        </div>
+    );
+}
+
+function CheckoutDelivery() {
+    const { t } = useTranslation();
+    const [selectedValue, setSelectedValue] = React.useState("fast");
+
+    const handleChange = (event) => {
+        setSelectedValue(event.target.value);
+    };
+
+    return (
+        <div className="flex flex-col flex-1 bg-white p-4">
+            <h5 className=" text-base uppercase my-0 px-3 font-semibold">
+                {t("chooseDeliveryOption")}
+            </h5>
+            <div className="mt-4 w-fit">
+                <Table size="small">
+                    <TableBody>
+                        <StyledTableRow>
+                            <TableCell align="left">
+                                <div className="-ml-3">
+                                    <Radio
+                                        checked={selectedValue === "fast"}
+                                        onChange={handleChange}
+                                        value="fast"
+                                        name="radio-buttons"
+                                        inputProps={{ "aria-label": "fast" }}
+                                    />
+                                    <span className="text-sm text-gray-100">
+                                        {t("fastDelivery")}
+                                    </span>
+                                </div>
+                            </TableCell>
+                            <TableCell align="right">
+                                <span className="text-sm font-medium text-red_main">
+                                    21.000đ
+                                </span>
+                            </TableCell>
+                        </StyledTableRow>
+                    </TableBody>
+                </Table>
+            </div>
+        </div>
+    );
+}
+
+function ProductWholesaleCartItemCard({ product }: { product: productCart }) {
+    const getWholesalePrice = () => {
+        const wholesalePrice = product.product_wholesale_pricing;
+
+        if (wholesalePrice && wholesalePrice.length > 0) {
+            for (
+                let priceIndex = wholesalePrice.length - 1;
+                priceIndex >= 0;
+                priceIndex--
+            ) {
+                if (
+                    product.quantityForProduct >=
+                    wholesalePrice[priceIndex].quantity_from
+                ) {
+                    return wholesalePrice[priceIndex].price;
+                }
+            }
+        }
+        return "";
+    };
+    return (
+        <StyledTableRow>
+            <TableCell align="left">
+                <div className="flex flex-row items-center space-x-4">
+                    <img
+                        src={product.image_url}
+                        className="w-24 h-24"
+                        alt={product.name}
+                        loading="lazy"
+                    />
+                    <p className="text-base self-start">{product.name}</p>
+                </div>
+            </TableCell>
+            <TableCell align="right">
+                <p className="my-0 font-medium text-base">
+                    {changePriceFormat(getWholesalePrice())}đ
+                </p>
+            </TableCell>
+            <TableCell align="right">
+                <p className="my-0 font-medium text-base">
+                    {product.quantityForProduct}
+                </p>
+            </TableCell>
+            <TableCell align="right">
+                <p className="my-0 font-medium text-base text-red_main">
+                    {changePriceFormat(
+                        getSubTotal(
+                            getWholesalePrice(),
+                            product.quantityForProduct
+                        )
+                    )}
+                    đ
+                </p>
+            </TableCell>
+        </StyledTableRow>
+    );
+}
+
+function PopOverOrderPayment() {
+    const { t } = useTranslation();
+    const [anchorEl, setAnchorEl] = useState(null);
+    const handlePopoverOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+
+    //Checkout prices
+    const priceCheckout = usePriceWholesaleCart();
+    return (
+        <>
+            <Popover
+                id="mouse-over-popover"
+                sx={{
+                    pointerEvents: "none",
+                }}
+                disableRestoreFocus
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handlePopoverClose}
+                anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                }}
+                transformOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                }}
+            >
+                <div className="p-4">
+                    <p id="tableTitle" className="text-sm font-medium">
+                        {t("discountDetail")}
+                    </p>
+                    <Table aria-labelledby="tableTitle">
+                        <TableBody>
+                            <StyledTableRow>
+                                <TableCell align="left">
+                                    <span className="text-gray-100 text-sm my-0">
+                                        {t("productSum")}
+                                    </span>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <span className="text-black text-sm font-medium my-0">
+                                        {priceCheckout &&
+                                            changePriceFormat(
+                                                String(priceCheckout.totalSub)
+                                            )}
+                                        đ
+                                    </span>
+                                </TableCell>
+                            </StyledTableRow>
+
+                            <StyledTableRow>
+                                <TableCell align="left">
+                                    <span className="text-gray-100 text-sm my-0">
+                                        {t("totalPayment")}
+                                    </span>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <span className="my-0 text-red_main text-2xl font-bold">
+                                        {priceCheckout &&
+                                            changePriceFormat(
+                                                String(priceCheckout.totalPrice)
+                                            )}
+                                        đ
+                                    </span>
+                                </TableCell>
+                            </StyledTableRow>
+                        </TableBody>
+                    </Table>
+                </div>
+            </Popover>
+            <div
+                aria-owns={open ? "mouse-over-popover" : undefined}
+                aria-haspopup="true"
+                onMouseEnter={handlePopoverOpen}
+                onMouseLeave={handlePopoverClose}
+            >
+                <Table size="small">
+                    <TableBody>
+                        <StyledTableRow>
+                            <TableCell align="left">
+                                <p className="my-0 text-sm font-medium">
+                                    {t("totalOrder")}
+                                </p>
+                            </TableCell>
+                            <TableCell align="right">
+                                <p className="my-0 text-red_main text-2xl font-bold">
+                                    {priceCheckout &&
+                                        changePriceFormat(
+                                            String(priceCheckout.totalPrice)
+                                        )}
+                                    đ
+                                </p>
+                            </TableCell>
+                        </StyledTableRow>
+                    </TableBody>
+                </Table>
+            </div>
+        </>
+    );
+}
+
+const CheckoutItem = forwardRef((props, ref) => {
+    const { t } = useTranslation();
+    const { productWholesaleCart } = useAppSelector((state) => state.product);
+    const [productCheckout, setProductCheckout] = useState<any>(null);
+    useEffect(() => {
+        const getProductCheckout = () => {
+            if (productWholesaleCart) {
+                // const result = productCart.filter(
+                //     (product: any) => product.check
+                // );
+                // console.log(result);
+                // setProductCheckout(result);
+                const newProductCheckout = {};
+                Object.entries(productWholesaleCart).forEach(
+                    ([key, product]: any) => {
+                        if (product.check) {
+                            newProductCheckout[key] = product;
+                        }
+                    }
+                );
+
+                setProductCheckout(newProductCheckout);
+            }
+        };
+
+        getProductCheckout();
+    }, [productWholesaleCart]);
+    return (
+        <div className="flex flex-col flex-1 bg-white p-4" ref={ref}>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>
+                            <span className=" text-base uppercase my-0 font-semibold">
+                                {t("product")}
+                            </span>
+                        </TableCell>
+                        <TableCell align="right">
+                            <span className=" font-medium text-gray-100 my-0">
+                                {t("productPrice")}
+                            </span>
+                        </TableCell>
+                        <TableCell align="right">
+                            <span className=" font-medium text-gray-100 my-0">
+                                {t("productQuantity")}
+                            </span>
+                        </TableCell>
+                        <TableCell align="right">
+                            <span className=" font-medium text-gray-100 my-0">
+                                {t("total")}
+                            </span>
+                        </TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {productCheckout &&
+                        Object.keys(productCheckout).map((key) => (
+                            <ProductWholesaleCartItemCard
+                                product={productCheckout[key]}
+                                key={key}
+                            />
+                        ))}
+                </TableBody>
+            </Table>
+            <Divider className="my-4" />
+            <div className="flex flex-1 flex-row items-center px-3 justify-end">
+                <PopOverOrderPayment />
+            </div>
+        </div>
+    );
+});
+
+function CheckoutPayment() {
+    const { t } = useTranslation();
+    const { selectedPaymentMethod } = useAppSelector((state) => state.order);
+    const dispatch = useAppDispatch();
+    const handleChange = (event: any) => {
+        dispatch(setPaymentMethod(event.target.value));
+    };
+
+    return (
+        <div className="flex flex-col flex-1 bg-white p-4">
+            <h5 className=" text-base uppercase my-0 px-3 font-semibold">
+                {t("choosePaymentOption")}
+            </h5>
+            <div className="mt-4 w-fit">
+                <div className="flex flex-row items-center space-x-4">
+                    <Radio
+                        checked={selectedPaymentMethod === "cod"}
+                        onChange={handleChange}
+                        value="cod"
+                        name="radio-buttons"
+                        inputProps={{ "aria-label": "COD" }}
+                    />
+                    <div className="flex flex-row items-center space-x-2 ">
+                        <FaMoneyBills
+                            style={{ color: colors.primary_main }}
+                            className="h-auto w-6"
+                        />
+                        <span className="text-sm text-gray-100">
+                            {t("COD")}
+                        </span>
+                    </div>
+                </div>
+                <div className="flex flex-row items-center space-x-4">
+                    <Radio
+                        checked={selectedPaymentMethod === "momo"}
+                        onChange={handleChange}
+                        value="momo"
+                        name="radio-buttons"
+                        inputProps={{ "aria-label": "momo" }}
+                    />
+                    <div className="flex flex-row items-center space-x-2 ">
+                        <img src="/assets/momo.png" className="h-auto w-6" />
+                        <span className="text-sm text-gray-100">
+                            {t("momo")}
+                        </span>
+                    </div>
+                </div>
+                <div className="flex flex-row items-center space-x-4">
+                    <Radio
+                        checked={selectedPaymentMethod === "vnpay"}
+                        onChange={handleChange}
+                        value="vnpay"
+                        name="radio-buttons"
+                        inputProps={{ "aria-label": "vnpay" }}
+                    />
+                    <div className="flex flex-row items-center space-x-2 ">
+                        <img src="/assets/zaloPay.png" className="h-auto w-6" />
+                        <span className="text-sm text-gray-100">VNPay</span>
+                    </div>
+                </div>
+                {/* <div className="flex flex-row items-center space-x-4">
+                    <Radio
+                        checked={selectedValue === "instant"}
+                        onChange={handleChange}
+                        value="instant"
+                        name="radio-buttons"
+                        inputProps={{ "aria-label": "instant" }}
+                    />
+                    <div className="flex flex-row items-center space-x-2 ">
+                        <span className="text-sm text-gray-100">
+                            {t("VNPay")}
+                        </span>
+                    </div>
+                </div> */}
+            </div>
+        </div>
+    );
+}
+
+function CheckoutSumup({
+    refProps,
+    handleOrder,
+    loading,
+}: {
+    refProps: any;
+    handleOrder: () => void;
+    loading: boolean;
+}) {
+    const { t } = useTranslation();
+    const navigate = useNavigate();
+    const handleSeeInformation = () => {
+        if (refProps) {
+            refProps.current.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+            });
+        }
+    };
+    const price = usePriceWholesaleCheckout();
+
+    return (
+        <div className="flex flex-col flex-1 bg-white p-4">
+            <div className="flex flex-row flex-1 justify-between px-3 items-center">
+                <h5 className=" text-base uppercase my-0 font-semibold">
+                    {t("order")}
+                </h5>
+                <TextButton onClick={() => navigate(-1)}>
+                    <span className="normal-case my-0 text-blue">
+                        {t("change")}
+                    </span>
+                </TextButton>
+            </div>
+            <div className="flex flex-row flex-1 px-3 items-center">
+                <span className="text-sm text-gray-100 my-0">
+                    1 {t("product")}
+                </span>
+                <TextButton
+                    endIcon={
+                        <KeyboardArrowUpIcon sx={{ color: colors.blue }} />
+                    }
+                    onClick={() => handleSeeInformation()}
+                >
+                    <span className="normal-case my-0 text-blue">
+                        {t("seeInformation")}
+                    </span>
+                </TextButton>
+            </div>
+            <Divider className="my-4" />
+            <div className="flex flex-row flex-1 justify-end">
+                <div className="flex w-fit">
+                    <Table aria-labelledby="tableTitle">
+                        <TableBody>
+                            <StyledTableRow>
+                                <TableCell
+                                    align="left"
+                                    className="min-w-fit w-96"
+                                >
+                                    <span className="text-gray-100 text-sm my-0">
+                                        {t("productSum")}
+                                    </span>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <span className="text-black text-sm font-medium my-0">
+                                        {price &&
+                                            changePriceFormat(price.totalSub)}
+                                        đ
+                                    </span>
+                                </TableCell>
+                            </StyledTableRow>
+                            <StyledTableRow>
+                                <TableCell align="left">
+                                    <span className="text-gray-100 text-sm my-0">
+                                        Phí vận chuyển
+                                    </span>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <span className="text-black text-sm font-medium my-0">
+                                        +
+                                        {price &&
+                                            changePriceFormat(
+                                                price.totalShippingFee
+                                            )}
+                                        đ
+                                    </span>
+                                </TableCell>
+                            </StyledTableRow>
+
+                            <StyledTableRow>
+                                <TableCell align="left">
+                                    <span className="text-gray-100 text-sm my-0">
+                                        {t("totalPayment")}
+                                    </span>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <span className="my-0 text-red_main text-2xl font-bold">
+                                        {changePriceFormat(price?.totalPrice)}đ
+                                    </span>
+                                </TableCell>
+                            </StyledTableRow>
+                            <StyledTableRow>
+                                <TableCell align="left"></TableCell>
+                                <TableCell align="right">
+                                    {loading ? (
+                                        <CircularProgress />
+                                    ) : (
+                                        <ContainedButton
+                                            className="bg-primary_main"
+                                            onClick={handleOrder}
+                                        >
+                                            <span>{t("orderNow")}</span>
+                                        </ContainedButton>
+                                    )}
+                                </TableCell>
+                            </StyledTableRow>
+                        </TableBody>
+                    </Table>
+                </div>
+            </div>
+        </div>
+    );
+}
+export default function CheckoutWholesale() {
+    const { t } = useTranslation();
+    const itemCard = useRef();
+    const { productWholesaleCart } = useAppSelector((state) => state.product);
+    const { user } = useAppSelector((state) => state.authentication);
+    const { currentAddress } = useAppSelector((state) => state.authentication);
+    const { selectedPaymentMethod } = useAppSelector((state) => state.order);
+    const [loading, setLoading] = useState<boolean>(false);
+    const handleOrder = () => {
+        setLoading(true);
+        //get products
+        const products: { id: number; quantity: number }[] = [];
+        Object.entries(productWholesaleCart).forEach(([key, product]: any) => {
+            if (product.check) {
+                const newProduct = {
+                    id: product.id,
+                    quantity: product.quantityForProduct,
+                };
+                products.push(newProduct);
+            }
+        });
+
+        //get customerId
+        const customer_id = user.id;
+
+        //get delievery address
+        const delivery_address_id = currentAddress.id;
+
+        //get delivery method
+        const delivery_method = "fast";
+
+        //get payment method
+        const payment_method = selectedPaymentMethod;
+
+        //create payload
+        const payload = {
+            products: products,
+            payment_method: payment_method,
+            delivery_method: delivery_method,
+            customer_id: customer_id,
+            delivery_address_id: delivery_address_id,
+        };
+
+        axiosClient.post("/createWholesaleOrder", payload).then(({ data }) => {
+            setLoading(false);
+        });
+    };
+    return (
+        <div className="flex flex-1 flex-col">
+            <HeaderCheckout />
+            <div className="flex flex-1 flex-col bg-background_main p-4 space-y-4">
+                <CheckoutAddress />
+                <CheckoutDelivery />
+                <CheckoutItem ref={itemCard} />
+
+                <CheckoutPayment />
+                <CheckoutSumup
+                    refProps={itemCard}
+                    handleOrder={handleOrder}
+                    loading={loading}
+                />
+            </div>
+            <Footer />
+        </div>
+    );
+}

@@ -64,12 +64,7 @@ export default function ProfileNavigation(props) {
                     >
                         {t("profile")}
                     </p>
-                    <p
-                        className="text-sm font-medium  my-1 text-gray-100  hover:text-primary_main  cursor-pointer"
-                        onClick={() => navigate("/user/bank")}
-                    >
-                        {t("bank")}
-                    </p>
+
                     <p
                         className="text-sm font-medium  my-1 text-gray-100  hover:text-primary_main  cursor-pointer"
                         onClick={() => navigate("/user/address")}
@@ -83,14 +78,31 @@ export default function ProfileNavigation(props) {
                         {t("notificationSetting")}
                     </p>
                 </div>
-                <div
-                    className="flex flex-row items-center text-gray-200 hover:text-primary_main  cursor-pointer"
-                    onClick={() => navigate("/user/order")}
-                >
-                    <ReceiptLongIcon />
-                    <p className="text-sm font-medium  my-0 ml-2 text-gray-200 hover:text-primary_main">
-                        {t("order")}
-                    </p>
+                <div className="flex flex-col  text-gray-200 hover:text-primary_main  cursor-pointer">
+                    <div
+                        className="flex flex-row items-center text-gray-200 hover:text-primary_main"
+                        onClick={() => navigate("/user/order")}
+                    >
+                        <ReceiptLongIcon />
+                        <p className="text-sm font-medium  my-0 ml-2 text-gray-200 hover:text-primary_main">
+                            {t("order")}
+                        </p>
+                    </div>
+                    <div className="ml-8 my-2 ">
+                        <p
+                            className="text-sm font-medium  my-1 text-gray-100  hover:text-primary_main  cursor-pointer"
+                            onClick={() => navigate("/user/order")}
+                        >
+                            {t("normalOrder")}
+                        </p>
+
+                        <p
+                            className="text-sm font-medium  my-1 text-gray-100  hover:text-primary_main  cursor-pointer"
+                            onClick={() => navigate("/user/order/wholesale")}
+                        >
+                            {t("wholesaleOrder")}
+                        </p>
+                    </div>
                 </div>
                 <div
                     className="flex flex-row items-center  text-gray-200 hover:text-primary_main  cursor-pointer"

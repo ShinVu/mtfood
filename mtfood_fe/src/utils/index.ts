@@ -30,6 +30,9 @@ function changePriceFormat(value: string | number | null) {
     if (!value) {
         return "";
     }
+    if (value === "notValid") {
+        return "notValid";
+    }
     const money = value;
     const config = {
         style: "currency",

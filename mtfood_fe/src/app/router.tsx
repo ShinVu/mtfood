@@ -28,6 +28,8 @@ import AddProduct from "../pages/addProductTestingFile";
 import AddCategory from "../pages/addCategoryTestingFile";
 import ProductWholesale from "../pages/ProductWholesale";
 import ProductWholesaleDetails from "../pages/product_details_wholesale";
+import CheckoutWholesale from "../pages/CheckoutWholesale";
+import UserOrderWholesale from "../pages/OrderWholesale";
 
 const router = createBrowserRouter([
     {
@@ -105,6 +107,10 @@ const router = createBrowserRouter([
                 element: <UserOrder />,
             },
             {
+                path: "user/order/wholesale/:type?",
+                element: <UserOrderWholesale />,
+            },
+            {
                 path: "user/order/details/:id",
                 element: <OrderDetail />,
             },
@@ -123,6 +129,10 @@ const router = createBrowserRouter([
             {
                 path: "checkout",
                 element: <Checkout />,
+            },
+            {
+                path: "checkout_wholesale",
+                element: <CheckoutWholesale />,
             },
             {
                 path: "product",

@@ -402,7 +402,7 @@ function ProductWholesaleCartItemCard({ product }: { product: productCart }) {
                 }
             }
         }
-        return "";
+        return "notValid";
     };
     return (
         <StyledTableRow>
@@ -431,7 +431,9 @@ function ProductWholesaleCartItemCard({ product }: { product: productCart }) {
             <TableCell align="center">
                 <div>
                     <p className="my-0 text-lg font-medium">
-                        {changePriceFormat(getWholesalePrice())}đ
+                        {getWholesalePrice() === "notValid"
+                            ? "Không khả dụng"
+                            : `${changePriceFormat(getWholesalePrice())}đ`}
                     </p>
                 </div>
             </TableCell>
@@ -486,13 +488,14 @@ function ProductWholesaleCartItemCard({ product }: { product: productCart }) {
             <TableCell align="center">
                 <div>
                     <p className="my-0 text-lg font-medium text-red_main">
-                        {changePriceFormat(
-                            getSubTotal(
-                                getWholesalePrice(),
-                                product.quantityForProduct
-                            )
-                        )}
-                        đ
+                        {getWholesalePrice() === "notValid"
+                            ? "Không khả dụng"
+                            : `${changePriceFormat(
+                                  getSubTotal(
+                                      getWholesalePrice(),
+                                      product.quantityForProduct
+                                  )
+                              )}đ`}
                     </p>
                 </div>
             </TableCell>
@@ -1098,7 +1101,7 @@ function OrderWholesaleProceedCard({
     };
     const { token } = useAppSelector((state) => state.authentication);
     //Cart prices
-    const priceCart = usePriceCart();
+    const priceCart = usePriceWholesaleCart();
     const handleNavigateMustLogIn = (navigateRoute: string) => {
         if (!token) {
             dispatch(handleLogInDialogOpen());
@@ -1142,7 +1145,9 @@ function OrderWholesaleProceedCard({
                     <div>
                         <ContainedButton
                             className="h-fit bg-primary_main"
-                            onClick={() => handleNavigateMustLogIn("/checkout")}
+                            onClick={() =>
+                                handleNavigateMustLogIn("/checkout_wholesale")
+                            }
                         >
                             <span>{t("buy")}</span>
                         </ContainedButton>
