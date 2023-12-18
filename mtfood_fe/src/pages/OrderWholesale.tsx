@@ -36,6 +36,7 @@ import { orderType, orderWholesaleType } from "../models/order.model";
 import { debounce } from "lodash";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { CircularProgress, Paper } from "@mui/material";
+import OrderWholesaleItem from "../features/profile/components/orderWholesaleItem";
 //Import colors
 
 function MyTabs() {
@@ -108,6 +109,7 @@ export default function UserOrderWholesale() {
                 .then(({ data }) => {
                     const resultOrders: orderWholesaleType[] =
                         data.result.orders;
+
                     const totalOrderLength: number = data.result.totalOrders;
                     setTotalLength(totalOrderLength);
                     //Change offset()
@@ -118,7 +120,8 @@ export default function UserOrderWholesale() {
                         dispatch(setWholesaleOrder([]));
                         setHasMore(false);
                     }
-                });
+                })
+                .catch(({ response }) => console.log(response));
         };
 
         fetchOrders();
@@ -195,10 +198,13 @@ export default function UserOrderWholesale() {
                             }
                             className="space-y-4"
                         >
-                            {/* {wholesaleOrders &&
+                            {wholesaleOrders &&
                                 wholesaleOrders.map((order) => (
-                                    <OrderWholesaleItem order={order} key={order.id} />
-                                ))} */}
+                                    <OrderWholesaleItem
+                                        order={order}
+                                        key={order.id}
+                                    />
+                                ))}
                         </InfiniteScroll>
                     </div>
                 </div>

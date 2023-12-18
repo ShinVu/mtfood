@@ -23,6 +23,7 @@ import { changePriceFormat, changeTimeFormat } from "../../../utils";
 import {
     orderDetail,
     orderType,
+    orderWholesaleDetail,
     orderWholesaleType,
 } from "../../../models/order.model";
 import { styled } from "@mui/material/styles";
@@ -35,61 +36,46 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-function OrderDetailItems({
-    orderDetailItems,
+function OrderWholesaleDetailItems({
+    orderWholesaleDetailItems,
     open,
 }: {
-    orderDetailItems: orderDetail[];
+    orderWholesaleDetailItems: orderWholesaleDetail[];
     open: boolean;
 }) {
     return (
         <Table size="small">
             <TableBody>
-                {orderDetailItems
+                {orderWholesaleDetailItems
                     .slice(0, 2)
-                    .map((orderDetailItem: orderDetail) => (
-                        <StyledTableRow key={orderDetailItem.id}>
+                    .map((orderWholesaleDetailItem: orderWholesaleDetail) => (
+                        <StyledTableRow key={orderWholesaleDetailItem.id}>
                             <TableCell align="left">
                                 <div className="flex flex-row space-x-4">
                                     <img
-                                        src={orderDetailItem.product.image_path}
+                                        src={
+                                            orderWholesaleDetailItem.product
+                                                .image_path
+                                        }
                                         className="w-24 h-24 object-cover object-center"
                                     />
                                     <p className="font-medium text-sm my-0">
-                                        {orderDetailItem.product.name}
+                                        {orderWholesaleDetailItem.product.name}
                                     </p>
                                 </div>
                             </TableCell>
                             <TableCell align="right">
                                 <div>
-                                    {orderDetailItem.unit_discount && (
-                                        <>
-                                            {parseFloat(
-                                                orderDetailItem.unit_discount
-                                            ) > 0 && (
-                                                <p className="text-base  text-gray-100 my-0 line-through">
-                                                    {changePriceFormat(
-                                                        parseFloat(
-                                                            orderDetailItem.unit_price
-                                                        ) +
-                                                            parseFloat(
-                                                                orderDetailItem.unit_discount
-                                                            )
-                                                    )}
-                                                </p>
-                                            )}
-                                            <p className="text-lg font-medium  my-0 ">
-                                                {changePriceFormat(
-                                                    orderDetailItem.unit_price
-                                                )}
-                                            </p>
-                                        </>
-                                    )}
+                                    <p className="text-lg font-medium  my-0 ">
+                                        {changePriceFormat(
+                                            orderWholesaleDetailItem.unit_price
+                                        )}
+                                    </p>
                                 </div>
                             </TableCell>
                             <TableCell align="right">
                                 <p className="text-lg font-medium  my-0 ">
-                                    x{orderDetailItem.quantity}
+                                    x{orderWholesaleDetailItem.quantity}
                                 </p>
                             </TableCell>
                             <TableCell align="right">
@@ -97,8 +83,9 @@ function OrderDetailItems({
                                     <p className="text-lg font-medium text-red_main my-0">
                                         {changePriceFormat(
                                             parseFloat(
-                                                orderDetailItem.unit_price
-                                            ) * orderDetailItem.quantity
+                                                orderWholesaleDetailItem.unit_price
+                                            ) *
+                                                orderWholesaleDetailItem.quantity
                                         )}
                                     </p>
                                 </div>
@@ -106,69 +93,61 @@ function OrderDetailItems({
                         </StyledTableRow>
                     ))}
                 {open &&
-                    orderDetailItems
+                    orderWholesaleDetailItems
                         .slice(2)
-                        .map((orderDetailItem: orderDetail) => (
-                            <StyledTableRow key={orderDetailItem.id}>
-                                <TableCell align="left">
-                                    <div className="flex flex-row space-x-4">
-                                        <img
-                                            src={
-                                                orderDetailItem.product
-                                                    .image_path
-                                            }
-                                            className="w-24 h-24 object-cover object-center"
-                                        />
-                                        <p className="font-medium text-sm my-0">
-                                            {orderDetailItem.product.name}
-                                        </p>
-                                    </div>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <div>
-                                        {orderDetailItem.unit_discount && (
-                                            <>
-                                                {parseFloat(
-                                                    orderDetailItem.unit_discount
-                                                ) > 0 && (
-                                                    <p className="text-base  text-gray-100 my-0 line-through">
-                                                        {changePriceFormat(
-                                                            parseFloat(
-                                                                orderDetailItem.unit_price
-                                                            ) +
-                                                                parseFloat(
-                                                                    orderDetailItem.unit_discount
-                                                                )
-                                                        )}
-                                                    </p>
+                        .map(
+                            (
+                                orderWholesaleDetailItem: orderWholesaleDetail
+                            ) => (
+                                <StyledTableRow
+                                    key={orderWholesaleDetailItem.id}
+                                >
+                                    <TableCell align="left">
+                                        <div className="flex flex-row space-x-4">
+                                            <img
+                                                src={
+                                                    orderWholesaleDetailItem
+                                                        .product.image_path
+                                                }
+                                                className="w-24 h-24 object-cover object-center"
+                                            />
+                                            <p className="font-medium text-sm my-0">
+                                                {
+                                                    orderWholesaleDetailItem
+                                                        .product.name
+                                                }
+                                            </p>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <div>
+                                            <p className="text-lg font-medium  my-0 ">
+                                                {changePriceFormat(
+                                                    orderWholesaleDetailItem.unit_price
                                                 )}
-                                                <p className="text-lg font-medium  my-0 ">
-                                                    {changePriceFormat(
-                                                        orderDetailItem.unit_price
-                                                    )}
-                                                </p>
-                                            </>
-                                        )}
-                                    </div>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <p className="text-lg font-medium  my-0 ">
-                                        x{orderDetailItem.quantity}
-                                    </p>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <div>
-                                        <p className="text-lg font-medium text-red_main my-0">
-                                            {changePriceFormat(
-                                                parseFloat(
-                                                    orderDetailItem.unit_price
-                                                ) * orderDetailItem.quantity
-                                            )}
+                                            </p>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <p className="text-lg font-medium  my-0 ">
+                                            x{orderWholesaleDetailItem.quantity}
                                         </p>
-                                    </div>
-                                </TableCell>
-                            </StyledTableRow>
-                        ))}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <div>
+                                            <p className="text-lg font-medium text-red_main my-0">
+                                                {changePriceFormat(
+                                                    parseFloat(
+                                                        orderWholesaleDetailItem.unit_price
+                                                    ) *
+                                                        orderWholesaleDetailItem.quantity
+                                                )}
+                                            </p>
+                                        </div>
+                                    </TableCell>
+                                </StyledTableRow>
+                            )
+                        )}
             </TableBody>
         </Table>
     );
@@ -191,9 +170,9 @@ export default function OrderWholesaleItem(props: {
             </div>
             <Divider className="my-2" />
             <div className="flex flex-1 flex-col space-y-2 w-full">
-                {/* <OrderDetailItems
+                <OrderWholesaleDetailItems
                     open={open}
-                    orderDetailItems={order.order_summary_detail}
+                    orderWholesaleDetailItems={order.order_summary_detail}
                 />
                 {order.order_summary_detail.length >= 3 && (
                     <div
@@ -202,7 +181,7 @@ export default function OrderWholesaleItem(props: {
                     >
                         {open ? <KeyboardArrowUp /> : <KeyboardArrowDownIcon />}
                     </div>
-                )} */}
+                )}
             </div>
             <Divider className="my-2" />
             <div className="flex flex-1 justify-end space-x-4 items-center">
