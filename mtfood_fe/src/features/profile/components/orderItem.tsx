@@ -45,8 +45,8 @@ function OrderDetailItems({
                     .slice(0, 2)
                     .map((orderDetailItem: orderDetail) => (
                         <StyledTableRow key={orderDetailItem.id}>
-                            <TableCell align="left">
-                                <div className="flex flex-row space-x-4">
+                            <TableCell align="left" className="w-4/6">
+                                <div className="flex flex-row space-x-4 w-full">
                                     <img
                                         src={orderDetailItem.product.image_path}
                                         className="w-24 h-24 object-cover object-center"
@@ -57,31 +57,31 @@ function OrderDetailItems({
                                 </div>
                             </TableCell>
                             <TableCell align="right">
-                                <div>
-                                    {orderDetailItem.unit_discount && (
-                                        <>
-                                            {parseFloat(
-                                                orderDetailItem.unit_discount
-                                            ) > 0 && (
-                                                <p className="text-base  text-gray-100 my-0 line-through">
-                                                    {changePriceFormat(
-                                                        parseFloat(
-                                                            orderDetailItem.unit_price
-                                                        ) +
-                                                            parseFloat(
-                                                                orderDetailItem.unit_discount
-                                                            )
-                                                    )}
-                                                </p>
-                                            )}
-                                            <p className="text-lg font-medium  my-0 ">
+                                {orderDetailItem.unit_discount && (
+                                    <>
+                                        {parseFloat(
+                                            orderDetailItem.unit_discount
+                                        ) > 0 && (
+                                            <p className="text-base  text-gray-100 my-0 line-through">
                                                 {changePriceFormat(
-                                                    orderDetailItem.unit_price
+                                                    parseFloat(
+                                                        orderDetailItem.unit_price
+                                                    ) +
+                                                        parseFloat(
+                                                            orderDetailItem.unit_discount
+                                                        )
                                                 )}
+                                                đ
                                             </p>
-                                        </>
-                                    )}
-                                </div>
+                                        )}
+                                        <p className="text-lg font-medium  my-0 ">
+                                            {changePriceFormat(
+                                                orderDetailItem.unit_price
+                                            )}
+                                            đ
+                                        </p>
+                                    </>
+                                )}
                             </TableCell>
                             <TableCell align="right">
                                 <p className="text-lg font-medium  my-0 ">
@@ -89,15 +89,13 @@ function OrderDetailItems({
                                 </p>
                             </TableCell>
                             <TableCell align="right">
-                                <div>
-                                    <p className="text-lg font-medium text-red_main my-0">
-                                        {changePriceFormat(
-                                            parseFloat(
-                                                orderDetailItem.unit_price
-                                            ) * orderDetailItem.quantity
-                                        )}
-                                    </p>
-                                </div>
+                                <p className="text-lg font-medium text-red_main my-0">
+                                    {changePriceFormat(
+                                        parseFloat(orderDetailItem.unit_price) *
+                                            orderDetailItem.quantity
+                                    )}
+                                    đ
+                                </p>
                             </TableCell>
                         </StyledTableRow>
                     ))}
@@ -204,7 +202,7 @@ export default function OrderItem(props: { order: orderType }) {
                     {t("totalOrderAmount")}
                 </p>
                 <p className="text-2xl font-bold text-red_main my-0 pr-2">
-                    {changePriceFormat(order.total)}
+                    {changePriceFormat(order.total)}đ
                 </p>
             </div>
             <div className="flex flex-1 flex-row justify-between mt-12 items-center">

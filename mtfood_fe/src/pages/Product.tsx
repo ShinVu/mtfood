@@ -127,7 +127,7 @@ function CategoryBar({
     };
 
     const [cat, setCat] = useState<string | null>(searchParams.get("category"));
-    console.log(cat);
+
     useEffect(() => {
         if (!searchParams.get("category")) {
             setCat(null);

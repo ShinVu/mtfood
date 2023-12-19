@@ -65,7 +65,7 @@ function MyTabs() {
             <Tab label={t("all")} value="all" />
             <Tab label={t("waitingConfirm")} value="waiting_confirm" />
             <Tab label={t("preparing")} value="in_process" />
-            <Tab label={t("waitingDelivery")} value="completed" />
+            <Tab label={t("completed")} value="completed" />
         </Tabs>
     );
 }

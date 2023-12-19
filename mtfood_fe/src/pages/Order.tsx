@@ -108,7 +108,6 @@ export default function UserOrder() {
                 const totalOrderLength: number = data.result.totalOrders;
                 setTotalLength(totalOrderLength);
                 //Change offset()
-
                 setOffset(0 + limit);
                 setHasMore(true);
                 if (resultOrders && resultOrders.length > 0) {
@@ -139,7 +138,7 @@ export default function UserOrder() {
                 limit: limit,
                 keyword: keyword,
             };
-            console.log(offset);
+
             axiosClient.post("/getOrders", payload).then(({ data }) => {
                 const resultOrders: orderType[] = data.result.orders;
 

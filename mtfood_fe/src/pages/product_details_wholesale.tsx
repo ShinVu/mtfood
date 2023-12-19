@@ -1013,7 +1013,7 @@ function ProductWholesalePriceCard({ product }: { product: any }) {
                     </TableHead>
                     <TableBody>
                         {product.product_wholesale_pricing.map((price: any) => (
-                            <StyledTableRow>
+                            <StyledTableRow key={price.id}>
                                 <TableCell
                                     className="text-2xl font-semibold"
                                     align="center"

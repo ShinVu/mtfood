@@ -333,5 +333,7 @@
     "choosePaymentMethod": "Choose payment method",
     "normalOrder": "Order",
     "wholesaleOrder": "Wholesale order",
-    "waitingConfirm": "Waiting confirm"
+    "waitingConfirm": "Waiting confirm",
+    "in_process": "In process",
+    "orderInProcess": "Your order is in process"
 }

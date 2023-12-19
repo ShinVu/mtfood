@@ -29,6 +29,10 @@ import {
 import { styled } from "@mui/material/styles";
 import { KeyboardArrowUp } from "@mui/icons-material";
 import { MapHeader, MapToText } from "../../order/components/message.";
+import {
+    MapWholesaleHeader,
+    MapWholesaleToText,
+} from "../../order/components/message_wholesale";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "& td, & th": {
@@ -50,7 +54,7 @@ function OrderWholesaleDetailItems({
                     .slice(0, 2)
                     .map((orderWholesaleDetailItem: orderWholesaleDetail) => (
                         <StyledTableRow key={orderWholesaleDetailItem.id}>
-                            <TableCell align="left">
+                            <TableCell align="left" className="w-4/6">
                                 <div className="flex flex-row space-x-4">
                                     <img
                                         src={
@@ -70,6 +74,7 @@ function OrderWholesaleDetailItems({
                                         {changePriceFormat(
                                             orderWholesaleDetailItem.unit_price
                                         )}
+                                        đ
                                     </p>
                                 </div>
                             </TableCell>
@@ -87,6 +92,7 @@ function OrderWholesaleDetailItems({
                                             ) *
                                                 orderWholesaleDetailItem.quantity
                                         )}
+                                        đ
                                     </p>
                                 </div>
                             </TableCell>
@@ -125,6 +131,7 @@ function OrderWholesaleDetailItems({
                                                 {changePriceFormat(
                                                     orderWholesaleDetailItem.unit_price
                                                 )}
+                                                đ
                                             </p>
                                         </div>
                                     </TableCell>
@@ -142,6 +149,7 @@ function OrderWholesaleDetailItems({
                                                     ) *
                                                         orderWholesaleDetailItem.quantity
                                                 )}
+                                                đ
                                             </p>
                                         </div>
                                     </TableCell>
@@ -163,7 +171,7 @@ export default function OrderWholesaleItem(props: {
     return (
         <Paper elevation={5} className="flex flex-1 flex-col p-4">
             <div className="flex flex-row w-full justify-between px-4">
-                <MapHeader orderStatus={order.status} />
+                <MapWholesaleHeader orderStatus={order.status} />
                 <p className="text-sm text-gray-100">
                     Mã đơn hàng: #{order.order_code}
                 </p>
@@ -189,11 +197,11 @@ export default function OrderWholesaleItem(props: {
                     {t("totalOrderAmount")}
                 </p>
                 <p className="text-2xl font-bold text-red_main my-0 pr-2">
-                    {changePriceFormat(order.total)}
+                    {changePriceFormat(order.total)}đ
                 </p>
             </div>
             <div className="flex flex-1 flex-row justify-between mt-12 items-center">
-                <MapToText order={order} />
+                <MapWholesaleToText order={order} />
                 <div className="flex flex-col lg:flex-row space-y-4 space-x-0 lg:space-y-0  lg:space-x-4">
                     <OutlinedButton
                         onClick={() =>

@@ -56,7 +56,7 @@ const StyledTableRow = mui_styled(TableRow)(({ theme }) => ({
 
 function OrderSummary({ order }: { order: orderType }) {
     const { t } = useTranslation();
-    console.log(parseFloat(order.products_discount));
+
     return (
         <div className="flex flex-col items-end  mt-8">
             <div>

@@ -335,5 +335,7 @@
     "choosePaymentMethod": "Đổi địa chỉ",
     "normalOrder": "Đơn hàng lẻ",
     "wholesaleOrder": "Đơn hàng sỉ",
-    "waitingConfirm": "Chờ xác nhận"
+    "waitingConfirm": "Chờ xác nhận",
+    "in_process": "Đang thực hiện",
+    "orderInProcess": "Đơn hàng sỉ của bạn đang được thực hiện. Bạn có thể xem kế hoạch giao hàng bên dưới"
 }

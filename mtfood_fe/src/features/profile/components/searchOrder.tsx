@@ -90,37 +90,37 @@ export default function SearchOrderBar() {
     const [searchValue, setSearchValue] = useState<string>("");
     const [options, setOptions] = useState<readonly searchOption[]>([]);
     const navigate = useNavigate();
-    const getOptionsDelayed = useCallback(
-        debounce(async (keyword) => {
-            const fetchOptions = async () => {
-                const payload = {
-                    keyword: keyword,
-                };
-                const response = await axiosClient.get("/orderSearch", {
-                    params: {
-                        ...payload,
-                    },
-                });
-                return response.data.result.order;
-            };
-            let newOptions = [];
+    // const getOptionsDelayed = useCallback(
+    //     debounce(async (keyword) => {
+    //         const fetchOptions = async () => {
+    //             const payload = {
+    //                 keyword: keyword,
+    //             };
+    //             const response = await axiosClient.get("/orderSearch", {
+    //                 params: {
+    //                     ...payload,
+    //                 },
+    //             });
+    //             return response.data.result.order;
+    //         };
+    //         let newOptions = [];
 
-            if (keyword !== "") {
-                newOptions = await fetchOptions();
-            }
-            setOptions(newOptions);
-        }, 500),
-        []
-    );
+    //         if (keyword !== "") {
+    //             newOptions = await fetchOptions();
+    //         }
+    //         setOptions(newOptions);
+    //     }, 500),
+    //     []
+    // );
 
     useEffect(() => {
         setSearchValue(searchParams.get("keyword") ?? "");
     }, [searchParams.get("keyword")]);
 
-    useEffect(() => {
-        hint.current = "";
-        getOptionsDelayed(searchValue);
-    }, [searchValue]);
+    // useEffect(() => {
+    //     hint.current = "";
+    //     getOptionsDelayed(searchValue);
+    // }, [searchValue]);
 
     const onSubmit = () => {
         const path = {
@@ -153,9 +153,9 @@ export default function SearchOrderBar() {
                 width: "100%",
             }}
             filterOptions={(x) => x}
+            placeholder={"testing"}
             options={options}
             freeSolo
-            getOptionLabel={(option) => option.name}
             value={value}
             onChange={(event: any, newValue: searchOption) => {
                 if (event.key === "Enter") {
