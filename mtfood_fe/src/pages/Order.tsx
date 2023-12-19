@@ -89,9 +89,10 @@ export default function UserOrder() {
         const fetchOrders = () => {
             const type = searchParams.get("type") ?? "all";
             const keyword = searchParams.get("keyword");
-            //Reset offset and has more
+            //Reset offset, totallength and has more
             setOffset(0);
-            setHasMore(true);
+            setHasMore(false);
+            setTotalLength(0);
             dispatch(setOrder([]));
 
             const payload = {
@@ -107,7 +108,9 @@ export default function UserOrder() {
                 const totalOrderLength: number = data.result.totalOrders;
                 setTotalLength(totalOrderLength);
                 //Change offset()
-                setOffset(offset + limit);
+
+                setOffset(0 + limit);
+                setHasMore(true);
                 if (resultOrders && resultOrders.length > 0) {
                     dispatch(setOrder(resultOrders));
                 } else if (resultOrders.length === 0) {
@@ -136,14 +139,17 @@ export default function UserOrder() {
                 limit: limit,
                 keyword: keyword,
             };
-
+            console.log(offset);
             axiosClient.post("/getOrders", payload).then(({ data }) => {
                 const resultOrders: orderType[] = data.result.orders;
+
                 //Increase offset
                 setOffset(offset + limit);
 
                 if (resultOrders && resultOrders.length >= 0) {
                     dispatch(pushOrder(resultOrders));
+                } else {
+                    setHasMore(false);
                 }
             });
         }
