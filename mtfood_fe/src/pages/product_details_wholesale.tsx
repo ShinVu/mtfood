@@ -263,7 +263,7 @@ function ProductMainCard({
                     check: false,
                 };
                 dispatch(addProductToWholesaleCart(productCart));
-                navigate("/cart");
+                navigate("/cart/wholesale");
             }
         }
     };

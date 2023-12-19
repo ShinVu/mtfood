@@ -137,7 +137,7 @@ export default function Header() {
                 </div>
                 <div
                     className="flex flex-row cursor-pointer"
-                    onClick={() => navigate("/cart")}
+                    onClick={() => navigate("/cart/retail")}
                 >
                     <StyledBadge
                         badgeContent={Object.keys(productCart).length}

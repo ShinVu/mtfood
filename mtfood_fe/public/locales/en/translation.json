@@ -332,5 +332,6 @@
     "changePaymentMethod": "Change payment",
     "choosePaymentMethod": "Choose payment method",
     "normalOrder": "Order",
-    "wholesaleOrder": "Wholesale order"
+    "wholesaleOrder": "Wholesale order",
+    "waitingConfirm": "Waiting confirm"
 }

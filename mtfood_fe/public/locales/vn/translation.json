@@ -334,5 +334,6 @@
     "changePaymentMethod": "Đổi cách thanh toán",
     "choosePaymentMethod": "Đổi địa chỉ",
     "normalOrder": "Đơn hàng lẻ",
-    "wholesaleOrder": "Đơn hàng sỉ"
+    "wholesaleOrder": "Đơn hàng sỉ",
+    "waitingConfirm": "Chờ xác nhận"
 }

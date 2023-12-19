@@ -35,7 +35,7 @@ import { useTranslation } from "react-i18next";
 
 //lodash
 import { debounce } from "@mui/material/utils";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook.js";
 import { productCart } from "../models/product.model.js";
 import { changePriceFormat, getSubTotal, isInt } from "../utils/index.js";
@@ -1184,14 +1184,21 @@ export default function Cart() {
         setWholesaleProducts(productWholesaleCart);
     }, [productCart, productWholesaleCart]);
 
-    const [currentCart, setCurrentCart] = useState<string>("cart");
+    const pathName = useLocation();
+
+    const [currentCart, setCurrentCart] = useState<string>(
+        pathName.pathname.split("/")[2]
+    );
+    const navigate = useNavigate();
     const handleClickCart = () => {
-        setCurrentCart("cart");
+        navigate("/cart/retail");
     };
     const handleClickWholesaleCart = () => {
-        setCurrentCart("wholesaleCart");
+        navigate("/cart/wholesale");
     };
-
+    useEffect(() => {
+        setCurrentCart(pathName.pathname.split("/")[2]);
+    }, [pathName]);
     return (
         <div className="flex flex-1 min-h-screen flex-col">
             <HeaderCheckout />
@@ -1200,7 +1207,7 @@ export default function Cart() {
                 <div className="flex flex-row self-center space-x-10 mt-2">
                     <Button
                         className={`${
-                            currentCart === "cart"
+                            currentCart === "retail"
                                 ? "bg-rich-black text-white"
                                 : ""
                         } text-2xl font-semibold`}
@@ -1210,7 +1217,7 @@ export default function Cart() {
                     </Button>
                     <Button
                         className={`${
-                            currentCart === "wholesaleCart"
+                            currentCart === "wholesale"
                                 ? "bg-rich-black text-white"
                                 : ""
                         } text-2xl font-semibold`}
@@ -1220,7 +1227,7 @@ export default function Cart() {
                     </Button>
                 </div>
 
-                {currentCart === "cart" ? (
+                {currentCart == "retail" ? (
                     products && Object.keys(products).length ? (
                         <>
                             <ProductCartItems
@@ -1239,7 +1246,7 @@ export default function Cart() {
                     <></>
                 )}
 
-                {currentCart === "wholesaleCart" ? (
+                {currentCart == "wholesale" ? (
                     wholesaleProducts &&
                     Object.keys(wholesaleProducts).length ? (
                         <>

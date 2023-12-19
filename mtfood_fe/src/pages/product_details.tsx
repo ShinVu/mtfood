@@ -231,7 +231,7 @@ function ProductMainCard({
         const quantityForProduct = quantity;
         const productCart = { ...product, quantityForProduct, check: false };
         dispatch(addProductToCart(productCart));
-        navigate("/cart");
+        navigate("/cart/retail");
     };
 
     const getFullAddress = () => {
