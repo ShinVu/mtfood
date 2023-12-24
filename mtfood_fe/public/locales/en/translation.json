@@ -335,5 +335,9 @@
     "wholesaleOrder": "Wholesale order",
     "waitingConfirm": "Waiting confirm",
     "in_process": "In process",
-    "orderInProcess": "Your order is in process"
+    "orderInProcess": "Your order is in process",
+    "totalPaid": "Total paid",
+    "quantityDelivered": "Quantity delivered",
+    "status": "Status",
+    "changeAddress": "Change address"
 }

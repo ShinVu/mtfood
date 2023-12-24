@@ -205,7 +205,7 @@ export default function OrderWholesaleItem(props: {
                 <div className="flex flex-col lg:flex-row space-y-4 space-x-0 lg:space-y-0  lg:space-x-4">
                     <OutlinedButton
                         onClick={() =>
-                            navigate(`/user/order/details/${order.id}`)
+                            navigate(`/user/order/wholesaleDetails/${order.id}`)
                         }
                     >
                         {t("seeOrderDetail")}

@@ -4,14 +4,18 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\cancelOrderRequest;
+use App\Http\Requests\changeAddressWholesaleRequest;
 use App\Http\Requests\changePaymentMethodRequest;
+use App\Http\Requests\changePaymentMethodWholesaleRequest;
 use App\Http\Requests\createOrderRequest;
 use App\Http\Requests\createOrderWholesaleRequest;
 use App\Http\Requests\getOrderDetailRequest;
 use App\Http\Requests\getOrdersRequest;
 use App\Http\Requests\getOrderVoucherRequest;
+use App\Http\Requests\getWholesaleOrderDetailRequest;
 use App\Http\Requests\getWholesaleOrdersRequest;
 use App\Models\Customer;
+use App\Models\DeliveryAddress;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\orderDetailBatch;
@@ -429,11 +433,61 @@ class OrderController extends Controller
                 }
             }
 
-            return response(['message' => 'getProductDetailSuccessfully', 'result' => ['order' => $order]], 200);
+            return response(['message' => 'getOrderDetailSuccessfully', 'result' => ['order' => $order]], 200);
         } catch (Exception $e) {
             return response(['message' => $e->getMessage(), 'result' => []], 500);
         }
     }
+
+    public function getWholesaleOrderDetail(getWholesaleOrderDetailRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $token = $request->bearerToken();
+
+            /** @var \App\Models\Customer $customer */
+            //Customer collection that matches id
+            $user = Customer::where('id', $data['customerId']);
+
+            //Check if customer id exists
+            if (!$user->exists()) {
+                return response(['message' => 'userInvalid', 'result' => []], 422);
+            }
+
+            //Check request authorization
+            if ($token != $user->first()['remember_token']) {
+                return response(['message' => 'invalidAccess', 'result' => []], 401);
+            }
+
+            /** @var \App\Models\Order $order */
+            $order = orderWholesaleSummary::where('id', $data['orderSummaryId']);
+
+            //Get order details and its relationships
+            $order = $order->with([
+                'orderSummaryDetail' => [
+                    'product'
+                ],
+                'address.ward.district.province'
+            ]);
+
+            $order = $order->first();
+            //Append media path
+            $productPath = 'storage/product/';
+
+            foreach ($order->orderSummaryDetail as $orderSummaryDetail) {
+
+                if ($imageName = $orderSummaryDetail->product->image_url) {
+                    $fullPath = $productPath . $orderSummaryDetail->product->id . "/" . $imageName;
+                    $orderSummaryDetail->product->image_url = asset($fullPath);
+                }
+            }
+
+            return response(['message' => 'getOrderWholesaleDetailSuccessfully', 'result' => ['order' => $order]], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
 
     public function cancelOrder(cancelOrderRequest $request)
     {
@@ -554,6 +608,126 @@ class OrderController extends Controller
             return response(['message' => $e->getMessage(), 'result' => []], 500);
         }
     }
+
+    public function changePaymentMethodWholesale(changePaymentMethodWholesaleRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $token = $request->bearerToken();
+
+
+            /** @var \App\Models\Customer $customer */
+            //Customer collection that matches id
+            $user = Customer::where('id', $data['customerId']);
+
+            //Check if customer id exists
+            if (!$user->exists()) {
+                return response(['message' => 'userInvalid', 'result' => []], 422);
+            }
+
+            //Check request authorization
+            if ($token != $user->first()['remember_token']) {
+                return response(['message' => 'invalidAccess', 'result' => []], 401);
+            }
+
+
+            //Check payment method
+            //User new payment method
+            $payment_method = $data['paymentMethod'];
+            if (!($payment_method == 'momo' || $payment_method == 'vnpay' ||  $payment_method == 'cod')) {
+                return response(['message' => 'paymentMethodInvalid', 'result' => []], 401);
+            }
+            /** @var \App\Models\Order $order */
+            $order = orderWholesaleSummary::where('id', $data['orderSummaryId']);
+
+            $order = $order->first();
+
+            $availableStatus = ['created', 'waiting_confirm', 'in_process'];
+
+
+            //If state is valid for changing payment method
+            if (in_array($order->status, $availableStatus)) {
+                if ($payment_method == 'cod') {
+                    //change order payment method and status
+                    $order->payment_method = 'cod';
+
+                    $order->save();
+                    return response(['message' => 'changePaymentMethodSuccess', 'result' => ['payment_method' => 'cod']], 200);
+                }
+                if ($payment_method == 'momo') {
+                    //change order payment method and status
+                    $order->payment_method = 'momo';
+
+                    $order->save();
+                    return response(['message' => 'changePaymentMethodSuccess', 'result' => ['payment_method' => 'momo']], 200);
+                }
+                if ($payment_method == 'vnpay') {
+                    //change order payment method and status
+                    $order->payment_method = 'vnpay';
+
+                    $order->save();
+                    return response(['message' => 'changePaymentMethodSuccess', 'result' => ['payment_method' => 'vnpay']], 200);
+                }
+            }
+
+
+            return response(['message' => 'changePaymentMethodFail'], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+    public function changeAddressWholesale(changeAddressWholesaleRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $token = $request->bearerToken();
+
+
+            /** @var \App\Models\Customer $customer */
+            //Customer collection that matches id
+            $user = Customer::where('id', $data['customerId']);
+
+            //Check if customer id exists
+            if (!$user->exists()) {
+                return response(['message' => 'userInvalid', 'result' => []], 422);
+            }
+
+            //Check request authorization
+            if ($token != $user->first()['remember_token']) {
+                return response(['message' => 'invalidAccess', 'result' => []], 401);
+            }
+
+
+            //Check address
+            //User new address
+            $address = $data['addressId'];
+            $addressExist = DeliveryAddress::where('id', $address)->exists();
+            if (!$addressExist) {
+                return response(['message' => 'invalidAddress', 'result' => []], 401);
+            }
+            /** @var \App\Models\Order $order */
+            $order = orderWholesaleSummary::where('id', $data['orderSummaryId']);
+
+            $order = $order->first();
+
+            $availableStatus = ['created', 'waiting_confirm', 'in_process'];
+
+
+            //If state is valid for changing address
+            if (in_array($order->status, $availableStatus)) {
+                $order->delivery_address_id = $address;
+                $order->save();
+            }
+
+
+            return response(['message' => 'changeAddressSuccess'], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
+
+
     public function getOrderVoucher(getOrderVoucherRequest $request)
     {
         try {
@@ -881,7 +1055,10 @@ class OrderController extends Controller
             $newOrder->total = $total;
             $newOrder->total_paid = 0;
 
+            //Update state to waiting_confirm
+            $newOrder->status = 'waiting_confirm';
 
+            //Save new order field to DB
             $newOrder->save();
 
             //Only commit transaction to database if everything is valid

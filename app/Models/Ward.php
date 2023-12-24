@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Ward extends Model
 {
@@ -50,4 +51,12 @@ class Ward extends Model
         'district_code',
         'administrative_unit_id'
     ];
+
+    /**
+     * Get the district for the address.
+     */
+    public function district(): HasOne
+    {
+        return $this->hasOne(District::class, 'code', 'district_code');
+    }
 }

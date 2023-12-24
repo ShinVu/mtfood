@@ -30,6 +30,7 @@ import ProductWholesale from "../pages/ProductWholesale";
 import ProductWholesaleDetails from "../pages/product_details_wholesale";
 import CheckoutWholesale from "../pages/CheckoutWholesale";
 import UserOrderWholesale from "../pages/OrderWholesale";
+import OrderDetailWholesale from "../pages/OrderDetailWholesale";
 
 const router = createBrowserRouter([
     {
@@ -113,6 +114,10 @@ const router = createBrowserRouter([
             {
                 path: "user/order/details/:id",
                 element: <OrderDetail />,
+            },
+            {
+                path: "user/order/wholesaleDetails/:id",
+                element: <OrderDetailWholesale />,
             },
             {
                 path: "",

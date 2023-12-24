@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class orderWholesaleSummary extends Model
 {
@@ -36,5 +37,13 @@ class orderWholesaleSummary extends Model
     public function orderSummaryDetail(): HasMany
     {
         return $this->hasMany(orderWholesaleSummaryDetail::class, 'order_wholesale_summary_id', 'id');
+    }
+
+    /**
+     * Get the address for the order summary.
+     */
+    public function address(): HasOne
+    {
+        return $this->hasOne(DeliveryAddress::class, 'id', 'delivery_address_id');
     }
 }

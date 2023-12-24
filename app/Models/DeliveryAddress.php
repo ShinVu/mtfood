@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class DeliveryAddress extends Model
 {
@@ -36,4 +37,12 @@ class DeliveryAddress extends Model
         'type',
         'default'
     ];
+
+    /**
+     * Get the ward for the address.
+     */
+    public function ward(): HasOne
+    {
+        return $this->hasOne(Ward::class, 'code', 'ward_code');
+    }
 }

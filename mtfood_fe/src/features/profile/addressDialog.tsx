@@ -41,16 +41,18 @@ import {
 } from "../authentication/authenticationSlice";
 import { AddAddressDialog, UserAddressItem } from ".";
 import { current } from "@reduxjs/toolkit";
+import { useNavigate } from "react-router-dom";
 
 export default function AddressDialog(props) {
     const { t } = useTranslation();
     const size = useWindowSizeDimensions();
-    const { open, handleModalOpen, handleClose } = props;
+    const { open, handleModalOpen, handleClose, isOrder, orderType, orderId } =
+        props;
     const { addresses, user, currentAddress } = useAppSelector(
         (state) => state.authentication
     );
     const dispatch = useAppDispatch();
-
+    const navigate = useNavigate();
     //AddAddress dialog state
     const [addAddressOpen, setAddAddressOpen] = useState<boolean>(false);
     const handleNewAddModalOpen = () => {
@@ -68,6 +70,24 @@ export default function AddressDialog(props) {
         if (address) {
             dispatch(setCurrentAddress(address));
         }
+    };
+
+    const handleAddressChange = () => {
+        if (isOrder) {
+            if (orderType === "wholesale") {
+                const payload = {
+                    customerId: user.id,
+                    orderSummaryId: orderId,
+                    addressId: currentAddress.id,
+                };
+                axiosClient
+                    .post("/changeAddressWholesale", payload)
+                    .then(({ data }) => navigate(0))
+                    .catch(({ response }) => console.log(response));
+            }
+        }
+
+        handleClose();
     };
     useEffect(() => {
         const fetchAddress = async () => {
@@ -150,7 +170,7 @@ export default function AddressDialog(props) {
                 >
                     {t("cancel")}
                 </TextButton>
-                <Button onClick={handleClose}>{t("confirm")}</Button>
+                <Button onClick={handleAddressChange}>{t("confirm")}</Button>
             </DialogActions>
             {addAddressOpen && (
                 <AddAddressDialog

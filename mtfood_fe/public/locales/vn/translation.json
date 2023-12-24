@@ -332,10 +332,14 @@
     "quantityInvalid": "Xin vui lòng nhập số lượng sản phẩm sỉ phù hợp",
     "totalProductDiscount": "Giảm giá sản phẩm",
     "changePaymentMethod": "Đổi cách thanh toán",
-    "choosePaymentMethod": "Đổi địa chỉ",
+    "choosePaymentMethod": "Chọn hình thức thanh toán",
     "normalOrder": "Đơn hàng lẻ",
     "wholesaleOrder": "Đơn hàng sỉ",
     "waitingConfirm": "Chờ xác nhận",
     "in_process": "Đang thực hiện",
-    "orderInProcess": "Đơn hàng sỉ của bạn đang được thực hiện. Bạn có thể xem kế hoạch giao hàng bên dưới"
+    "orderInProcess": "Đơn hàng sỉ của bạn đang được thực hiện. Bạn có thể xem kế hoạch giao hàng bên dưới",
+    "totalPaid": "Đã thanh toán",
+    "quantityDelivered": "SL Đã giao",
+    "status": "Trạng thái",
+    "changeAddress": "Đổi địa chỉ"
 }

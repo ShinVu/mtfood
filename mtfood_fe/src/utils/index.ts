@@ -28,7 +28,7 @@ function getSizeDialog(size: string) {
 //Return price in VND format
 function changePriceFormat(value: string | number | null) {
     if (!value) {
-        return "";
+        return "0";
     }
     if (value === "notValid") {
         return "notValid";
@@ -42,6 +42,7 @@ function changePriceFormat(value: string | number | null) {
     const formated = new Intl.NumberFormat("vi-VN", config)
         .format(money)
         .split(" ")[0];
+
     return formated;
 }
 

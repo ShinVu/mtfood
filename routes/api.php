@@ -89,11 +89,14 @@ Route::controller(OrderController::class)->group(function () {
     Route::post('/getWholesaleOrders', 'getWholesaleOrders');
     Route::post('/orderSearch', 'orderSearch');
     Route::post('/getOrderDetail', 'getOrderDetail');
+    Route::post('/getWholesaleOrderDetail', 'getWholesaleOrderDetail');
     Route::get('/getOrderVoucher', 'getOrderVoucher');
     Route::post('/createOrder', 'createOrder');
     Route::post('/createWholesaleOrder', 'createWholesaleOrder');
     Route::post('/cancelOrder', 'cancelOrder');
     Route::post('/changePaymentMethod', 'changePaymentMethod');
+    Route::post('/changePaymentMethodWholesale', 'changePaymentMethodWholesale');
+    Route::post('/changeAddressWholesale', 'changeAddressWholesale');
 });
 
 Route::controller(ChatController::class)->group(function () {

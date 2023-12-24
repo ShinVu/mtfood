@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class District extends Model
 {
@@ -51,4 +52,12 @@ class District extends Model
         'province_code',
         'administrative_unit_id'
     ];
+
+    /**
+     * Get the province for the address.
+     */
+    public function province(): HasOne
+    {
+        return $this->hasOne(Province::class, 'code', 'province_code');
+    }
 }

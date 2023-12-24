@@ -193,6 +193,16 @@ export default function Header() {
                         {t("product")}
                     </TextButton>
                     <TextButton
+                        sx={
+                            location.pathname.split("/")[1] ===
+                            "productWholesale"
+                                ? {
+                                      borderBottomStyle: "solid",
+                                      borderWidth: "2px",
+                                      borderRadius: "0",
+                                  }
+                                : undefined
+                        }
                         className="text-white text-sm"
                         onClick={() => navigate("/productWholesale")}
                     >
