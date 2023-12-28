@@ -97,6 +97,7 @@ Route::controller(OrderController::class)->group(function () {
     Route::post('/changePaymentMethod', 'changePaymentMethod');
     Route::post('/changePaymentMethodWholesale', 'changePaymentMethodWholesale');
     Route::post('/changeAddressWholesale', 'changeAddressWholesale');
+    Route::post('/getWholesaleSummaryOrders', 'getWholesaleSummaryOrders');
 });
 
 Route::controller(ChatController::class)->group(function () {

@@ -14,6 +14,7 @@ use App\Http\Requests\getOrdersRequest;
 use App\Http\Requests\getOrderVoucherRequest;
 use App\Http\Requests\getWholesaleOrderDetailRequest;
 use App\Http\Requests\getWholesaleOrdersRequest;
+use App\Http\Requests\getWholesaleSummaryOrdersRequest;
 use App\Models\Customer;
 use App\Models\DeliveryAddress;
 use App\Models\Order;
@@ -61,7 +62,7 @@ class OrderController extends Controller
             }
 
             /** @var \App\Models\Order $order */
-            $orders = Order::where('customer_id', $data['customerId']);
+            $orders = Order::where('customer_id', $data['customerId'])->where('is_order_wholesale', 0);
 
             //get type from request
             $type = "all";
@@ -163,6 +164,62 @@ class OrderController extends Controller
         }
     }
 
+    public function getWholesaleSummaryOrders(getWholesaleSummaryOrdersRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $token = $request->bearerToken();
+
+
+            /** @var \App\Models\Customer $customer */
+            //Customer collection that matches id
+            $user = Customer::where('id', $data['customerId']);
+
+            //Check if customer id exists
+            if (!$user->exists()) {
+                return response(['message' => 'userInvalid', 'result' => []], 422);
+            }
+
+            //Check request authorization
+            if ($token != $user->first()['remember_token']) {
+                return response(['message' => 'invalidAccess', 'result' => []], 401);
+            }
+
+            /** @var \App\Models\Order $order */
+            $orders = Order::where('customer_id', $data['customerId'])->where('is_order_wholesale', 1)->where('order_wholesale_summary_id', $data['orderSummaryId']);
+
+            //Get order details and its relationships
+            $orders = $orders->with([
+                'orderDetail' => [
+                    'product'
+                ],
+            ]);
+
+            $orders = $orders->get();
+
+            //Append media path
+            $productPath = 'storage/product/';
+
+            foreach ($orders as $order) {
+                foreach ($order->orderDetail as $orderDetail) {
+                    if ($orderDetail->product->image_url) {
+
+                        $productId = $orderDetail->product->id;
+
+                        $fullPath = $productPath . $productId . "/" . $orderDetail->product->image_url;
+
+                        $orderDetail->product->image_path = asset($fullPath);
+                    }
+                }
+            }
+
+
+
+            return response(['message' => 'getOrdersSuccessfully', 'result' => ['orders' => $orders]], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage(), 'result' => []], 500);
+        }
+    }
     public function getWholesaleOrders(getWholesaleOrdersRequest $request)
     {
         try {
@@ -997,6 +1054,12 @@ class OrderController extends Controller
             //Products user want to buy, including {id: productId, quantity: productQuantity}
             $products = $data['products'];
 
+            //Total quantity user want to buy
+            $totalQuantity = 0;
+            foreach ($products as $orderProduct) {
+                $totalQuantity = $totalQuantity + $orderProduct['quantity'];
+            }
+
             //Create order detail, calculate amount for each product
             foreach ($products as $orderProduct) {
                 //Get product
@@ -1018,7 +1081,7 @@ class OrderController extends Controller
                 $productUnitPrice = 0;
                 $productWholesalePricingId = -1;
                 for ($x = sizeof($productWholesalePricing) - 1; $x >= 0; $x--) {
-                    if ($orderProduct['quantity'] >= $productWholesalePricing[$x]['quantity_from']) {
+                    if ($totalQuantity >= $productWholesalePricing[$x]['quantity_from']) {
                         $productUnitPrice = $productWholesalePricing[$x]['price'];
                         $productWholesalePricingId = $productWholesalePricing[$x]['id'];
                         break;
