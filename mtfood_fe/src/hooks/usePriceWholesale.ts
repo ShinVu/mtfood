@@ -10,7 +10,9 @@ import {
 //Return prices,... of cart
 export default function usePriceWholesaleCart() {
     const [price, setPrice] = useState<priceWholesaleCart | null>(null);
-    const { productWholesaleCart } = useAppSelector((state) => state.product);
+    const { productWholesaleCart, totalNumOfProductWholesale } = useAppSelector(
+        (state) => state.product
+    );
     const getWholesalePrice = (product: productCart) => {
         const wholesalePrice = product.product_wholesale_pricing;
 
@@ -21,14 +23,14 @@ export default function usePriceWholesaleCart() {
                 priceIndex--
             ) {
                 if (
-                    product.quantityForProduct >=
+                    totalNumOfProductWholesale >=
                     wholesalePrice[priceIndex].quantity_from
                 ) {
                     return wholesalePrice[priceIndex].price;
                 }
             }
         }
-        return "";
+        return "-1";
     };
     useEffect(() => {
         function getPrice() {
@@ -42,17 +44,12 @@ export default function usePriceWholesaleCart() {
                             totalSub +
                             parseFloat(getWholesalePrice(product)) *
                                 parseFloat(product.quantityForProduct);
-                        totalPrice =
-                            totalPrice +
-                            parseFloat(getWholesalePrice(product)) *
-                                parseFloat(product.quantityForProduct);
                     }
                 }
             );
-
+            totalPrice = totalSub;
             return {
                 totalPrice,
-
                 totalSub,
             };
         }

@@ -194,6 +194,9 @@ function CheckoutDelivery() {
 }
 
 function ProductWholesaleCartItemCard({ product }: { product: productCart }) {
+    const { totalNumOfProductWholesale } = useAppSelector(
+        (state) => state.product
+    );
     const getWholesalePrice = () => {
         const wholesalePrice = product.product_wholesale_pricing;
 
@@ -204,7 +207,7 @@ function ProductWholesaleCartItemCard({ product }: { product: productCart }) {
                 priceIndex--
             ) {
                 if (
-                    product.quantityForProduct >=
+                    totalNumOfProductWholesale >=
                     wholesalePrice[priceIndex].quantity_from
                 ) {
                     return wholesalePrice[priceIndex].price;

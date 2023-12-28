@@ -223,13 +223,13 @@ function ProductMainCard({
 
     const addToCart = () => {
         const quantityForProduct = quantity;
-        const productCart = { ...product, quantityForProduct, check: false };
+        const productCart = { ...product, quantityForProduct, check: true };
         dispatch(addProductToCart(productCart));
     };
 
     const buyNow = () => {
         const quantityForProduct = quantity;
-        const productCart = { ...product, quantityForProduct, check: false };
+        const productCart = { ...product, quantityForProduct, check: true };
         dispatch(addProductToCart(productCart));
         navigate("/cart/retail");
     };

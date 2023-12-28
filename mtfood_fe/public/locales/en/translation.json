@@ -339,5 +339,9 @@
     "totalPaid": "Total paid",
     "quantityDelivered": "Quantity delivered",
     "status": "Status",
-    "changeAddress": "Change address"
+    "changeAddress": "Change address",
+    "wholesalePlan": "Plan",
+    "orderStepperPlanning": "Planning",
+    "planning": "Planning",
+    "orderPlanning": "This order is planned for your wholesale order. It is subject to changes."
 }

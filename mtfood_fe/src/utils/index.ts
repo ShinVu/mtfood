@@ -30,7 +30,7 @@ function changePriceFormat(value: string | number | null) {
     if (!value) {
         return "0";
     }
-    if (value === "notValid") {
+    if (value < 0) {
         return "notValid";
     }
     const money = value;

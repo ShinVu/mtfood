@@ -23,6 +23,7 @@ const initialState = {
     productDiscount: null,
     productCart: getLocalStorage("CART"),
     productWholesaleCart: getLocalStorage("WHOLESALECART"),
+    totalNumOfProductWholesale: 0,
     cartChecked: getLocalStorage("CART_CHECKED"),
     wholesaleCartChecked: getLocalStorage("WHOLESALE_CART_CHECKED"),
 };
@@ -101,6 +102,19 @@ export const productSlice = createSlice({
             };
             state.productWholesaleCart = newProductCart;
 
+            //update total number of products
+            let totalNumOfProducts = 0;
+            Object.entries(state.productWholesaleCart).forEach(
+                ([key, product]: any) => {
+                    if (product.check) {
+                        totalNumOfProducts =
+                            totalNumOfProducts + product.quantityForProduct;
+                    }
+                }
+            );
+            state.totalNumOfProductWholesale = totalNumOfProducts;
+
+            //save wholesalecart to local storage
             localStorage.setItem(
                 "WHOLESALECART",
                 JSON.stringify(newProductCart)
@@ -112,6 +126,18 @@ export const productSlice = createSlice({
                 state.productWholesaleCart;
             state.productWholesaleCart = newProductCart;
 
+            //update total number of products
+            let totalNumOfProducts = 0;
+            Object.entries(state.productWholesaleCart).forEach(
+                ([key, product]: any) => {
+                    if (product.check) {
+                        totalNumOfProducts =
+                            totalNumOfProducts + product.quantityForProduct;
+                    }
+                }
+            );
+            state.totalNumOfProductWholesale = totalNumOfProducts;
+
             localStorage.setItem(
                 "WHOLESALECART",
                 JSON.stringify(newProductCart)
@@ -119,6 +145,10 @@ export const productSlice = createSlice({
         },
         removeAllProductFromWholesaleCart(state) {
             state.productWholesaleCart = {};
+
+            //update total number of products
+
+            state.totalNumOfProductWholesale = 0;
             localStorage.setItem("WHOLESALECART", JSON.stringify({}));
         },
 
@@ -130,6 +160,17 @@ export const productSlice = createSlice({
                 }
             );
             state.wholesaleCartChecked = !currentCheck;
+            //update total number of products
+            let totalNumOfProducts = 0;
+            Object.entries(state.productWholesaleCart).forEach(
+                ([key, product]: any) => {
+                    if (product.check) {
+                        totalNumOfProducts =
+                            totalNumOfProducts + product.quantityForProduct;
+                    }
+                }
+            );
+            state.totalNumOfProductWholesale = totalNumOfProducts;
             localStorage.setItem(
                 "WHOLESALECART",
                 JSON.stringify(state.productWholesaleCart)

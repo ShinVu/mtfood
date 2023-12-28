@@ -227,45 +227,23 @@ function ProductMainCard({
 
     const addToCart = () => {
         const quantityForProduct = quantity;
-        if (product && product.product_wholesale_pricing) {
-            if (product.product_wholesale_pricing[0].quantity_from > quantity) {
-                dispatch(
-                    handleSnackbarDialogOpen({
-                        message: `quantityInvalid`,
-                        severity: "error",
-                    })
-                );
-            } else {
-                const productCart = {
-                    ...product,
-                    quantityForProduct,
-                    check: false,
-                };
-                dispatch(addProductToWholesaleCart(productCart));
-            }
-        }
+        const productCart = {
+            ...product,
+            quantityForProduct,
+            check: true,
+        };
+        dispatch(addProductToWholesaleCart(productCart));
     };
 
     const buyNow = () => {
         const quantityForProduct = quantity;
-        if (product && product.product_wholesale_pricing) {
-            if (product.product_wholesale_pricing[0].quantity_from > quantity) {
-                dispatch(
-                    handleSnackbarDialogOpen({
-                        message: `quantityInvalid`,
-                        severity: "error",
-                    })
-                );
-            } else {
-                const productCart = {
-                    ...product,
-                    quantityForProduct,
-                    check: false,
-                };
-                dispatch(addProductToWholesaleCart(productCart));
-                navigate("/cart/wholesale");
-            }
-        }
+        const productCart = {
+            ...product,
+            quantityForProduct,
+            check: true,
+        };
+        dispatch(addProductToWholesaleCart(productCart));
+        navigate("/cart/wholesale");
     };
 
     const getFullAddress = () => {

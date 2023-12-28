@@ -8,6 +8,7 @@ import {
     ProfileNavigation,
     OrderStepper,
     OrderItemCard,
+    OrderItem,
 } from "../features/profile/index.js";
 import {
     ContainedButton,
@@ -197,7 +198,7 @@ function ChangePaymentMethodDialog(props) {
             <DialogActions>
                 <Button onClick={handleClose}>{t("cancel")}</Button>
                 <Button onClick={changePaymentMethod} autoFocus>
-                    Agree
+                    {t("confirm")}
                 </Button>
             </DialogActions>
         </Dialog>
@@ -220,7 +221,12 @@ export default function OrderDetailWholesale() {
         }
     };
 
+    //Wholesale summary order
     const [order, setOrder] = useState<orderWholesaleType | null>(null);
+    //Retail orders
+
+    const [retailOrders, setRetailOrders] = useState<orderType[] | null>(null);
+    //Get wholesale order detail
     useEffect(() => {
         const fetchOrder = () => {
             const payload = {
@@ -231,7 +237,7 @@ export default function OrderDetailWholesale() {
                 .post("/getWholesaleOrderDetail", payload)
                 .then(({ data }) => {
                     const newOrder: orderWholesaleType = data.result.order;
-                    console.log(newOrder);
+
                     setOrder(newOrder);
                 })
                 .catch();
@@ -241,6 +247,26 @@ export default function OrderDetailWholesale() {
         }
     }, []);
 
+    //Get orders
+    useEffect(() => {
+        const fetchOrders = () => {
+            const payload = {
+                customerId: user.id,
+                orderSummaryId: id,
+            };
+            axiosClient
+                .post("/getWholesaleSummaryOrders", payload)
+                .then(({ data }) => {
+                    const orders: orderType[] = data.result.orders;
+                    console.log(data);
+                    setRetailOrders(orders);
+                })
+                .catch();
+        };
+        if (!retailOrders) {
+            fetchOrders();
+        }
+    }, []);
     useEffect(() => {
         const fetchAddress = async () => {
             const payload = {
@@ -284,117 +310,137 @@ export default function OrderDetailWholesale() {
             <Header />
             <div className="flex flex-row flex-1 w-full px-4 py-12 bg-background_main">
                 <ProfileNavigation user={user} />
-                {order && (
-                    <div className="flex flex-col space-y-4 flex-1">
-                        <Paper elevation={2} className="p-4">
-                            <div className="flex flex-row w-full justify-between ">
-                                <div
-                                    className="flex flex-row items-center cursor-pointer"
-                                    onClick={() => navigate(-1)}
-                                >
-                                    <KeyboardArrowLeftIcon />
-                                    <p className="text-gray-100 text-base font-normal my-0">
-                                        {t("back")}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <Divider className="mt-4 mb-4" />
-                            <div className="flex flex-row justify-between p-4">
-                                <div className="flex flex-col justify-between">
-                                    <div>
-                                        <p className="my-0 text-black text-lg">
-                                            {t("orderCode")}:{" "}
-                                            <span className="font-bold">
-                                                #{order.order_code}
-                                            </span>
+                <div className="flex flex-col w-full">
+                    {order && (
+                        <div className="flex flex-col space-y-4 flex-1">
+                            <Paper elevation={2} className="p-4">
+                                <div className="flex flex-row w-full justify-between ">
+                                    <div
+                                        className="flex flex-row items-center cursor-pointer"
+                                        onClick={() => navigate(-1)}
+                                    >
+                                        <KeyboardArrowLeftIcon />
+                                        <p className="text-gray-100 text-base font-normal my-0">
+                                            {t("back")}
                                         </p>
-                                        <div className="flex flex-row">
-                                            <p className="text-lg my-0">
-                                                {t("status")}:{" "}
-                                            </p>
-                                            <MapWholesaleHeaderDetail
-                                                orderStatus={order.status}
-                                            />
-                                        </div>
                                     </div>
-                                    <MapWholesaleToText order={order} />
                                 </div>
-                                <div className="flex flex-col justify-evenly">
-                                    <MapToButton
-                                        order={order}
-                                        handleOpen={handleOpen}
-                                        handleClose={handleClose}
-                                        handleAddressOpen={handleAddressOpen}
-                                        handleAddressClose={handleAddressClose}
-                                    />
-                                    <ChangePaymentMethodDialog
-                                        open={open}
-                                        orderId={order.id}
-                                        handleOpen={handleOpen}
-                                        handleClose={handleClose}
-                                    />
-                                    <AddressDialog
-                                        open={openAddress}
-                                        handleClose={handleAddressClose}
-                                        isOrder={true}
-                                        orderType={"wholesale"}
-                                        orderId={order.id}
-                                    />
+
+                                <Divider className="mt-4 mb-4" />
+                                <div className="flex flex-row justify-between p-4">
+                                    <div className="flex flex-col justify-between">
+                                        <div>
+                                            <p className="my-0 text-black text-lg">
+                                                {t("orderCode")}:{" "}
+                                                <span className="font-bold">
+                                                    #{order.order_code}
+                                                </span>
+                                            </p>
+                                            <div className="flex flex-row">
+                                                <p className="text-lg my-0">
+                                                    {t("status")}:{" "}
+                                                </p>
+                                                <MapWholesaleHeaderDetail
+                                                    orderStatus={order.status}
+                                                />
+                                            </div>
+                                        </div>
+                                        <MapWholesaleToText order={order} />
+                                    </div>
+                                    <div className="flex flex-col justify-evenly">
+                                        <MapToButton
+                                            order={order}
+                                            handleOpen={handleOpen}
+                                            handleClose={handleClose}
+                                            handleAddressOpen={
+                                                handleAddressOpen
+                                            }
+                                            handleAddressClose={
+                                                handleAddressClose
+                                            }
+                                        />
+                                        <ChangePaymentMethodDialog
+                                            open={open}
+                                            orderId={order.id}
+                                            handleOpen={handleOpen}
+                                            handleClose={handleClose}
+                                        />
+                                        <AddressDialog
+                                            open={openAddress}
+                                            handleClose={handleAddressClose}
+                                            isOrder={true}
+                                            orderType={"wholesale"}
+                                            orderId={order.id}
+                                        />
+                                    </div>
                                 </div>
+                            </Paper>
+                            <div className="flex flex-row flex-1 space-x-4">
+                                <Paper elevation={2} className="w-1/3 p-4">
+                                    <h5 className="text-primary_main text-base uppercase my-0">
+                                        {t("orderAddress")}
+                                    </h5>
+
+                                    <div className="mt-3">
+                                        <p className="text-black font-medium">
+                                            {order.address &&
+                                                order.address?.name}
+                                        </p>
+                                        <p className="text-gray-100">
+                                            {order.address &&
+                                                order.address?.phone_number}
+                                        </p>
+                                        <p className="text-gray-100">
+                                            {getFullAddress()}
+                                        </p>
+                                    </div>
+                                </Paper>
+                                <Paper elevation={2} className="w-1/3 p-4">
+                                    <h5 className="text-primary_main text-base uppercase my-0">
+                                        {t("orderDelivery")}
+                                    </h5>
+
+                                    <div className="mt-3">
+                                        <p className="text-black font-medium">
+                                            {order.delivery_method == "fast" &&
+                                                "Giao hàng nhanh"}
+                                        </p>
+                                    </div>
+                                </Paper>
+                                <Paper elevation={2} className="w-1/3 p-4">
+                                    <h5 className="text-primary_main text-base uppercase my-0">
+                                        {t("orderPayment")}
+                                    </h5>
+
+                                    <div className="mt-3">
+                                        <p className="text-black font-medium">
+                                            {t(order.payment_method)}
+                                        </p>
+                                    </div>
+                                </Paper>
                             </div>
-                        </Paper>
-                        <div className="flex flex-row flex-1 space-x-4">
-                            <Paper elevation={2} className="w-1/3 p-4">
-                                <h5 className="text-primary_main text-base uppercase my-0">
-                                    {t("orderAddress")}
-                                </h5>
-
-                                <div className="mt-3">
-                                    <p className="text-black font-medium">
-                                        {order.address && order.address?.name}
-                                    </p>
-                                    <p className="text-gray-100">
-                                        {order.address &&
-                                            order.address?.phone_number}
-                                    </p>
-                                    <p className="text-gray-100">
-                                        {getFullAddress()}
-                                    </p>
-                                </div>
-                            </Paper>
-                            <Paper elevation={2} className="w-1/3 p-4">
-                                <h5 className="text-primary_main text-base uppercase my-0">
-                                    {t("orderDelivery")}
-                                </h5>
-
-                                <div className="mt-3">
-                                    <p className="text-black font-medium">
-                                        {order.delivery_method == "fast" &&
-                                            "Giao hàng nhanh"}
-                                    </p>
-                                </div>
-                            </Paper>
-                            <Paper elevation={2} className="w-1/3 p-4">
-                                <h5 className="text-primary_main text-base uppercase my-0">
-                                    {t("orderPayment")}
-                                </h5>
-
-                                <div className="mt-3">
-                                    <p className="text-black font-medium">
-                                        {t(order.payment_method)}
-                                    </p>
-                                </div>
+                            <Paper elevation={3} className="p-2">
+                                <OrderWholesaleItemsDetailCard
+                                    orderDetails={order.order_summary_detail}
+                                />
+                                <OrderSummary order={order} />
                             </Paper>
                         </div>
-                        <Paper elevation={3} className="p-2">
-                            <OrderWholesaleItemsDetailCard
-                                orderDetails={order.order_summary_detail}
-                            />
-                            <OrderSummary order={order} />
-                        </Paper>
-                    </div>
-                )}
+                    )}
+                    {retailOrders && (
+                        <div>
+                            <h1 className="text-3xl my-8">
+                                {t("wholesalePlan")}
+                            </h1>
+                            {retailOrders.map((retailOrder: orderType) => (
+                                <OrderItem
+                                    order={retailOrder}
+                                    key={retailOrders.id}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
             <Footer />
         </div>

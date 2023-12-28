@@ -286,44 +286,35 @@ function ProductWholesaleCartItemCard({ product }: { product: productCart }) {
     //Redux
     const { user, token } = useAppSelector((state) => state.authentication);
     const dispatch = useAppDispatch();
-
+    const { totalNumOfProductWholesale } = useAppSelector(
+        (state) => state.product
+    );
     useEffect(() => {
         const handleQuantityChange = () => {
             if (product.product_wholesale_pricing) {
-                if (
-                    product.product_wholesale_pricing[0].quantity_from >
-                    quantity
-                ) {
-                    dispatch(
-                        handleSnackbarDialogOpen({
-                            message: "quantityInvalid",
-                            severity: "error",
-                        })
-                    );
-                } else {
-                    const quantityForProduct = quantity;
-                    const productCart = { ...product, quantityForProduct };
-                    dispatch(addProductToWholesaleCart(productCart));
-                }
+                // if (
+                //     product.product_wholesale_pricing[0].quantity_from >
+                //     totalNumOfProductWholesale
+                // ) {
+                //     dispatch(
+                //         handleSnackbarDialogOpen({
+                //             message: "quantityInvalid",
+                //             severity: "error",
+                //         })
+                //     );
+                // } else {
+                const quantityForProduct = quantity;
+                const productCart = { ...product, quantityForProduct };
+                dispatch(addProductToWholesaleCart(productCart));
+                // }
             }
         };
         handleQuantityChange();
     }, [quantity]);
 
     const quantitySubstract = () => {
-        if (product.product_wholesale_pricing) {
-            if (
-                product.product_wholesale_pricing[0].quantity_from >= quantity
-            ) {
-                dispatch(
-                    handleSnackbarDialogOpen({
-                        message: `quantityInvalid`,
-                        severity: "error",
-                    })
-                );
-            } else {
-                setQuantity(quantity - 1);
-            }
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
         }
     };
     const quantityAdd = () => {
@@ -333,20 +324,8 @@ function ProductWholesaleCartItemCard({ product }: { product: productCart }) {
     const quantityChange = (value: string) => {
         if (isInt(value.trim())) {
             const quantity = parseInt(value.trim());
-            if (product.product_wholesale_pricing) {
-                if (
-                    product.product_wholesale_pricing[0].quantity_from >
-                    quantity
-                ) {
-                    dispatch(
-                        handleSnackbarDialogOpen({
-                            message: "quantityInvalid",
-                            severity: "error",
-                        })
-                    );
-                }
-                setQuantity(quantity);
-            }
+
+            setQuantity(quantity);
         }
     };
 
@@ -397,7 +376,10 @@ function ProductWholesaleCartItemCard({ product }: { product: productCart }) {
                 priceIndex >= 0;
                 priceIndex--
             ) {
-                if (quantity >= wholesalePrice[priceIndex].quantity_from) {
+                if (
+                    totalNumOfProductWholesale >=
+                    wholesalePrice[priceIndex].quantity_from
+                ) {
                     return wholesalePrice[priceIndex].price;
                 }
             }
@@ -884,6 +866,7 @@ function PopOverOrderWholesalePayment() {
 
     //Cart prices
     const priceCart = usePriceWholesaleCart();
+
     return (
         <>
             <Popover
@@ -917,13 +900,17 @@ function PopOverOrderWholesalePayment() {
                                     </span>
                                 </TableCell>
                                 <TableCell align="right">
-                                    <span className="text-black text-sm font-medium my-0">
-                                        {priceCart &&
-                                            changePriceFormat(
-                                                String(priceCart.totalSub)
-                                            )}
-                                        đ
-                                    </span>
+                                    {priceCart && (
+                                        <span className="text-black text-sm font-medium my-0">
+                                            {changePriceFormat(
+                                                priceCart.totalSub
+                                            ) == "notValid"
+                                                ? "Không khả dụng"
+                                                : `${changePriceFormat(
+                                                      String(priceCart.totalSub)
+                                                  )}đ`}
+                                        </span>
+                                    )}
                                 </TableCell>
                             </StyledTableRow>
 
@@ -934,13 +921,19 @@ function PopOverOrderWholesalePayment() {
                                     </span>
                                 </TableCell>
                                 <TableCell align="right">
-                                    <span className="my-0 text-red_main text-2xl font-bold">
-                                        {priceCart &&
-                                            changePriceFormat(
-                                                String(priceCart.totalPrice)
-                                            )}
-                                        đ
-                                    </span>
+                                    {priceCart && (
+                                        <span className="my-0 text-red_main text-2xl font-bold">
+                                            {changePriceFormat(
+                                                priceCart.totalPrice
+                                            ) == "notValid"
+                                                ? "Không khả dụng"
+                                                : `${changePriceFormat(
+                                                      String(
+                                                          priceCart.totalPrice
+                                                      )
+                                                  )}đ`}
+                                        </span>
+                                    )}
                                 </TableCell>
                             </StyledTableRow>
                         </TableBody>
@@ -962,13 +955,17 @@ function PopOverOrderWholesalePayment() {
                                 </p>
                             </TableCell>
                             <TableCell align="right">
-                                <p className="my-0 text-red_main text-2xl font-bold">
-                                    {priceCart &&
-                                        changePriceFormat(
-                                            String(priceCart.totalPrice)
-                                        )}
-                                    đ
-                                </p>
+                                {priceCart && (
+                                    <p className="my-0 text-red_main text-2xl font-bold">
+                                        {changePriceFormat(
+                                            priceCart.totalPrice
+                                        ) == "notValid"
+                                            ? "Không khả dụng"
+                                            : `${changePriceFormat(
+                                                  String(priceCart.totalPrice)
+                                              )}đ`}
+                                    </p>
+                                )}
                             </TableCell>
                         </StyledTableRow>
                     </TableBody>

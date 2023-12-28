@@ -157,13 +157,13 @@ function OrderSummary({ order }: { order: orderType }) {
 
 function OrderCancel({ orderStatus }: { orderStatus: string }) {
     const { t } = useTranslation();
-    if (order_states.indexOf(orderStatus) >= 12) {
+    if (order_states.indexOf(orderStatus) >= 13) {
         return (
             <Paper elevation={0} className="w-full p-2 bg-orange-light">
                 <p>{t("orderIsReturned")}</p>
             </Paper>
         );
-    } else if (order_states.indexOf(orderStatus) >= 9) {
+    } else if (order_states.indexOf(orderStatus) >= 10) {
         return (
             <Paper elevation={0} className="w-full p-2 bg-orange-light">
                 <p>{t("orderIsCanceled")}</p>
@@ -194,7 +194,7 @@ function MapToButton({
             .then(({ data }) => navigate(0));
     };
 
-    if (order.status === order_states[1]) {
+    if (order.status === order_states[2]) {
         return (
             <div className="flex flex-col space-y-4">
                 <ContainedButton className=" bg-primary_main">
@@ -210,7 +210,7 @@ function MapToButton({
             </div>
         );
     }
-    if (order.status === order_states[3]) {
+    if (order.status === order_states[4]) {
         return (
             <div className="flex flex-col space-y-4">
                 <ContainedButton className=" bg-primary_main">
@@ -226,8 +226,8 @@ function MapToButton({
         );
     }
     if (
-        order_states.indexOf(order.status) == 7 ||
-        order_states.indexOf(order.status) == 8
+        order_states.indexOf(order.status) == 8 ||
+        order_states.indexOf(order.status) == 9
     ) {
         return (
             <div className="flex flex-col space-y-4">
@@ -238,7 +238,7 @@ function MapToButton({
             </div>
         );
     }
-    if (order_states.indexOf(order.status) <= 5) {
+    if (order_states.indexOf(order.status) <= 6) {
         return (
             <div className="flex flex-col space-y-4">
                 <ContainedButton className=" bg-primary_main">
@@ -412,7 +412,7 @@ export default function OrderDetail() {
                                 </div>
                             </div>
                             <div className="my-8">
-                                {order_states.indexOf(order.status) > 8 ? (
+                                {order_states.indexOf(order.status) > 9 ? (
                                     <OrderCancel orderStatus={order.status} />
                                 ) : (
                                     <OrderStepper order={order} />

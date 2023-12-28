@@ -341,5 +341,9 @@
     "totalPaid": "Đã thanh toán",
     "quantityDelivered": "SL Đã giao",
     "status": "Trạng thái",
-    "changeAddress": "Đổi địa chỉ"
+    "changeAddress": "Đổi địa chỉ",
+    "wholesalePlan": "Kế hoạch giao",
+    "orderStepperPlanning": "Lên kế hoạch",
+    "planning": "Đang lên kế hoạch",
+    "orderPlanning": "Đơn hàng đang được lên kế hoạch để giao cho bạn. Thông tin của đơn hàng có thể thay đổi tùy theo tình hình thực tế"
 }

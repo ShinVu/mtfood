@@ -10,7 +10,9 @@ import {
 //Return prices,... of cart
 export default function usePriceWholesaleCheckout() {
     const [price, setPrice] = useState<priceWholesaleCart | null>(null);
-    const { productWholesaleCart } = useAppSelector((state) => state.product);
+    const { productWholesaleCart, totalNumOfProductWholesale } = useAppSelector(
+        (state) => state.product
+    );
     const getWholesalePrice = (product: productCart) => {
         const wholesalePrice = product.product_wholesale_pricing;
 
@@ -21,7 +23,7 @@ export default function usePriceWholesaleCheckout() {
                 priceIndex--
             ) {
                 if (
-                    product.quantityForProduct >=
+                    totalNumOfProductWholesale >=
                     wholesalePrice[priceIndex].quantity_from
                 ) {
                     return wholesalePrice[priceIndex].price;
