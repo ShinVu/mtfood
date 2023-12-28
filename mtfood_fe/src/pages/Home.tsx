@@ -340,7 +340,7 @@ function ProductSlideNewProductCard() {
     );
 }
 
-function ProductSlideMostLikedProductCard() {
+function ProductSlideRecommendationProductCard() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const size = useWindowSizeDimensions();
@@ -370,7 +370,7 @@ function ProductSlideMostLikedProductCard() {
         const limit = getLimit(size);
         const fetchProduct = () => {
             axiosClient
-                .get(`/productMostLiked?limit=${limit}`)
+                .get(`/getProductRecommendationItemItem`)
                 .then(({ data }: { data: any }) => {
                     const products: Array<product> = data.result.product;
 
@@ -573,7 +573,7 @@ export default function Home() {
                 <TagCard />
                 <ProductSlideDiscountProductCard />
                 <ProductSlideNewProductCard />
-                <ProductSlideMostLikedProductCard />
+                <ProductSlideRecommendationProductCard />
             </div>
 
             <Footer />

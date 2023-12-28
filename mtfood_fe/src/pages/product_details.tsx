@@ -941,6 +941,113 @@ function ProductSameCategoryCard({
     return (
         <div className="flex p-4 flex-col  bg-white pl-6">
             <h1 className="text-black text-xl font-bold uppercase">
+                Sản phẩm cùng loại
+            </h1>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 mt-4">
+                {products
+                    ? products.map((product) => (
+                          <ProductCard
+                              product={product}
+                              className="w-full min-w-fit h-fit"
+                              key={product.id}
+                              loading="lazy"
+                          />
+                      ))
+                    : getDummy().map((value) => (
+                          <span key={value}>
+                              <Skeleton className="w-40 h-64" />
+                          </span>
+                      ))}
+            </div>
+            <OutlinedButton
+                className="max-w-fit self-center mt-4 mb-2"
+                onClick={handleSeemore}
+            >
+                {t("more")}
+            </OutlinedButton>
+        </div>
+    );
+}
+
+function ProductRecommendationCard({
+    mainProduct,
+}: {
+    mainProduct: product | null;
+}) {
+    const { t } = useTranslation();
+    const navigate = useNavigate();
+    const size = useWindowSizeDimensions();
+    const [products, setProduct] = useState<Array<product> | null>(null);
+    const getDummy = () => {
+        if (size === "2xl") {
+            return Array.apply(null, Array(16)).map(function (x, i) {
+                return i;
+            });
+        } else if (size === "xl") {
+            return Array.apply(
+                null,
+                Array(12).map(function (x, i) {
+                    return i;
+                })
+            );
+        } else if (size === "lg") {
+            return Array.apply(null, Array(8)).map(function (x, i) {
+                return i;
+            });
+        } else if (size === "md") {
+            return Array.apply(null, Array(8)).map(function (x, i) {
+                return i;
+            });
+        } else {
+            return Array.apply(null, Array(4)).map(function (x, i) {
+                return i;
+            });
+        }
+    };
+
+    const handleSeemore = () => {
+        const path = {
+            pathname: "/product",
+            search: createSearchParams({
+                page: String(1),
+                category: mainProduct?.category_id,
+            }).toString(),
+        };
+        navigate(path);
+    };
+    useEffect(() => {
+        const getLimit = (size: string) => {
+            if (size === "sm") {
+                return 4;
+            } else if (size === "xs") {
+                return 4;
+            } else if (size === "md") {
+                return 8;
+            } else if (size === "lg") {
+                return 12;
+            } else if (size === "xl") {
+                return 16;
+            } else if (size === "2xl") {
+                return 16;
+            }
+        };
+        const limit = getLimit(size);
+        const fetchProduct = () => {
+            axiosClient
+                .get(`/getProductRecommendationItemItem`)
+                .then(({ data }: { data: any }) => {
+                    const products: Array<product> = data.result.product;
+
+                    setProduct(products);
+                });
+        };
+        if (!products && mainProduct) {
+            fetchProduct();
+        }
+    }, [products, mainProduct]);
+    return (
+        <div className="flex p-4 flex-col  bg-white pl-6">
+            <h1 className="text-black text-xl font-bold uppercase">
                 Sản phẩm tương tự
             </h1>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 mt-4">
@@ -1017,6 +1124,7 @@ export default function ProductDetails() {
                 <ProductDescriptionCard product={product} />
                 <ProductReviewCard product={product} />
                 <ProductSameCategoryCard mainProduct={product} />
+                <ProductRecommendationCard mainProduct={product} />
             </div>
             <Footer />
         </div>
