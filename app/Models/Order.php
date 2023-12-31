@@ -20,7 +20,7 @@ class Order extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'order_id';
 
     /**
      * The attributes that are mass assignable.
@@ -28,25 +28,18 @@ class Order extends Model
      * @var array
      */
     protected $fillable = [
-        'subtotal',
-        'shipping_subtotal',
-        'shipping_discount',
-        'voucher_discount',
-        'products_discount',
-        'order_discount',
-        'vat',
-        'payment_method',
-        'delivery_method',
-        'notes',
+        'order_id',
         'order_code',
-        'status',
-        'confirmed_at',
-        'shipping_at',
-        'delivered_at',
-        'reviewed_at',
-        'employee_id',
-        'customer_id',
-        'delivery_address_id',
-        'order_discount_id'
+        'account_id',
+        'delivery_id',
+        'GHN_code',
+        'order_date',
+        'order_flag',
+        'order_status',
+        'total_amount',
+        'order_type',
+        'parent_id',
+        'wholesale',
+        'GHN_fee',
     ];
 }

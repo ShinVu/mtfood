@@ -13,14 +13,14 @@ class OrderDetail extends Model
      *
      * @var string
      */
-    protected $table = 'order_details';
+    protected $table = 'order_detail';
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'order_detail_id';
 
     /**
      * The attributes that are mass assignable.
@@ -28,14 +28,11 @@ class OrderDetail extends Model
      * @var array
      */
     protected $fillable = [
-        'quantity',
-        'unit_price',
-        'unit_discount',
-        'batch_code',
-        'pricing_id',
-        'discount_id',
-        'batch_id',
-        'order_id',
-        'product_id'
+        'order_detail_id',
+        'order_code',
+        'product_id',
+        'product_price',
+        'product_quantity',
+        'product_sale'
     ];
 }

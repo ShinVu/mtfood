@@ -4,75 +4,51 @@
             @csrf
             <div class="form-group">
                 <label for="exampleInputEmail1">Tên sản phẩm</label>
-                <input type="text" name="name" placeholder="Tên sản phẩm" class="form-control" value="{{ old('name', $product->name ?? "") }}">
-                @error('name')
-                <small id="emailHelp" class="form-text text-danger">{{ $errors->first('name') }}</small>
+                <input type="text" name="product_name" placeholder="Tên sản phẩm" class="form-control" value="{{ old('product_name', $product->product_name ?? "") }}">
+                @error('product_name')
+                <small id="emailHelp" class="form-text text-danger">{{ $errors->first('product_name') }}</small>
                 @enderror
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Mô tả</label>
-                <textarea name="description" class="form-control" id="" cols="30" rows="3">{{ old('description', $product->description ?? "") }}</textarea>
-                @error('description')
-                <small id="emailHelp" class="form-text text-danger">{{ $errors->first('description') }}</small>
+                <textarea name="product_description" class="form-control" id="" cols="30" rows="3">{{ old('product_description', $product->product_description ?? "") }}</textarea>
+                @error('product_description')
+                <small id="emailHelp" class="form-text text-danger">{{ $errors->first('product_description') }}</small>
                 @enderror
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Cân nặng</label>
-                        <input type="number" name="weight" placeholder="10" class="form-control" value="{{ old('weight', $product->weight ?? 0) }}">
+                        <input type="number" name="product_weight" placeholder="10" class="form-control" value="{{ old('product_weight', $product->product_weight ?? 0) }}">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Nguyên liệu</label>
-                        <input type="text" name="ingredient" placeholder="10" class="form-control" value="{{ old('ingredient', $product->ingredient ?? "") }}">
+                        <label for="exampleInputEmail1">Giảm giá (%)</label>
+                        <input type="text" name="product_sale" placeholder="10" class="form-control" value="{{ old('product_sale', $product->product_sale ?? "") }}">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Nguồn gốc</label>
-                        <input type="text" name="origin" placeholder="10" class="form-control" value="{{ old('origin', $product->origin ?? "") }}">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Tỉnh thành</label>
-                        <select name="province_id" class="form-control" id="loadDistrict">
-                            <option value="">Chọn tỉnh thành</option>
-                            @foreach($provinces ?? [] as $item)
-                                <option value="{{ $item->id }}" {{ ($product->province_id ?? 0) == $item->id ? "selected" : "" }}>{{ $item->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Quận huyện</label>
-                        <select name="district_id" class="form-control" id="districtsData">
-                            <option value="">Chọn quận huyện</option>
-                            @foreach($activeDistricts ?? [] as $key =>  $item)
-                                <option value="{{ $key }}" selected>{{ $item }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Phường xã</label>
-                        <select name="ward_id" class="form-control" id="wardData">
-                            <option value="">Chọn phường xã</option>
-                            @foreach($activeWard ?? [] as $key =>  $item)
-                                <option value="{{ $key }}" selected>{{ $item }}</option>
+                        {{-- <input type="text" name="origin" placeholder="10" class="form-control" value="{{ old('origin', $product->origin ?? "") }}"> --}}
+                        <select name="product_brand" class="form-control" id="product_brand">
+                            <option value="">Chọn nguồn gốc</option>
+                            @foreach($product_brand ?? [] as $item)
+                                <option value="{{ $item->brand_id }}" {{ ($product->product_brand ?? 0) == $item->brand_id ? "selected" : "" }}>{{ $item->brand_name }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
             </div>
-            @if (isset($images) && $images && !$images->isEmpty())
+            @if (isset($images) && $images && !(count($images) == 0))
                 @foreach($images as $item)
-                    <a href="{{ route('get_admin.product.delete_image', $item->id) }}" style="margin-bottom: 10px;display: inline-block">
-                        <img src="{{ pare_url_file($item->path) }}" style="width: 100px;height: auto;margin-right: 10px;border: 1px solid #dedede;border-radius: 5px" alt="">
+                    <a href="{{ route('get_admin.product.delete_image', [
+                        'id' => (int)$product->product_id,
+                        'name' => $item
+                    ]) }}" style="margin-bottom: 10px;display: inline-block">
+                        <img src="{{ pare_url_file($item) }}" style="width: 100px;height: auto;margin-right: 10px;border: 1px solid #dedede;border-radius: 5px" alt="">
                     </a>
                 @endforeach
             @endif
@@ -85,150 +61,30 @@
             </div>
             <div id="wrap-row-menu">
                 <h5>Giá sỉ</h5>
-                @if(isset($productsWholesale) && $productsWholesale && !$productsWholesale->IsEmpty())
-                    @foreach($productsWholesale as $key => $item)
-                        <div class="row row-menu {{ $key == 0 ? 'row-menu-temple' : '' }}">
-                            <div class="col-sm-2">
-                                <div class="form-group mlr-10">
-                                    <input type="text" class="form-control" name="wholesale[form][]"
-                                           value="{{ $item->form }}" placeholder=""/>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-group mlr-10">
-                                    <input type="text" class="form-control" name="wholesale[to][]"
-                                           value="{{ $item->to }}" placeholder=""/>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-group mlr-10">
-                                    <input type="text" class="form-control" name="wholesale[unit_price][]"
-                                           value="price"
-                                           placeholder=""/>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-group mlr-10">
-                                    <input type="text" class="form-control" name="wholesale[price][]"
-                                           value="{{ $item->price }}"
-                                           placeholder="Permission"/>
-                                </div>
-                            </div>
-                            <div class="col-md-2 action-row-menu {{ $key == 0 ? 'hide' : '' }}">
-                                <div class="form-group">
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-default btn-remove"><i class="fa fa-trash"></i>  </a>
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-default btn-move-up"><i class="fa fa-arrow-up"></i></a>
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-default btn-move-down"><i class="fa fa-arrow-down"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                @else
-                    <div class="row row-menu row-menu-temple">
-                        <div class="col-sm-2">
-                            <div class="form-group mlr-10">
-                                <input type="number" class="form-control" name="wholesale[form][]"
-                                       value="" placeholder="SL từ"/>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="form-group mlr-10">
-                                <input type="number" class="form-control" name="wholesale[to][]"
-                                       value=""
-                                       placeholder="Đến"/>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="form-group mlr-10">
-                                <input type="text" class="form-control" name="wholesale[unit_price][]"
-                                       value="price"
-                                       placeholder="?param=1&param2=2"/>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="form-group mlr-10">
-                                <input type="text" class="form-control" name="wholesale[price][]"
-                                       value=""
-                                       placeholder="Price"/>
-                            </div>
-                        </div>
-                        <div class="col-md-2 action-row-menu hide">
-                            <div class="form-group">
-                                <a href="javascript:void(0)" class="btn btn-sm btn-default btn-remove"><i class="fa fa-trash"></i>  </a>
-                                <a href="javascript:void(0)" class="btn btn-sm btn-default btn-move-up"><i class="fa fa-arrow-up"></i></a>
-                                <a href="javascript:void(0)" class="btn btn-sm btn-default btn-move-down"><i class="fa fa-arrow-down"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-            </div>
-            <div class="row">
-                <div class="form-group">
-                    <a id="copy_menu" class="col-sm-12" href="javascript:void(0)"><i class="fa fa-plus"></i> Thêm menu</a>
-                </div>
-            </div>
 
-            <div id="wrap-row-option">
-                <h5>Option</h5>
-                @if(isset($productValues) && $productValues && !$productValues->IsEmpty())
-                    @foreach($productValues as $key => $value)
-                        <div class="row row-menu {{ $key == 0 ? 'row-option-temple' : '' }}">
-                            <div class="col-sm-3">
-                                <div class="form-group mlr-10">
-                                    <select name="options[productOptionId][]" id="" class="form-control">
-                                        @foreach($productOptions ?? [] as $item)
-                                            <option value="{{ $item->id }}" {{ $value->product_option_id == $item->id ? "selected" : "" }}>{{ $item->option_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group mlr-10">
-                                    <input type="text" class="form-control" name="options[value][]"
-                                           value="{{ $value->name_value }}"
-                                           placeholder="Giá trị"/>
-                                </div>
-                            </div>
-                            <div class="col-md-2 action-row-menu hide">
-                                <div class="form-group">
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-default btn-remove"><i class="fa fa-trash"></i>  </a>
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-default btn-move-up"><i class="fa fa-arrow-up"></i></a>
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-default btn-move-down"><i class="fa fa-arrow-down"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                @else
-                    <div class="row row-menu row-option-temple">
-                        <div class="col-sm-3">
-                            <div class="form-group mlr-10">
-                                <select name="options[productOptionId][]" id="" class="form-control">
-                                    @foreach($productOptions ?? [] as $item)
-                                        <option value="{{ $item->id }}">{{ $item->option_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group mlr-10">
-                                <input type="text" class="form-control" name="options[value][]"
-                                       value=""
-                                       placeholder="Giá trị"/>
-                            </div>
-                        </div>
-                        <div class="col-md-2 action-row-menu hide">
-                            <div class="form-group">
-                                <a href="javascript:void(0)" class="btn btn-sm btn-default btn-remove"><i class="fa fa-trash"></i>  </a>
-                                <a href="javascript:void(0)" class="btn btn-sm btn-default btn-move-up"><i class="fa fa-arrow-up"></i></a>
-                                <a href="javascript:void(0)" class="btn btn-sm btn-default btn-move-down"><i class="fa fa-arrow-down"></i></a>
-                            </div>
-                        </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Giá sỉ mức 1 (10-29)</label>
+                        <input type="text" name="level1" placeholder="0" class="form-control js-money" value="{{ old('level1', number_format(($product->level1 ?? 0),0,',')) }}">
                     </div>
-                @endif
-            </div>
-            <div class="row">
-                <div class="form-group">
-                    <a id="copy_option" class="col-sm-12" href="javascript:void(0)"><i class="fa fa-plus"></i> Thêm option</a>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Giá sỉ mức 2 (30-59)</label>
+                        <input type="text" name="level2" placeholder="0" class="form-control js-money" value="{{ old('level2', number_format(($product->level2 ?? 0),0,',')) }}">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Giá sỉ mức 3 (60-99)</label>
+                        <input type="text" name="level3" placeholder="0" class="form-control js-money" value="{{ old('level3', number_format(($product->level3 ?? 0),0,',')) }}">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Giá sỉ mức 4 (100-150)</label>
+                        <input type="text" name="level4" placeholder="0" class="form-control js-money" value="{{ old('level4', number_format(($product->level4 ?? 0),0,',')) }}">
+                    </div>
                 </div>
             </div>
 
@@ -237,45 +93,37 @@
         <div class="col-sm-4">
             <div class="form-group">
                 <label for="exampleInputEmail1">Danh mục</label>
-                <select name="category_id" class="form-control">
+                <select name="product_category" class="form-control">
                     <option value="">Chọn danh mục</option>
                     @foreach($categories ?? [] as $item)
-                        <option value="{{ $item->id }}" {{ ($product->category_id ?? 0) == $item->id ? "selected" : "" }}>{{ $item->name }}</option>
+                        <option value="{{ $item->id }}" {{ ($product->product_category ?? 0) == $item->id ? "selected" : "" }}>{{ $item->name }}</option>
                     @endforeach
                 </select>
-                @error('category_id')
-                    <small id="emailHelp" class="form-text text-danger">{{ $errors->first('category_id') }}</small>
+                @error('product_category')
+                    <small id="emailHelp" class="form-text text-danger">{{ $errors->first('product_category') }}</small>
                 @enderror
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Trạng thái</label>
-                <select name="status" id="" class="form-control">
+                <select name="product_status" id="" class="form-control">
                     @foreach($status ?? [] as $key => $item)
-                        <option value="{{ $key }}" {{ ($product->status ?? 0) == $key ? "selected" : "" }}>{{ $item['name'] }}</option>
+                        <option value="{{ $key }}" {{ ($product->product_status ?? 0) == $key ? "selected" : "" }}>{{ $item['name'] }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Giá</label>
-                <input type="text" name="price" placeholder="0" class="form-control js-money" value="{{ old('price', number_format(($product->price ?? 0),0,',')) }}">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Đơn vị</label>
-                <input type="text" name="unit" placeholder="0" class="form-control" value="{{ old('unit', $product->unit ?? 'Chiếc') }}">
+                <input type="text" name="product_price" placeholder="0" class="form-control js-money" value="{{ old('price', number_format(($product->product_price ?? 0),0,',')) }}">
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Số lượng</label>
-                <input type="text" name="quantity_available" placeholder="0" class="form-control" value="{{ old('quantity_available', $product->quantity_available ?? 0) }}">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Hạn sử dụng</label>
-                <input type="date" name="exp_date" placeholder="0" class="form-control" required value="{{ old('exp_date', $product->exp_date ?? "") }}">
+                <input type="text" name="product_quantity" placeholder="0" class="form-control" value="{{ old('product_quantity', $product->product_quantity ?? 0) }}">
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">Hình ảnh</label>
                 <input type="file" class="form-control" name="avatar">
-                @if (isset($product->image_url) && $product->image_url)
-                    <img src="{{ pare_url_file($product->image_url) }}" style="width: 60px;height: 60px; border-radius: 10px; margin-top: 10px" alt="">
+                @if (isset($product->product_image) && $product->product_image)
+                    <img src="{{ pare_url_file($product->product_image) }}" style="width: 60px;height: 60px; border-radius: 10px; margin-top: 10px" alt="">
                 @endif
             </div>
         </div>

@@ -11,6 +11,7 @@ use App\Models\ProductOption;
 use App\Models\ProductValue;
 use App\Models\ProductWholesalePrice;
 use App\Models\Province;
+use App\Models\Brand;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,17 +23,11 @@ class BeProductController extends Controller
 {
     public function index(Request $request)
     {
-        $products = Product::with('category:id,name');
+        $name = $request->n;
 
-        if ($name = $request->n)
-            $products->where('name', 'like', '%' . $name . '%');
-
-        if ($s = $request->status)
-            $products->where('status', $s);
-
-        $products = $products
-            ->orderByDesc('id')
-            ->paginate(20);
+        $products = Product::join('category', 'product.product_category', '=', 'category.category_id')
+            ->where('product_name', 'like', '%' . $name . '%')
+            ->get();
 
         $model = new Product();
         $status = $model->getStatus();
@@ -51,35 +46,43 @@ class BeProductController extends Controller
         $categories = Category::all();
         $model = new Product();
         $status = $model->getStatus();
-//        $provinces = Province::all();
-//        $productOptions = ProductOption::all();
+    //    $provinces = Province::all();
+    //    $productOptions = ProductOption::all();
+
+
+        $product_brand = Brand::all();
+
         $provinces = $productOptions = [];
-        return view('be.product.create', compact('categories', 'status', 'provinces', 'productOptions'));
+        return view('be.product.create', compact('categories', 'status', 'product_brand'));
     }
 
     public function store(Request $request)
     {
         try {
-            $data = $request->except('_token', 'avatar', 'wholesale', 'options');
-            $data['created_at'] = Carbon::now();
-            $data['price'] = str_replace(',', '', $request->price);
+            $data = $request->except('_token');
 
-            if ($request->avatar) {
-                $file = upload_image('avatar');
-                if (isset($file['code']) && $file['code'] == 1) $data['image_url'] = $file['name'];
-            }
-            $data['nums_of_reviews'] = 0;
-            $data['nums_of_like'] = 0;
-            $data['directionForPreservation'] = "Chưa cập nhật";
-            $data['pack'] = "Không";
-            $data['directionForUse'] = "Chưa cập nhật";
+            $data['product_price'] = str_replace(',', '', $request->product_price);
+            $data['level1'] = str_replace(',', '', $request->level1);
+            $data['level2'] = str_replace(',', '', $request->level2);
+            $data['level3'] = str_replace(',', '', $request->level3);
+            $data['level4'] = str_replace(',', '', $request->level4);
+
+            // if ($request->avatar) {
+            //     $file = upload_image('avatar');
+            //     if (isset($file['code']) && $file['code'] == 1) $data['image_url'] = $file['name'];
+            // }
+            //dd($data);
+            $data['image_url'] = $this->uploadMultiImage($request->file);
+
+            //dd($request->file);
+
 //            $data['user_id'] = Auth::user()->id;
 
             $product = Product::create($data);
 
-//            if ($request->file) {
-//                $this->syncAlbumImageAndProduct($request->file, $product->id);
-//            }
+        //    if ($request->file) {
+        //        $this->syncAlbumImageAndProduct($request->file, $product->id);
+        //    }
 //
 //            if ($request->wholesale)
 //                $this->processWholesalePrice($request->wholesale, $product->id);
@@ -98,10 +101,13 @@ class BeProductController extends Controller
 
     public function edit($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::where('product_id', '=', $id)->get();
         $categories = Category::all();
         $model = new Product();
         $status = $model->getStatus();
+
+        $product_brand = Brand::all();
+
 //        $provinces = Province::all();
 //        $productOptions = ProductOption::all();
 
@@ -118,17 +124,19 @@ class BeProductController extends Controller
 //        $images = ProductImage::where('product_id', $id)->orderByDesc('id')->get();
 //        $productsWholesale = ProductWholesalePrice::where('product_id', $id)->get();
 
+
         $viewData = [
-            'product'           => $product,
+            'product'           => $product[0],
             'categories'        => $categories,
             'status'            => $status,
-            'images'            => $images ?? [],
+            'images'            => explode('|||||', $product[0]->product_image ?? '') ?? [],
             'provinces'         => $provinces,
             'activeDistricts'   => $activeDistricts ?? [],
             'activeWard'        => $activeWard ?? [],
             'productsWholesale' => $productsWholesale ?? [],
             'productOptions'    => $productOptions,
-            'productValues'     => $productValues ?? []
+            'productValues'     => $productValues ?? [],
+            'product_brand'      => $product_brand ?? []
         ];
 
         return view('be.product.update', $viewData);
@@ -137,15 +145,26 @@ class BeProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = $request->except('_token', 'avatar', 'wholesale', 'options');
-            $data['slug'] = Str::slug($request->name);
-            $data['updated_at'] = Carbon::now();
-            $data['price'] = str_replace(',', '', $request->price);
-            if ($request->avatar) {
-                $file = upload_image('avatar');
-                if (isset($file['code']) && $file['code'] == 1) $data['image_url'] = $file['name'];
-            }
+            $data = $request->except('_token');
+            $data['product_price'] = str_replace(',', '', $request->product_price);
+            $data['level1'] = str_replace(',', '', $request->level1);
+            $data['level2'] = str_replace(',', '', $request->level2);
+            $data['level3'] = str_replace(',', '', $request->level3);
+            $data['level4'] = str_replace(',', '', $request->level4);
+            $obj = Product::find($request->product_id);
+            $imageURL = $this->uploadMultiImage($request->file);
+            if($imageURL == ""){
+                $imageURL = $obj->product_image;
+            }else
+            $imageURL = $imageURL.'|||||'.($obj->product_image ?? '');
+            $data['product_image'] = $imageURL;
+            //dd($data);
+            // if ($request->avatar) {
+            //     $file = upload_image('avatar');
+            //     if (isset($file['code']) && $file['code'] == 1) $data['image_url'] = $file['name'];
+            // }
 
+            //$product_id = $id;
             Product::find($id)->update($data);
 //            $this->processWholesalePrice($request->wholesale, $id);
 //            if ($request->file) {
@@ -257,10 +276,99 @@ class BeProductController extends Controller
         }
     }
 
-    public function deleteImage($id)
+    protected function uploadMultiImage($files){
+
+        $i=0;
+        $nameReturn = "";
+
+        if($files != null){
+            foreach ($files as $key => $fileImage) {
+                $ext = $fileImage->getClientOriginalExtension();
+                $extend = [
+                    'png', 'jpg', 'jpeg', 'PNG', 'JPG'
+                ];
+
+                if (!in_array($ext, $extend)) return "";
+
+
+                $path = public_path() . '/uploads';
+                if (!\File::exists($path)) {
+                    mkdir($path, 0777, true);
+                }
+
+                $filename = time() . Str::slug($fileImage->getClientOriginalName()) . '.' . $ext;
+
+                $fileImage->move($path, $filename);
+
+                if($i==0){
+                    $nameReturn = $filename;
+                }
+                else{
+                    $nameReturn = $nameReturn. '|||||' .$filename;
+                }
+                $i++;
+
+                // $fileImage->move($path, $filename);
+                // \DB::table('products_images')
+                //     ->insert([
+                //         'name'       => $fileImage->getClientOriginalName(),
+                //         'path'       => $filename,
+                //         'product_id' => $productID,
+                //         'created_at' => Carbon::now()
+                //     ]);
+            }
+        }
+        return $nameReturn;
+    }
+
+    public function deleteImage(Request $request)
     {
-        $image = ProductImage::find($id);
-        if ($image) $image->delete();
+        $data = Product::find($request->id);
+
+        $imageArr = explode('|||||', $data->product_image);
+
+        $imageUrl = "";
+
+        for($i=0; $i<count($imageArr); $i++){
+            if($imageArr[$i] != $request->name){
+                if($imageUrl == "")
+                    $imageUrl = $imageArr[$i];
+                else
+                    $imageUrl = $imageUrl . '|||||' . $imageArr[$i];
+            }
+        }
+
+        //$data->image_url = $imageUrl;
+        Product::find($request->id)->update([
+            'product_image' => $imageUrl
+        ]);
+
         return redirect()->back();
+    }
+
+    public function indexExists(Request $request)
+    {
+        $products = Product::with('category:id,name');
+
+        if ($name = $request->n)
+            $products->where('product_name', 'like', '%' . $name . '%');
+
+        if ($s = $request->status)
+            $products->where('status', $s);
+
+        $products = $products
+            ->orderByDesc('product_id')
+            ->paginate(20);
+
+        $model = new Product();
+        $status = $model->getStatus();
+
+        $viewData = [
+            'products' => $products,
+            'query'    => $request->query(),
+            'status'   => $status
+        ];
+
+        return view('be.product.indexExists', $viewData);
     }
 }

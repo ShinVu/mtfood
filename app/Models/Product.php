@@ -10,7 +10,8 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $table = 'products';
+    protected $table = 'product';
+    protected $primaryKey = 'product_id';
     protected $guarded = [''];
 
     const STATUS_DEFAULT = 1;

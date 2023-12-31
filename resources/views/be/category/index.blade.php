@@ -25,7 +25,6 @@
                     <th>#</th>
                     <th>Avatar</th>
                     <th>Tên danh mục</th>
-                    <th>Slug</th>
                     <th>Mô tả</th>
                     <th>Ngày tạo</th>
                     <th>Thao tác</th>
@@ -34,18 +33,17 @@
                 <tbody>
                 @foreach($categories ?? [] as $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $item->category_id }}</td>
                         <td>
-                            <img src="{{ pare_url_file($item->image_url) }}" style="width: 60px;height: 60px; border-radius: 10px" alt="">
+                            <img src="{{ pare_url_file($item->category_image) }}" style="width: 60px;height: 60px; border-radius: 10px" alt="">
                         </td>
-                        <td>{{ $item->name }}</td>
-                        <td>{{ $item->slug }}</td>
-                        <td>{{ $item->description }}</td>
+                        <td>{{ $item->category_name }}</td>
+                        <td>{{ $item->category_description }}</td>
                         <td>{{ $item->created_at }}</td>
                         <td>
-                            <a href="{{ route('get_admin.category.update', $item->id) }}">Edit</a>
+                            <a href="{{ route('get_admin.category.update', $item->category_id) }}">Edit</a>
                             <a href="javascript:;void(0)">|</a>
-                            <a href="{{ route('get_admin.category.delete', $item->id) }}">Delete</a>
+                            <a href="{{ route('get_admin.category.delete', $item->category_id) }}">Delete</a>
                         </td>
                     </tr>
                 @endforeach

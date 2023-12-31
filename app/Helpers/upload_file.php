@@ -71,11 +71,10 @@ if (!function_exists('pare_url_file')) {
             return 'https://123code.net/images/preloader.png';
 //            return '/images//preloader.png';
         }
-        $explode = explode('__', $image);
+        $explode = explode('|||||', $image);
 
         if (isset($explode[0])) {
-            $time = str_replace('_', '/', $explode[0]);
-            return '/' . $folder . '/' . date('Y/m/d', strtotime($time)) . '/' . $image;
+            return '/' . $folder . '/' . $explode[0];
         }
     }
 }

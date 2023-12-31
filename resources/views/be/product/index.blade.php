@@ -36,36 +36,32 @@
                 <tbody>
                 @foreach($products ?? [] as $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $item->product_id }}</td>
                         <td>
                             <a href="" style="display: inline-block;position: relative">
-                                <img src="{{ pare_url_file($item->image_url) }}" style="width: 60px;height: 60px; border-radius: 10px" alt="">
-                                <span class="badge badge-danger" style="position: absolute;right: 10px;top: 10px">{{ $item->images_count }}</span>
+                                <img src="{{ pare_url_file($item->product_image) }}" style="width: 60px;height: 60px; border-radius: 10px" alt="">
                             </a>
                         </td>
                         <td>
-                            {{ $item->name }} <br>
+                            {{ $item->product_name }} <br>
 {{--                            <span>{{ $item->province->name ?? "..." }} - {{ $item->district->name ?? "..." }} - {{ $item->ward->name ?? "..." }}</span>--}}
                         </td>
-                        <td>{{ $item->category->name ?? "[N\A]" }}</td>
-                        <td>{{ $item->user->name ?? "[N\A]" }}</td>
-                        <td>{{ number_format($item->price,0,',','.') }}đ</td>
+                        <td>{{ $item->name ?? "[N\A]" }}</td>
+                        <td>--</td>
+                        <td>{{ number_format($item->product_price,0,',','.') }}đ</td>
                         <td>
-                            <span class="{{ $item->getStatus($item->status)['class'] ?? "badge badge-light" }}">{{ $item->getStatus($item->status)['name'] ?? "Tạm dừng" }}</span>
+                            <span class="{{ $item->getStatus($item->product_status)['class'] ?? "badge badge-light" }}">{{ $item->getStatus($item->product_status)['name'] ?? "Tạm dừng" }}</span>
                         </td>
                         <td>{{ $item->created_at }}</td>
                         <td>
-                            <a href="{{ route('get_admin.product.update', $item->id) }}">Edit</a>
+                            <a href="{{ route('get_admin.product.update', $item->product_id) }}">Edit</a>
                             <a href="javascript:;void(0)">|</a>
-                            <a href="{{ route('get_admin.product.delete', $item->id) }}">Delete</a>
+                            <a href="{{ route('get_admin.product.delete', $item->product_id) }}">Delete</a>
                         </td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
-            <div class="col-12">
-                {!! $products->appends($query ?? [])->links() !!}
-            </div>
         </div>
     </div>
 @stop

@@ -14,9 +14,9 @@ class BeCategoryController extends Controller
     public function index(Request $request)
     {
         $categories = Category::whereRaw(1);
-        if ($request->n) $categories->where('name','like','%'.$request->n.'%');
+        if ($request->n) $categories->where('category_name','like','%'.$request->n.'%');
 
-        $categories = $categories->orderByDesc('id')->paginate(20);
+        $categories = $categories->orderByDesc('category_id')->paginate(20);
 
         $viewData = [
             'categories' => $categories
@@ -34,12 +34,10 @@ class BeCategoryController extends Controller
     {
         try {
             $data = $request->except('_token','avatar');
-            $data['slug'] = Str::slug($request->name);
-            $data['created_at'] = Carbon::now();
 
             if ($request->avatar){
                 $file = upload_image('avatar');
-                if (isset($file['code']) && $file['code'] == 1) $data['avatar'] = $file['name'];
+                if (isset($file['code']) && $file['code'] == 1) $data['category_image'] = $file['name'];
             }
 
             $category = Category::create($data);
@@ -60,13 +58,11 @@ class BeCategoryController extends Controller
 
     public function update(Request $request, $id) {
         try {
-            $data = $request->except('_token','avatar');
-            $data['slug'] = Str::slug($request->name);
-            $data['updated_at'] = Carbon::now();
+            $data = $request->except('_token');
 
             if ($request->avatar){
                 $file = upload_image('avatar');
-                if (isset($file['code']) && $file['code'] == 1) $data['avatar'] = $file['name'];
+                if (isset($file['code']) && $file['code'] == 1) $data['category_image'] = $file['name'];
             }
 
             Category::find($id)->update($data);

@@ -119,3 +119,10 @@ body {
 .lists-status-order .badge{
 
 }
+.space-between {
+    justify-content: space-between;
+  }
+
+.pl-md{
+    padding-left: 20px;
+}

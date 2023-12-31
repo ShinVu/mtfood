@@ -11,6 +11,7 @@
     <link href="{{asset('theme_admin/css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="{{asset('theme_admin/css/dashboard.css') }}" rel="stylesheet">
+    <link href="{{asset('theme_admin/ti-icons/css/themify-icons.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         .nav-tab-profile .nav-item.active {
@@ -52,11 +53,31 @@
             <div class="sidebar-sticky" style="margin-top: 80px">
                 <ul class="nav flex-column">
                     @foreach(config('nav') as $item)
+
                         <li class="nav-item">
-                            <a class="nav-link {{ (request()->is($item['group'])) ? 'active' : '' }}" href="{{ route($item['route']) }}" title="{{ $item['name'] }}">
+                        @if($item['childs'] == [])
+                            <a class="nav-link {{ (str_contains(Request::getRequestUri(), $item['prefix'][0])) ? 'active' : '' }}" href="{{ route($item['route']) }}" title="{{ $item['name'] }}" >
                                 <span data-feather="{{ $item['icon'] }}"></span>
                                 {{ $item['name'] }}
                             </a>
+                        @else
+                            <a class="nav-link {{ (str_contains(Request::getRequestUri(), $item['prefix'][0])) ? 'active' : '' }}" data-toggle="collapse" href="#{{$item['prefix'][0]}}" aria-expanded="{{ (str_contains(Request::getRequestUri(), $item['prefix'][0])) ? 'true' : 'false' }}" aria-controls="{{$item['prefix'][0]}}">
+                                <span data-feather="{{ $item['icon'] }}"></span>
+                                <span class="menu-title">{{ $item['name'] }}</span>
+                            </a>
+                            <div class="collapse {{ (str_contains(Request::getRequestUri(), $item['prefix'][0])) ? 'show' : '' }}" id="{{$item['prefix'][0]}}">
+                                <ul class="nav flex-column sub-menu pl-md">
+                                    @foreach($item['childs'] as $child)
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route($child['route']) }}">
+                                            <span data-feather="{{ $child['icon'] }}"></span>
+                                            {{ $child['name'] }}
+                                        </a>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         </li>
                     @endforeach
                 </ul>
