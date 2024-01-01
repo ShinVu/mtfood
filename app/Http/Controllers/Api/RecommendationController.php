@@ -19,10 +19,13 @@ class RecommendationController extends Controller
     {
         try {
             $data = $request->validated();
-
+            $offset = 0;
             $userId = 1;
             $num_item = 8;
 
+            if (isset($data['offset'])) {
+                $offset = $data['offset'];
+            }
             if (isset($data['userId'])) {
                 $userId = $data['userId'];
             }
@@ -42,7 +45,7 @@ class RecommendationController extends Controller
                 $join->on('products.id', '=', 'highest_discount.product_id');
             })
                 ->orderBy('products.updated_at', 'desc')
-                ->skip(0)->take($num_item)
+                ->skip($offset)->take($num_item)
                 ->selectRaw('products.id,products.name,products.image_url,products.price,highest_discount.max_discount_amount, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
                 ->get();
 

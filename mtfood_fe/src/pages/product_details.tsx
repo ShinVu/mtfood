@@ -978,6 +978,7 @@ function ProductRecommendationCard({
     const navigate = useNavigate();
     const size = useWindowSizeDimensions();
     const [products, setProduct] = useState<Array<product> | null>(null);
+    const [seeMore, setSeemore] = useState<boolean>(false);
     const getDummy = () => {
         if (size === "2xl") {
             return Array.apply(null, Array(16)).map(function (x, i) {
@@ -1006,14 +1007,7 @@ function ProductRecommendationCard({
     };
 
     const handleSeemore = () => {
-        const path = {
-            pathname: "/product",
-            search: createSearchParams({
-                page: String(1),
-                category: mainProduct?.category_id,
-            }).toString(),
-        };
-        navigate(path);
+        setSeemore(true);
     };
     useEffect(() => {
         const getLimit = (size: string) => {
@@ -1035,7 +1029,7 @@ function ProductRecommendationCard({
         const fetchProduct = () => {
             const payload = {
                 itemId: mainProduct?.id,
-                numItems: limit + 1,
+                numItems: limit * 2,
             };
 
             axiosClient
@@ -1060,26 +1054,42 @@ function ProductRecommendationCard({
             </h1>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 mt-4">
                 {products
-                    ? products.map((product) => (
-                          <ProductCard
-                              product={product}
-                              className="w-full min-w-fit h-fit"
-                              key={product.id}
-                              loading="lazy"
-                          />
-                      ))
+                    ? products
+                          .slice(0, Math.ceil(products.length / 2) + 1)
+                          .map((product) => (
+                              <ProductCard
+                                  product={product}
+                                  className="w-full min-w-fit h-fit"
+                                  key={product.id}
+                                  loading="lazy"
+                              />
+                          ))
                     : getDummy().map((value) => (
                           <span key={value}>
                               <Skeleton className="w-40 h-64" />
                           </span>
                       ))}
+                {products &&
+                    seeMore &&
+                    products
+                        .slice(Math.ceil(products.length / 2) + 1)
+                        .map((product) => (
+                            <ProductCard
+                                product={product}
+                                className="w-full min-w-fit h-fit"
+                                key={product.id}
+                                loading="lazy"
+                            />
+                        ))}
             </div>
-            <OutlinedButton
-                className="max-w-fit self-center mt-4 mb-2"
-                onClick={handleSeemore}
-            >
-                {t("more")}
-            </OutlinedButton>
+            {!seeMore && (
+                <OutlinedButton
+                    className="max-w-fit self-center mt-4 mb-2"
+                    onClick={handleSeemore}
+                >
+                    {t("more")}
+                </OutlinedButton>
+            )}
         </div>
     );
 }

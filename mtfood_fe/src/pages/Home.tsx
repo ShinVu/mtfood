@@ -394,14 +394,7 @@ function ProductSlideRecommendationProductCard() {
     }, [productMostLiked]);
 
     const handleMostLikedClick = () => {
-        const path = {
-            pathname: "/product",
-            search: createSearchParams({
-                page: String(1),
-                sort: "mostPurchased",
-            }).toString(),
-        };
-        navigate(path);
+        navigate("/productUserRecommend");
     };
 
     return (

@@ -31,6 +31,7 @@ import ProductWholesaleDetails from "../pages/product_details_wholesale";
 import CheckoutWholesale from "../pages/CheckoutWholesale";
 import UserOrderWholesale from "../pages/OrderWholesale";
 import OrderDetailWholesale from "../pages/OrderDetailWholesale";
+import UserRecommendProduct from "../pages/userRecommendPage";
 
 const router = createBrowserRouter([
     {
@@ -148,6 +149,7 @@ const router = createBrowserRouter([
                 path: "productWholesale",
                 element: <ProductWholesale />,
             },
+            { path: "productUserRecommend", element: <UserRecommendProduct /> },
             {
                 path: "addProductTesting",
                 element: <AddProduct />,
