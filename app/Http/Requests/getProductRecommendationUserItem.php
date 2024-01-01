@@ -22,7 +22,8 @@ class getProductRecommendationUserItem extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'userId' => 'required',
+            'numItems' => 'required'
         ];
     }
 }

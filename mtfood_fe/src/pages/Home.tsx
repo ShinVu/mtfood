@@ -347,6 +347,7 @@ function ProductSlideRecommendationProductCard() {
     const [products, setProducts] = useState<Array<product>>([]);
 
     const { productMostLiked } = useAppSelector((state) => state.product);
+    const { user } = useAppSelector((state) => state.authentication);
 
     const dispatch = useAppDispatch();
 
@@ -369,8 +370,16 @@ function ProductSlideRecommendationProductCard() {
 
         const limit = getLimit(size);
         const fetchProduct = () => {
+            const payload = {
+                userId: user.id,
+                numItems: limit,
+            };
             axiosClient
-                .get(`/getProductRecommendationItemItem`)
+                .get(`/getProductRecommendationUserItem`, {
+                    params: {
+                        ...payload,
+                    },
+                })
                 .then(({ data }: { data: any }) => {
                     const products: Array<product> = data.result.product;
 
@@ -561,7 +570,7 @@ function ProductSlideDiscountProductCard() {
 
 export default function Home() {
     const { t } = useTranslation();
-
+    const { user } = useAppSelector((state) => state.authentication);
     return (
         <div className="flex flex-1 flex-col">
             <Header />
@@ -573,7 +582,7 @@ export default function Home() {
                 <TagCard />
                 <ProductSlideDiscountProductCard />
                 <ProductSlideNewProductCard />
-                <ProductSlideRecommendationProductCard />
+                {user && <ProductSlideRecommendationProductCard />}
             </div>
 
             <Footer />

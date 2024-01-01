@@ -22,7 +22,8 @@ class getProductRecommendationItemItem extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'itemId' => 'required',
+            'numItems' => 'required'
         ];
     }
 }

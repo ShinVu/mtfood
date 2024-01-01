@@ -1033,18 +1033,26 @@ function ProductRecommendationCard({
         };
         const limit = getLimit(size);
         const fetchProduct = () => {
+            const payload = {
+                itemId: mainProduct?.id,
+                numItems: limit,
+            };
+            console.log(payload);
             axiosClient
-                .get(`/getProductRecommendationItemItem`)
+                .get(`/getProductRecommendationItemItem`, {
+                    params: {
+                        ...payload,
+                    },
+                })
                 .then(({ data }: { data: any }) => {
                     const products: Array<product> = data.result.product;
-
                     setProduct(products);
                 });
         };
-        if (!products && mainProduct) {
+        if (mainProduct) {
             fetchProduct();
         }
-    }, [products, mainProduct]);
+    }, [mainProduct]);
     return (
         <div className="flex p-4 flex-col  bg-white pl-6">
             <h1 className="text-black text-xl font-bold uppercase">

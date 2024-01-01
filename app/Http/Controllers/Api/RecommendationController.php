@@ -18,7 +18,19 @@ class RecommendationController extends Controller
     public function getProductRecommendationUserItem(getProductRecommendationUserItem $request)
     {
         try {
-            $response = Http::get('http://127.0.0.1:50083/api/user_sample', ['user_id' => 1, 'num_user' => 8]);
+            $data = $request->validated();
+
+            $userId = 1;
+            $num_item = 8;
+
+            if (isset($data['userId'])) {
+                $userId = $data['userId'];
+            }
+            if (isset($data['numItems'])) {
+                $num_item = $data['numItems'];
+            }
+
+            $response = Http::get('http://127.0.0.1:50083/api/user_sample', ['user_id' => $userId, 'num_item' => $num_item]);
             $productIds = $response->json()['product_id'];
 
             /** @var \App\Models\Product $productNew */
@@ -51,7 +63,19 @@ class RecommendationController extends Controller
     public function getProductRecommendationItemItem(getProductRecommendationItemItem $request)
     {
         try {
-            $response = Http::get('http://127.0.0.1:50083/api/item_item', ['item_id' => 1, 'num_item' => 8]);
+            $data = $request->validated();
+
+            $itemId = 1;
+            $num_item = 8;
+
+            if (isset($data['itemId'])) {
+                $itemId = $data['itemId'];
+            }
+            if (isset($data['numItems'])) {
+                $num_item = $data['numItems'];
+            }
+
+            $response = Http::get('http://127.0.0.1:50083/api/item_item', ['item_id' => $itemId, 'num_item' => $num_item]);
             $productIds = $response->json()['product_id'];
 
             /** @var \App\Models\Product $productNew */
