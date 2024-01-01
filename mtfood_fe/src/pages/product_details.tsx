@@ -1035,9 +1035,9 @@ function ProductRecommendationCard({
         const fetchProduct = () => {
             const payload = {
                 itemId: mainProduct?.id,
-                numItems: limit,
+                numItems: limit + 1,
             };
-            console.log(payload);
+
             axiosClient
                 .get(`/getProductRecommendationItemItem`, {
                     params: {

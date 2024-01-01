@@ -42,7 +42,7 @@ class RecommendationController extends Controller
                 $join->on('products.id', '=', 'highest_discount.product_id');
             })
                 ->orderBy('products.updated_at', 'desc')
-                ->skip(0)->take(10)
+                ->skip(0)->take($num_item)
                 ->selectRaw('products.id,products.name,products.image_url,products.price,highest_discount.max_discount_amount, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
                 ->get();
 
@@ -87,7 +87,7 @@ class RecommendationController extends Controller
                 $join->on('products.id', '=', 'highest_discount.product_id');
             })
                 ->orderBy('products.updated_at', 'desc')
-                ->skip(0)->take(10)
+                ->skip(0)->take($num_item)
                 ->selectRaw('products.id,products.name,products.image_url,products.price,highest_discount.max_discount_amount, case when (highest_discount.max_discount_amount is not NULL) then (products.price - highest_discount.max_discount_amount) else products.price end as priceDiscount')
                 ->get();
 
