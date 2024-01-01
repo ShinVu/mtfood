@@ -96,7 +96,7 @@ export default function UserRecommendProduct() {
             const totalPage = response.data.result.totalPage;
 
             setProduct(products);
-            setTotalPage(totalPage);
+            setTotalPage(totalPage ?? 1);
         };
 
         fetchProducts();
