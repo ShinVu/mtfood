@@ -306,17 +306,17 @@ class BeOrderController extends Controller
         try{
             //
             $data = $request->except('_token');
-
+            $delivery_id = time();
             $delivery = [
                 'delivery_address' => $data['delivery_address'],
                 'delivery_name' => $data['delivery_name'],
                 'delivery_phone' => $data['delivery_phone'],
                 'account_id' => $data['account_id'],
-                'delivery_id' => time(),
+                'delivery_id' => $delivery_id,
                 'delivery_note' => ''
             ];
 
-            $delivery_id = Delivery::create($delivery)->delivery_id;
+            Delivery::create($delivery)->delivery_id;
 
             $order_code = time();
             $order = [
@@ -376,7 +376,7 @@ class BeOrderController extends Controller
         // $user = User::where('id', '=', $order[0]->account_id)
         //     ->get();
 
-        $orderdetail = OrderDetail::join('products', 'products.product_id', '=', 'order_detail.product_id')
+        $orderdetail = OrderDetail::join('product', 'product.product_id', '=', 'order_detail.product_id')
             ->where('order_detail.order_code', '=', $order[0]->order_code)
             ->get([
                 'order_detail.order_detail_id',
@@ -385,7 +385,7 @@ class BeOrderController extends Controller
                 'order_detail.product_price',
                 'order_detail.product_quantity',
                 'order_detail.product_sale',
-                'products.product_image',
+                'product.product_image',
                 'product.product_name'
             ]);
 
