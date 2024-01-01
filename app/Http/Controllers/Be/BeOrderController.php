@@ -277,7 +277,7 @@ class BeOrderController extends Controller
         //
         $order_code = $request->n ?? "";
 
-        $order = Order::join('users', 'orders.account_id', '=', 'users.id')
+        $order = Order::join('account', 'orders.account_id', '=', 'account.account_id')
             ->where('order_code', 'like', '%' . $order_code . '%')
             ->where('order_type', '=', 5)
             ->get();
@@ -311,6 +311,9 @@ class BeOrderController extends Controller
                 'delivery_address' => $data['delivery_address'],
                 'delivery_name' => $data['delivery_name'],
                 'delivery_phone' => $data['delivery_phone'],
+                'account_id' => $data['account_id'],
+                'delivery_id' => time(),
+                'delivery_note' => ''
             ];
 
             $delivery_id = Delivery::create($delivery)->delivery_id;
