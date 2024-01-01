@@ -76,12 +76,15 @@
                                     @foreach($products ?? [] as $item)
                                         <option value="{{ $item->product_id }}" >
                                             {{ $item->product_name }}
-                                            <input type="hidden" id="product_quantity_{{ $item->product_id }}" value="{{ $item->product_quantity }}">
-                                            <input type="hidden" id="product_price_{{ $item->product_id }}" value="{{ $item->product_price }}">
-                                            <input type="hidden" id="product_sale_{{ $item->product_id }}" value="{{ $item->product_sale }}">
                                         </option>
                                     @endforeach
                                 </select>
+                                
+                                @foreach($products ?? [] as $item)
+                                <input type="hidden" id="product_quantity_{{ $item->product_id }}" value="{{ $item->product_quantity }}" />
+                                <input type="hidden" id="product_price_{{ $item->product_id }}" value="{{ $item->product_price }}" />
+                                <input type="hidden" id="product_sale_{{ $item->product_id }}" value="{{ $item->product_sale }}" />
+                                @endforeach
                                 @error('product_id')
                                     <small id="emailHelp" class="form-text text-danger">{{ $errors->first('product_id') }}</small>
                                 @enderror
